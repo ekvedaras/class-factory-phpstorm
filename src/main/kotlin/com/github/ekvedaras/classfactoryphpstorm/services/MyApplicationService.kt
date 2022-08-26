@@ -1,6 +1,6 @@
-package org.jetbrains.plugins.template.services
+package com.github.ekvedaras.classfactoryphpstorm.services
 
-import org.jetbrains.plugins.template.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 
 class MyApplicationService {
 
