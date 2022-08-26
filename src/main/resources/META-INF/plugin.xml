@@ -1,18 +1,19 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.ekvedaras.classfactoryphpstorm</id>
-    <name>class-factory-phpstorm</name>
+    <name>ClassFactory</name>
     <vendor>ekvedaras</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.jetbrains.php</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.ekvedaras.classfactoryphpstorm.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.ekvedaras.classfactoryphpstorm.services.MyProjectService"/>
+        <psi.referenceContributor language="PHP"
+                                  implementation="com.github.ekvedaras.classfactoryphpstorm.classfactory.definition.ClassPropertyReferenceContributorForFactoryDefinition"/>
+        <completion.contributor language="PHP"
+                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.classfactory.definition.ClassPropertyCompletionContributorForFactoryDefinition"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.ekvedaras.classfactoryphpstorm.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 </idea-plugin>
