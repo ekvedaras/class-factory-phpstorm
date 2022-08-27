@@ -8,6 +8,6 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
 class ClassPropertyReference(element: StringLiteralExpression, private val targetClass: TargetClass) : PsiReferenceBase<PsiElement>(element) {
     override fun resolve(): PsiElement? {
-        return targetClass.constructor?.getPropertyByName(element.text.unquoteAndCleanup())?.parameter
+        return targetClass.constructor?.getParameterByName(element.text.unquoteAndCleanup())?.parameter
     }
 }

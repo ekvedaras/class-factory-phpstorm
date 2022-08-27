@@ -10,7 +10,14 @@ class TargetClassConstructor(private val constructor: Method, private val target
     val parameters : List<TargetClassConstructorParameter>
         get() = constructor.parameters.map { TargetClassConstructorParameter(it, targetClass) }
 
-    fun getPropertyByName(name: String) : TargetClassConstructorParameter? {
+    val totalParameters : Int
+        get() = this.parameters.size
+
+    fun getParameterByName(name: String) : TargetClassConstructorParameter? {
         return TargetClassConstructorParameter(constructor.parameters.firstOrNull { it.name == name } ?: return null, targetClass)
+    }
+
+    fun getParameterIndex(parameter: TargetClassConstructorParameter) = this.parameters.indexOfFirst {
+        it.parameter.name == parameter.parameter.name
     }
 }
