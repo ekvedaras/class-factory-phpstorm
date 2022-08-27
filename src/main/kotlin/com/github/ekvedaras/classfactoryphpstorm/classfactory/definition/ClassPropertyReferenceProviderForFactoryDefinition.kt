@@ -11,15 +11,17 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
 class ClassPropertyReferenceProviderForFactoryDefinition : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-        val array = element.parent.parent
-        if (array !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
-        if (element.isArrayHashValueOf(array)) return PsiReference.EMPTY_ARRAY
+        val arrayHashElement = element.parent.parent
+        if (arrayHashElement !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
+        if (element.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY
+        if (arrayHashElement.parent.parent !is PhpReturn) return PsiReference.EMPTY_ARRAY
 
-        val method = array.parentOfType<Method>() ?: return PsiReference.EMPTY_ARRAY
+        val method = arrayHashElement.parentOfType<Method>() ?: return PsiReference.EMPTY_ARRAY
         if (! method.isClassFactoryDefinition()) return PsiReference.EMPTY_ARRAY
 
         val definitionMethod = DefinitionMethod(method)

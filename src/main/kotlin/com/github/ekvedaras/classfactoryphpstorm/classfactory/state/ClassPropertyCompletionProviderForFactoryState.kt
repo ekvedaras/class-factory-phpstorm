@@ -1,7 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.classfactory.state
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReference
 import com.intellij.codeInsight.completion.CompletionParameters
@@ -23,9 +23,11 @@ class ClassPropertyCompletionProviderForFactoryState : CompletionProvider<Comple
 
         if (array !is ArrayHashElement && array !is ArrayCreationExpression) return
         if (array is ArrayHashElement && parameters.position.parent.isArrayHashValueOf(array)) return
+        if (array is ArrayHashElement && array.parent.parent.parent !is MethodReference) return
+        if (array is ArrayCreationExpression && array.parent.parent !is MethodReference) return
 
         val methodReference = array.parentOfType<MethodReference>() ?: return
-        if (! methodReference.isClassFactoryState()) return
+        if (! methodReference.isCurrentClassFactoryState()) return
 
         val stateMethodReference = StateMethodReference(methodReference)
         val targetClass = stateMethodReference.classFactory.targetClass ?: return

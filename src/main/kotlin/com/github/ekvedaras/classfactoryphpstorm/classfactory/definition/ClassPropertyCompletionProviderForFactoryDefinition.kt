@@ -12,6 +12,7 @@ import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.PhpReturn
 
 class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
@@ -23,6 +24,8 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
 
         if (array !is ArrayHashElement && array !is ArrayCreationExpression) return
         if (array is ArrayHashElement && parameters.position.parent.isArrayHashValueOf(array)) return
+        if (array is ArrayHashElement && array.parent.parent !is PhpReturn) return
+        if (array is ArrayCreationExpression && array.parent !is PhpReturn) return
 
         val method = array.parentOfType<Method>() ?: return
         if (! method.isClassFactoryDefinition()) return
