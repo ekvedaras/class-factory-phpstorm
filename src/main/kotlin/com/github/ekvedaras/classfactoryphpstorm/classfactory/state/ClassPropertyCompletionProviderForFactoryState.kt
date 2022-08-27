@@ -1,8 +1,8 @@
-package com.github.ekvedaras.classfactoryphpstorm.classfactory.definition
+package com.github.ekvedaras.classfactoryphpstorm.classfactory.state
 
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReference
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
@@ -10,9 +10,9 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
-import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.MethodReference
 
-class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<CompletionParameters>() {
+class ClassPropertyCompletionProviderForFactoryState : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
@@ -22,13 +22,13 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
 
         if (element !is ArrayHashElement && element !is ArrayCreationExpression) return
 
-        val method = element.parentOfType<Method>() ?: return
-        if (! method.isClassFactoryDefinition()) return
+        val methodReference = element.parentOfType<MethodReference>() ?: return
+        if (! methodReference.isClassFactoryState()) return
 
-        val definitionMethod = DefinitionMethod(method)
-        val targetClass = definitionMethod.classFactory.targetClass ?: return
+        val stateMethodReference = StateMethodReference(methodReference)
+        val targetClass = stateMethodReference.classFactory.targetClass ?: return
 
-        val alreadyDefinedProperties = definitionMethod.definedProperties
+        val alreadyDefinedProperties = stateMethodReference.definedProperties
 
         result.addAllElements(
             targetClass
