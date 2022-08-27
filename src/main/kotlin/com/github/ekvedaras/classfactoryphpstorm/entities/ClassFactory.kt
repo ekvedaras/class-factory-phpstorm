@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.entities
 
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactory
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.PhpIndex
@@ -12,12 +13,7 @@ class ClassFactory(private val clazz: PhpClass) {
 
     val targetClass: TargetClass?
         get() {
-            return TargetClass(
-                PhpIndex
-                .getInstance(clazz.project)
-                .getClassesByFQN(this.getClassField()?.getClassReference()?.fqn ?: return null)
-                .firstOrNull() ?: return null
-            )
+            return TargetClass(this.getClassField()?.getClassReference()?.getClass() ?: return null)
         }
 
     private fun getClassField() = clazz.childrenOfType<PhpClassFieldsList>()

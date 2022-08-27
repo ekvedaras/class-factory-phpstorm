@@ -19,6 +19,12 @@
         <completion.contributor language="PHP"
                                 implementationClass="com.github.ekvedaras.classfactoryphpstorm.classfactory.state.ClassPropertyCompletionContributorForFactoryState"
                                 order="first"/>
+
+        <psi.referenceContributor language="PHP"
+                                  implementation="com.github.ekvedaras.classfactoryphpstorm.classfactoryusages.make.ClassPropertyReferenceContributorForMakeMethod"/>
+        <completion.contributor language="PHP"
+                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.classfactoryusages.make.ClassPropertyCompletionContributorForMakeMethod"
+                                order="first"/>
     </extensions>
 
     <applicationListeners>
