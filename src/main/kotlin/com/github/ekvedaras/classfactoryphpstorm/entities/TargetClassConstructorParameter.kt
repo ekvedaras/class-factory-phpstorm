@@ -3,7 +3,10 @@ package com.github.ekvedaras.classfactoryphpstorm.entities
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.psi.util.childrenOfType
+import com.intellij.psi.util.nextLeaf
 import com.jetbrains.php.lang.psi.elements.Parameter
+import com.jetbrains.php.lang.psi.elements.Variable
 
 class TargetClassConstructorParameter(val parameter: Parameter, private val targetClass: TargetClass) {
     val lookup : LookupElement

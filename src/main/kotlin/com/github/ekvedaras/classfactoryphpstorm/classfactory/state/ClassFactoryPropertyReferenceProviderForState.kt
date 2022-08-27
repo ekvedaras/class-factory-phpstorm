@@ -1,9 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm.classfactory.state
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
-import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.psireferences.ClassPropertyReference
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
@@ -22,7 +21,7 @@ class ClassFactoryPropertyReferenceProviderForState : PsiReferenceProvider() {
         val methodReference = array.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY
         if (! methodReference.isCurrentClassFactoryState()) return PsiReference.EMPTY_ARRAY
 
-        val stateMethodReference = StateMethodReference(methodReference)
+        val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
         val targetClass = stateMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY
 
         return arrayOf(ClassPropertyReference(element as StringLiteralExpression, targetClass))

@@ -22,6 +22,7 @@ class Utilities private constructor() {
             null
         }
         fun MethodReference.isClassFactoryMakeMethod() = this.name == "make" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
+        fun MethodReference.isClassFactoryStateMethod() = this.name == "state" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
         fun PsiElement.isArrayHashValueOf(arrayHashElement: ArrayHashElement) = this == arrayHashElement.value
         fun ClassReference.getClass() = PhpIndex
             .getInstance(this.project)

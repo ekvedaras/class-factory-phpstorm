@@ -8,7 +8,7 @@ import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.MethodReference
 
-class StateMethodReference(private val methodReference: MethodReference) {
+class StateMethodReferenceInsideFactory(private val methodReference: MethodReference) {
     val classFactory: ClassFactory
 
     init {
