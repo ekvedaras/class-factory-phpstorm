@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.classfactory.definition
 
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
@@ -18,11 +19,12 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
-        val element = parameters.position.parent.parent.parent
+        val array = parameters.position.parent.parent.parent
 
-        if (element !is ArrayHashElement && element !is ArrayCreationExpression) return
+        if (array !is ArrayHashElement && array !is ArrayCreationExpression) return
+        if (array is ArrayHashElement && parameters.position.parent.isArrayHashValueOf(array)) return
 
-        val method = element.parentOfType<Method>() ?: return
+        val method = array.parentOfType<Method>() ?: return
         if (! method.isClassFactoryDefinition()) return
 
         val definitionMethod = DefinitionMethod(method)
