@@ -1,0 +1,17 @@
+package com.github.ekvedaras.classfactoryphpstorm
+
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
+
+internal abstract class TestCase : BasePlatformTestCase() {
+    protected fun assertCompletionContains(vararg shouldContain: String) {
+        val strings = myFixture.lookupElementStrings ?: return fail("Empty completion result")
+
+        assertContainsElements(strings, shouldContain.asList())
+    }
+
+    protected fun assertCompletionDoesNotContain(vararg shouldNotContain: String) {
+        val strings = myFixture.lookupElementStrings ?: return
+
+        assertDoesntContain(strings, shouldNotContain.asList())
+    }
+}
