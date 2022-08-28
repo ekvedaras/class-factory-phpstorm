@@ -1,4 +1,4 @@
-package com.github.ekvedaras.classfactoryphpstorm.classfactory
+package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory
 
 import com.intellij.codeInsight.completion.CompletionSorter
 import com.intellij.codeInsight.lookup.LookupElementWeigher

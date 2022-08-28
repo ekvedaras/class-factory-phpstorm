@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
+import com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInDefinitionMethod
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 
@@ -58,6 +59,10 @@ internal abstract class EssentialTestCase : TestCase() {
         myFixture.complete(CompletionType.BASIC)
 
         assertTrue(myFixture.lookupElements?.isEmpty() ?: true)
+    }
+
+    fun testItReportsNotFoundProperties() {
+        assertInspection("nonExistingProperty.php", PropertyNotFoundInspectionInDefinitionMethod())
     }
 
 //    fun testItResolvesReferencesInAssociativeArrayKeys() {

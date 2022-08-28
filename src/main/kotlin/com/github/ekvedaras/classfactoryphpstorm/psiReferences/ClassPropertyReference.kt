@@ -1,4 +1,4 @@
-package com.github.ekvedaras.classfactoryphpstorm.psireferences
+package com.github.ekvedaras.classfactoryphpstorm.psiReferences
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.TargetClass

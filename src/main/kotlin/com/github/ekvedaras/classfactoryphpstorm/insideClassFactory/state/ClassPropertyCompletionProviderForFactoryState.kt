@@ -1,17 +1,19 @@
-package com.github.ekvedaras.classfactoryphpstorm.classfactoryusages.make
+package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
-import com.intellij.codeInsight.completion.*
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.MethodReference
 
-class ClassPropertyCompletionProviderForMakeMethod : CompletionProvider<CompletionParameters>() {
+class ClassPropertyCompletionProviderForFactoryState : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
@@ -25,12 +27,12 @@ class ClassPropertyCompletionProviderForMakeMethod : CompletionProvider<Completi
         if (array is ArrayCreationExpression && array.parent.parent !is MethodReference) return
 
         val methodReference = array.parentOfType<MethodReference>() ?: return
-        if (! methodReference.isClassFactoryMakeMethod()) return
+        if (! methodReference.isCurrentClassFactoryState()) return
 
-        val makeMethodReference = MakeMethodReference(methodReference)
-        val targetClass = makeMethodReference.classFactory.targetClass ?: return
+        val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
+        val targetClass = stateMethodReference.classFactory.targetClass ?: return
 
-        val alreadyDefinedProperties = makeMethodReference.definedProperties
+        val alreadyDefinedProperties = stateMethodReference.definedProperties
 
         result.addAllElements(
             targetClass
@@ -44,5 +46,4 @@ class ClassPropertyCompletionProviderForMakeMethod : CompletionProvider<Completi
 
         result.stopHere()
     }
-
 }

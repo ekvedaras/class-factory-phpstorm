@@ -1,4 +1,4 @@
-package com.github.ekvedaras.classfactoryphpstorm.classfactoryusages.make
+package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state
 
 import com.intellij.codeInsight.completion.CompletionContributor
 import com.intellij.codeInsight.completion.CompletionType
@@ -6,7 +6,7 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
 import com.jetbrains.php.lang.lexer.PhpTokenTypes
 
-class ClassPropertyCompletionContributorForMakeMethod : CompletionContributor() {
+class ClassPropertyCompletionContributorForStateMethod : CompletionContributor() {
     override fun invokeAutoPopup(position: PsiElement, typeChar: Char): Boolean {
         return typeChar == '\''
     }
@@ -15,7 +15,7 @@ class ClassPropertyCompletionContributorForMakeMethod : CompletionContributor() 
         extend(
             CompletionType.BASIC,
             PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
-            ClassPropertyCompletionProviderForMakeMethod(),
+            ClassPropertyCompletionProviderForStateMethod(),
         )
     }
 }

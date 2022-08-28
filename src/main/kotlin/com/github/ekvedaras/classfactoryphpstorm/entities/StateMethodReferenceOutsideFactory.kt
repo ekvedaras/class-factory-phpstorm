@@ -2,13 +2,10 @@ package com.github.ekvedaras.classfactoryphpstorm.entities
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.getClass
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryStateMethod
 import com.intellij.psi.util.childrenOfType
-import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
-import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.MethodReference
 
 class StateMethodReferenceOutsideFactory(private val methodReference: MethodReference) {

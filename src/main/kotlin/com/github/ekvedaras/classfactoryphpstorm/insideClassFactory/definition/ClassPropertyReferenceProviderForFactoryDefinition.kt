@@ -1,7 +1,7 @@
-package com.github.ekvedaras.classfactoryphpstorm.classfactory.definition
+package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.psireferences.ClassPropertyReference
+import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.intellij.psi.PsiElement

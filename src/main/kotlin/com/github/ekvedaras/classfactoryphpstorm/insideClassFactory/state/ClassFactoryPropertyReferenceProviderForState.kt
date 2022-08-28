@@ -1,9 +1,9 @@
-package com.github.ekvedaras.classfactoryphpstorm.classfactory.state
+package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
-import com.github.ekvedaras.classfactoryphpstorm.psireferences.ClassPropertyReference
+import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceProvider

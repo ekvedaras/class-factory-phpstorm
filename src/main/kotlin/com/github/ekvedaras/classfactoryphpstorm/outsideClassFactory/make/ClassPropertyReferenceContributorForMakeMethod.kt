@@ -1,6 +1,5 @@
-package com.github.ekvedaras.classfactoryphpstorm.classfactoryusages.make
+package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make
 
-import com.github.ekvedaras.classfactoryphpstorm.classfactory.definition.ClassPropertyReferenceProviderForFactoryDefinition
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceRegistrar
