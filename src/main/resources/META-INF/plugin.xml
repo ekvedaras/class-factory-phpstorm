@@ -35,7 +35,7 @@
         <localInspection language="PHP"
                          groupPath="PHP"
                          groupKey="name"
-                         shortName="PropertyNotFound"
+                         shortName="PropertyNotFoundInspectionInDefinitionMethod"
                          enabledByDefault="true"
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"

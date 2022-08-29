@@ -46,7 +46,7 @@ class PropertyNotFoundInspectionInDefinitionMethod : PhpInspection() {
                         MyBundle.message("classPropertyNotFound")
                             .replace("{property}", expression.text.replace("\'", ""))
                             .replace("{class}", targetClass.name),
-                        ProblemHighlightType.ERROR,
+                        ProblemHighlightType.LIKE_UNKNOWN_SYMBOL,
                         TextRange(1, expression.textLength - 1)
                     )
                 }

@@ -8,7 +8,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.7.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.8.0"
+    id("org.jetbrains.intellij") version "1.8.1"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
@@ -83,14 +83,6 @@ tasks {
                 getOrNull(properties("pluginVersion")) ?: getLatest()
             }.toHTML()
         })
-    }
-
-    runIde {
-        if (environment.contains("IDE_DIR")) {
-            ideDir.set(File(environment["IDE_DIR"].toString()))
-        }
-
-        systemProperty("idea.platform.prefix", "PhpStorm")
     }
 
     // Configure UI tests plugin

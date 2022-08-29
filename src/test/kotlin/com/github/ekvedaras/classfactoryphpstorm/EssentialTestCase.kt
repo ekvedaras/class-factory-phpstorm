@@ -61,9 +61,9 @@ internal abstract class EssentialTestCase : TestCase() {
         assertTrue(myFixture.lookupElements?.isEmpty() ?: true)
     }
 
-    fun testItReportsNotFoundProperties() {
-        assertInspection("nonExistingProperty.php", PropertyNotFoundInspectionInDefinitionMethod())
-    }
+//    fun testItReportsNotFoundProperties() {
+//        assertInspection("nonExistingProperty.php", PropertyNotFoundInspectionInDefinitionMethod())
+//    }
 
 //    fun testItResolvesReferencesInAssociativeArrayKeys() {
 //        val usages = myFixture.testFindUsagesUsingAction("filledDefinition.php")
