@@ -5,7 +5,7 @@
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/19824.svg)](https://plugins.jetbrains.com/plugin/19824)
 
 <!-- Plugin description -->
-PhpStorm integration for [ekvedaras/class-factory]() package.
+PhpStorm integration for [ekvedaras/class-factory](https://github.com/ekvedaras/class-factory) package.
 
 Current features:
 
