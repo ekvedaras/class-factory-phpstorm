@@ -54,12 +54,14 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionContains("age")
     }
 
-    fun testItCompletesNorthingIfAllPropertiesAreAlreadyDefined() {
+    fun testItCompletesNothingIfAllPropertiesAreAlreadyDefined() {
         myFixture.configureByFile("caretAtStringInNewValueWhenAllPropertiesAreAlreadyDefined.php")
         myFixture.complete(CompletionType.BASIC)
 
         assertTrue(myFixture.lookupElements?.isEmpty() ?: true)
     }
+
+//    These tests don't work due to a big in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
 
 //    fun testItReportsNotFoundProperties() {
 //        assertInspection("nonExistingProperty.php", PropertyNotFoundInspectionInDefinitionMethod())
