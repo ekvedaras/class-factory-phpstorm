@@ -10,7 +10,7 @@ PhpStorm integration for [ekvedaras/class-factory](https://github.com/ekvedaras/
 Current features:
 
 * Autocompletion in class factory methods
-* Reference resolving for properties in factories. ⚠️Renaming private promoted properties does not work due to [a bug in PhpStorm](https://youtrack.jetbrains.com/issue/WI-68507/Field-reference-resolved-to-private-property-doesnt-get-renamed)
+* Reference resolving for properties in factories. ⚠️ Renaming private promoted properties does not work due to [a bug in PhpStorm](https://youtrack.jetbrains.com/issue/WI-68507/Field-reference-resolved-to-private-property-doesnt-get-renamed)
 * Inspection to detect properties that don't exist in targeted class constructor
 <!-- Plugin description end -->
 
