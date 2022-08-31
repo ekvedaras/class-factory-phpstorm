@@ -3,7 +3,9 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
-- Initial release with autocompletion, reference resolving and property not found inspection.
-
 ### Added
+- Initial release with autocompletion, reference resolving and property not found inspection.
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+
+### Fixed
+- `NullPointerException` cast (#1)
