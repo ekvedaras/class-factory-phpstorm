@@ -1,10 +1,10 @@
-package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition
+package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
-import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.util.TextRange
@@ -12,12 +12,11 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
-import com.jetbrains.php.lang.psi.elements.Method
-import com.jetbrains.php.lang.psi.elements.PhpReturn
+import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 
-class PropertyNotFoundInspectionInDefinitionMethod : PhpInspection() {
+class PropertyNotFoundInspectionInState : PhpInspection() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhpElementVisitor() {
             override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression?) {
@@ -26,13 +25,13 @@ class PropertyNotFoundInspectionInDefinitionMethod : PhpInspection() {
                 val arrayHashElement = expression.parent.parent
                 if (arrayHashElement !is ArrayHashElement) return
                 if (expression.isArrayHashValueOf(arrayHashElement)) return
-                if (arrayHashElement.parent.parent !is PhpReturn) return
+                if (arrayHashElement.parent.parent.parent !is MethodReference) return
 
-                val method = arrayHashElement.parentOfType<Method>() ?: return
-                if (! method.isClassFactoryDefinition()) return
+                val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return
+                if (! methodReference.isCurrentClassFactoryState()) return
 
-                val definitionMethod = DefinitionMethod(method)
-                val targetClass = definitionMethod.classFactory.targetClass ?: return
+                val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
+                val targetClass = stateMethodReference.classFactory.targetClass ?: return
 
                 if (targetClass.constructor?.getParameterByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(

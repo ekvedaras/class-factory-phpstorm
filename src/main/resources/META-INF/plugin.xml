@@ -40,6 +40,33 @@
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInDefinitionMethod"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInState"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state.PropertyNotFoundInspectionInState"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInStateMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state.PropertyNotFoundInspectionInStateMethod"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInMakeMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.PropertyNotFoundInspectionInMakeMethod"/>
     </extensions>
 
     <applicationListeners>
