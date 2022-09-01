@@ -1,6 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.entities
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
@@ -32,4 +33,6 @@ class DefinitionMethod(private val method: Method) {
 
             return properties.toList()
         }
+
+    fun getPropertyDefinition(name: String) = definedProperties.firstOrNull { it.key?.text?.unquoteAndCleanup() == name }
 }

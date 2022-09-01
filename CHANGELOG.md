@@ -8,6 +8,7 @@
 - Resolve references for attributes array keys in closure states.
 - Detect unknown properties in state and make methods both inside and outside factory.
 - Detect unknown properties in attributes array keys in closure states.
+- Resolve attributes array value types from factory definition (inside factory definition only. wip.)
 
 ## [1.0.0]
 ### Added

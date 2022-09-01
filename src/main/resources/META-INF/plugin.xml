@@ -105,6 +105,10 @@
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.PropertyNotFoundInspectionInAttributesArrayKeysInMakeMethod"/>
     </extensions>
 
+    <extensions defaultExtensionNs="com.jetbrains.php">
+        <typeProvider4 implementation="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassFactoryPropertyDefinitionTypeProvider"/>
+    </extensions>
+
     <applicationListeners>
     </applicationListeners>
 </idea-plugin>
