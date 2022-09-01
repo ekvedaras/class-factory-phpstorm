@@ -17,5 +17,11 @@ class ClassPropertyCompletionContributorForFactoryState : CompletionContributor(
             PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
             ClassPropertyCompletionProviderForFactoryState(),
         )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
+            ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryState(),
+        )
     }
 }

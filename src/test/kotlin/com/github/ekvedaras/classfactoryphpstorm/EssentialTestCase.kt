@@ -61,6 +61,22 @@ internal abstract class EssentialTestCase : TestCase() {
         assertTrue(myFixture.lookupElements?.isEmpty() ?: true)
     }
 
+    fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInClosure()
+    {
+        myFixture.configureByFile("caretAtArrayKeyOfAttributesInClosure.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("id", "age")
+    }
+
+    fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInShortClosure()
+    {
+        myFixture.configureByFile("caretAtArrayKeyOfAttributesInShortClosure.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("id", "age")
+    }
+
 //    These tests don't work due to a big in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
 
 //    fun testItReportsNotFoundProperties() {

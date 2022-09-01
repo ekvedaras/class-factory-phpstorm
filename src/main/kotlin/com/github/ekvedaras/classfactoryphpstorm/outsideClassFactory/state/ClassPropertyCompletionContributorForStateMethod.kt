@@ -17,5 +17,11 @@ class ClassPropertyCompletionContributorForStateMethod : CompletionContributor()
             PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
             ClassPropertyCompletionProviderForStateMethod(),
         )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
+            ClassPropertyCompletionProviderForAttributesArrayInClosureOfStateMethod(),
+        )
     }
 }

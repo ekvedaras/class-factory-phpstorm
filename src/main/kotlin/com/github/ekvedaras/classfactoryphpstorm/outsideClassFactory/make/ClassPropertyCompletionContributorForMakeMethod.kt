@@ -17,5 +17,11 @@ class ClassPropertyCompletionContributorForMakeMethod : CompletionContributor() 
             PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
             ClassPropertyCompletionProviderForMakeMethod(),
         )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
+            ClassPropertyCompletionProviderForAttributesArrayInClosureOfMakeMethod(),
+        )
     }
 }

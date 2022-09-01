@@ -17,5 +17,11 @@ class ClassPropertyCompletionContributorForFactoryDefinition : CompletionContrib
             PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
             ClassPropertyCompletionProviderForFactoryDefinition(),
         )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
+            ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryDefinition(),
+        )
     }
 }
