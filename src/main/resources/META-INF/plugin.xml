@@ -67,6 +67,42 @@
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.PropertyNotFoundInspectionInMakeMethod"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInAttributesArrayKeysInState"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state.PropertyNotFoundInspectionInAttributesArrayKeysInState"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInAttributesArrayKeysInStateMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state.PropertyNotFoundInspectionInAttributesArrayKeysInStateMethod"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInAttributesArrayKeysInMakeMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.PropertyNotFoundInspectionInAttributesArrayKeysInMakeMethod"/>
     </extensions>
 
     <applicationListeners>
