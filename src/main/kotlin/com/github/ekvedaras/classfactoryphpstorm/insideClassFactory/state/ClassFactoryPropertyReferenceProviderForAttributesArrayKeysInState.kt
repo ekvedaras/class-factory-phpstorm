@@ -10,12 +10,24 @@ import com.intellij.psi.PsiReferenceProvider
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.Function
 
-class ClassFactoryPropertyReferenceProviderForState : PsiReferenceProvider() {
+class ClassFactoryPropertyReferenceProviderForAttributesArrayKeysInState : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-        val arrayHashElement = element.parent.parent
+        val attributesArray = element.parent.parent
+
+        if (element.parent !is ArrayIndex) return PsiReference.EMPTY_ARRAY
+        if (attributesArray !is ArrayAccessExpression) return PsiReference.EMPTY_ARRAY
+        if (attributesArray.firstPsiChild !is Variable) return PsiReference.EMPTY_ARRAY
+
+        val function = attributesArray.parentOfType<Function>() ?: return PsiReference.EMPTY_ARRAY
+        if (function.parent.parent.parent !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
+        if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return PsiReference.EMPTY_ARRAY
+
+        val arrayHashElement = function.parent.parent.parent
+
         if (arrayHashElement !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
-        if (element.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY
+        if (! function.parent.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY
         if (arrayHashElement.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
         val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY

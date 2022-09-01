@@ -1,8 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition
 
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
@@ -29,12 +27,12 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryDefinit
         if (function.parent.parent.parent !is ArrayHashElement) return
         if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
 
-        val array = function.parent.parent.parent
+        val arrayHashElement = function.parent.parent.parent
 
-        if (array !is ArrayHashElement) return
-        if (array.parent.parent !is PhpReturn) return
+        if (arrayHashElement !is ArrayHashElement) return
+        if (arrayHashElement.parent.parent !is PhpReturn) return
 
-        val method = array.parentOfType<Method>() ?: return
+        val method = arrayHashElement.parentOfType<Method>() ?: return
         if (! method.isClassFactoryDefinition()) return
 
         val definitionMethod = DefinitionMethod(method)

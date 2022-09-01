@@ -11,5 +11,10 @@ class ClassFactoryPropertyReferenceContributorForState : PsiReferenceContributor
             PlatformPatterns.psiElement(StringLiteralExpression::class.java),
             ClassFactoryPropertyReferenceProviderForState(),
         )
+
+        registrar.registerReferenceProvider(
+            PlatformPatterns.psiElement(StringLiteralExpression::class.java),
+            ClassFactoryPropertyReferenceProviderForAttributesArrayKeysInState(),
+        )
     }
 }

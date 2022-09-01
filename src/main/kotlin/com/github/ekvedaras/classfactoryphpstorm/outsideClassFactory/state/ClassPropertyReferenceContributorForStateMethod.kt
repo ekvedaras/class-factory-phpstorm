@@ -11,5 +11,10 @@ class ClassPropertyReferenceContributorForStateMethod : PsiReferenceContributor(
             PlatformPatterns.psiElement(StringLiteralExpression::class.java),
             ClassPropertyReferenceProviderForStateMethod(),
         )
+
+        registrar.registerReferenceProvider(
+            PlatformPatterns.psiElement(StringLiteralExpression::class.java),
+            ClassPropertyReferenceProviderForAttributesArrayKeysInStateMethod(),
+        )
     }
 }

@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Added
 - Complete properties for attributes array keys in closure states.
+- Resolve references for attributes array keys in closure states.
 
 ## [1.0.0]
 ### Added

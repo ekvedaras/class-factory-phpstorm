@@ -11,5 +11,10 @@ class ClassPropertyReferenceContributorForMakeMethod : PsiReferenceContributor()
             PlatformPatterns.psiElement(StringLiteralExpression::class.java),
             ClassPropertyReferenceProviderForMakeMethod(),
         )
+
+        registrar.registerReferenceProvider(
+            PlatformPatterns.psiElement(StringLiteralExpression::class.java),
+            ClassPropertyReferenceProviderForAttributesArrayKeysInMakeMethod(),
+        )
     }
 }
