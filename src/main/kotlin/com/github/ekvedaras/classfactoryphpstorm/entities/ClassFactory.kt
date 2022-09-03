@@ -15,6 +15,11 @@ class ClassFactory(private val clazz: PhpClass) {
             return TargetClass(this.getClassField()?.getClassReference()?.getClass() ?: return null)
         }
 
+    val definitionMethod: DefinitionMethod?
+        get() {
+            return DefinitionMethod(clazz.ownMethods.firstOrNull { it.name == "definition" } ?: return null)
+        }
+
     private fun getClassField() = clazz.childrenOfType<PhpClassFieldsList>()
         .firstOrNull { fieldList -> fieldList.childrenOfType<Field>().firstOrNull{ it.name == "class" } != null }
         ?.childrenOfType<Field>()

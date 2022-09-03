@@ -107,6 +107,9 @@
 
     <extensions defaultExtensionNs="com.jetbrains.php">
         <typeProvider4 implementation="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassFactoryPropertyDefinitionTypeProvider"/>
+        <typeProvider4 implementation="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state.ClassFactoryPropertyStateTypeProvider"/>
+        <typeProvider4 implementation="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state.ClassFactoryPropertyStateMethodTypeProvider"/>
+        <typeProvider4 implementation="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.ClassFactoryPropertyMakeMethodTypeProvider"/>
     </extensions>
 
     <applicationListeners>
