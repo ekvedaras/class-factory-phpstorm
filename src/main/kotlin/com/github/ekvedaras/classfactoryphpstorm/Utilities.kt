@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
+import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.PhpIndex

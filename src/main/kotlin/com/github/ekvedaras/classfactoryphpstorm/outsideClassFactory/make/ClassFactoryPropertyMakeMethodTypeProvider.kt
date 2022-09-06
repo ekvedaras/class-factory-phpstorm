@@ -2,6 +2,7 @@ package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
@@ -45,7 +46,7 @@ class ClassFactoryPropertyMakeMethodTypeProvider : PhpTypeProvider4 {
         if (arrayHashElement.parent.parent.parent !is MethodReference) return null
 
         val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return null
-        if (! methodReference.isClassFactoryState()) return null
+        if (! methodReference.isClassFactoryMakeMethod()) return null
 
         val stateMethodReference = MakeMethodReference(methodReference)
 
