@@ -4,6 +4,7 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHash
 import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
+import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceProvider
@@ -14,6 +15,8 @@ import com.jetbrains.php.lang.psi.elements.Function
 
 class ClassPropertyReferenceProviderForAttributesArrayKeysInMakeMethod : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
+        if (DumbService.isDumb(element.project)) return PsiReference.EMPTY_ARRAY
+
         val attributesArray = element.parent.parent
 
         if (element.parent !is ArrayIndex) return PsiReference.EMPTY_ARRAY

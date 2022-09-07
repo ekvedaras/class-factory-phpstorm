@@ -7,8 +7,10 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFact
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
+import com.intellij.psi.PsiReference
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.*
@@ -20,6 +22,8 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod : PhpIns
         return object : PhpElementVisitor() {
             override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression?) {
                 if (expression == null) return
+
+                if (DumbService.isDumb(expression.project)) return
 
                 val attributesArray = expression.parent.parent
 

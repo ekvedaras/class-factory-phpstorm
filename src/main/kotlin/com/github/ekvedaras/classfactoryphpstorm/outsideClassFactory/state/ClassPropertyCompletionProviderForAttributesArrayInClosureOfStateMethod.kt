@@ -5,6 +5,7 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFact
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
 import com.intellij.codeInsight.completion.*
+import com.intellij.openapi.project.DumbService
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.*
@@ -16,6 +17,8 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfStateMethod : 
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
+        if (DumbService.isDumb(parameters.position.project)) return
+
         val key = parameters.position
         val attributesArray = key.parent.parent.parent
 

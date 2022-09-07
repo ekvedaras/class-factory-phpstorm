@@ -3,6 +3,10 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+### Fixed
+- Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
+
+## [1.1.0]
 ### Added
 - Complete properties for attributes array keys in closure states.
 - Resolve references for attributes array keys in closure states.

@@ -4,6 +4,7 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHash
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
+import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceProvider
@@ -13,6 +14,8 @@ import com.jetbrains.php.lang.psi.elements.*
 
 class ClassFactoryPropertyReferenceProviderForState : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
+        if (DumbService.isDumb(element.project)) return PsiReference.EMPTY_ARRAY
+
         val arrayHashElement = element.parent.parent
         if (arrayHashElement !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
         if (element.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY

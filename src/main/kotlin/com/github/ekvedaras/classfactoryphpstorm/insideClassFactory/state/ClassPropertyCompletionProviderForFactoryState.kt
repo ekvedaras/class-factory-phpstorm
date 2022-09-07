@@ -7,6 +7,7 @@ import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceIn
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.openapi.project.DumbService
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
@@ -19,6 +20,8 @@ class ClassPropertyCompletionProviderForFactoryState : CompletionProvider<Comple
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
+        if (DumbService.isDumb(parameters.position.project)) return
+
         val array = parameters.position.parent.parent.parent
 
         if (array !is ArrayHashElement && array !is ArrayCreationExpression) return

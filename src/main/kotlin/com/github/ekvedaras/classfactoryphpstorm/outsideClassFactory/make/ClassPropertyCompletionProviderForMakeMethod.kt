@@ -5,6 +5,7 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFact
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
 import com.intellij.codeInsight.completion.*
+import com.intellij.openapi.project.DumbService
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
@@ -17,6 +18,8 @@ class ClassPropertyCompletionProviderForMakeMethod : CompletionProvider<Completi
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
+        if (DumbService.isDumb(parameters.position.project)) return
+
         val array = parameters.position.parent.parent.parent
 
         if (array !is ArrayHashElement && array !is ArrayCreationExpression) return

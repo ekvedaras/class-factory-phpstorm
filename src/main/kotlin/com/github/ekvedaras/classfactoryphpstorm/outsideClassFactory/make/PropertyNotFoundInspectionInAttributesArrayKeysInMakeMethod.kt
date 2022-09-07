@@ -9,6 +9,7 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndC
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiReference
@@ -23,6 +24,8 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInMakeMethod : PhpInspectio
         return object : PhpElementVisitor() {
             override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression?) {
                 if (expression == null) return
+
+                if (DumbService.isDumb(expression.project)) return
 
                 val attributesArray = expression.parent.parent
 

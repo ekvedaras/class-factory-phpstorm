@@ -7,6 +7,7 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFact
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
@@ -22,6 +23,8 @@ class PropertyNotFoundInspectionInDefinitionMethod : PhpInspection() {
         return object : PhpElementVisitor() {
             override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression?) {
                 if (expression == null) return
+
+                if (DumbService.isDumb(expression.project)) return
 
                 val arrayHashElement = expression.parent.parent
                 if (arrayHashElement !is ArrayHashElement) return
