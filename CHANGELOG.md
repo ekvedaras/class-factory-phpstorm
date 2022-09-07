@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [1.1.1]
 ### Fixed
 - Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
 
