@@ -6,6 +6,7 @@
 ### Fixed
 - Complete attributes array keys when closure is passed directly to class factory method instead of as an array hash value.
 - Complete attributes array value when closure is passed directly to class factory method instead of as an array hash value.
+- Resolve references for attributes array keys when closure is passed directly to class factory method instead of as an array hash value.
 
 ## [1.1.1]
 ### Fixed

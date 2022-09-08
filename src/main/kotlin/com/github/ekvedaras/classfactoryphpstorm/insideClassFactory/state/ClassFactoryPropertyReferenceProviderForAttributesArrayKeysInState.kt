@@ -24,16 +24,22 @@ class ClassFactoryPropertyReferenceProviderForAttributesArrayKeysInState : PsiRe
         if (attributesArray.firstPsiChild !is Variable) return PsiReference.EMPTY_ARRAY
 
         val function = attributesArray.parentOfType<Function>() ?: return PsiReference.EMPTY_ARRAY
-        if (function.parent.parent.parent !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
         if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return PsiReference.EMPTY_ARRAY
 
-        val arrayHashElement = function.parent.parent.parent
+        if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
-        if (arrayHashElement !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
-        if (! function.parent.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY
-        if (arrayHashElement.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
+        val methodReference = if (function.parent.parent.parent is ArrayHashElement) {
+            val arrayHashElement = function.parent.parent.parent
 
-        val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY
+            if (arrayHashElement !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
+            if (! function.parent.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY
+            if (arrayHashElement.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
+
+            arrayHashElement.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY
+        } else {
+            function.parent.parent.parent as MethodReference
+        }
+
         if (! methodReference.isCurrentClassFactoryState()) return PsiReference.EMPTY_ARRAY
 
         val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
