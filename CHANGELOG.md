@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [1.1.2]
 ### Fixed
 - Complete attributes array keys when closure is passed directly to class factory method instead of as an array hash value.
 - Complete attributes array value when closure is passed directly to class factory method instead of as an array hash value.
