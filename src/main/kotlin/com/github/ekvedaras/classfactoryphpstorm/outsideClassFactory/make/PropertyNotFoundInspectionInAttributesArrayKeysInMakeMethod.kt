@@ -34,15 +34,22 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInMakeMethod : PhpInspectio
                 if (attributesArray.firstPsiChild !is Variable) return
 
                 val function = attributesArray.parentOfType<Function>() ?: return
-                if (function.parent.parent.parent !is ArrayHashElement) return
                 if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
 
-                val arrayHashElement = function.parent.parent.parent
-                if (arrayHashElement !is ArrayHashElement) return
-                if (! function.parent.isArrayHashValueOf(arrayHashElement)) return
-                if (arrayHashElement.parent.parent.parent !is MethodReference) return
+                if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return
 
-                val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return
+                val methodReference = if (function.parent.parent.parent is ArrayHashElement) {
+                    val arrayHashElement = function.parent.parent.parent
+
+                    if (arrayHashElement !is ArrayHashElement) return
+                    if (! function.parent.isArrayHashValueOf(arrayHashElement)) return
+                    if (arrayHashElement.parent.parent.parent !is MethodReference) return
+
+                    arrayHashElement.parentOfType<MethodReference>() ?: return
+                } else {
+                    function.parent.parent.parent as MethodReference
+                }
+
                 if (! methodReference.isClassFactoryMakeMethod()) return
 
                 val makeMethodReference = MakeMethodReference(methodReference)
