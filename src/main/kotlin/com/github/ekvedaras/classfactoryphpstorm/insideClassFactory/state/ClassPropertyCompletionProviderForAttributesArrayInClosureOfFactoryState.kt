@@ -33,7 +33,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryState :
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return
 
-        val methodReference = if (function.parent.parent is ArrayHashElement) {
+        val methodReference = if (function.parent.parent.parent is ArrayHashElement) {
             val array = function.parent.parent.parent
 
             if (array !is ArrayHashElement) return

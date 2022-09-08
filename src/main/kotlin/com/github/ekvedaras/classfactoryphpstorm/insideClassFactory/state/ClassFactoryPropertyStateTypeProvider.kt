@@ -32,16 +32,22 @@ class ClassFactoryPropertyStateTypeProvider : PhpTypeProvider4 {
         if (key !is StringLiteralExpression) return null
 
         val function = element.parentOfType<Function>() ?: return null
-        if (function.parent.parent.parent !is ArrayHashElement) return null
         if (function.parameters[0].name != (element.firstPsiChild as Variable).name) return null
 
-        val arrayHashElement = function.parent.parent.parent
+        if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return null
 
-        if (arrayHashElement !is ArrayHashElement) return null
-        if (! function.parent.isArrayHashValueOf(arrayHashElement)) return null
-        if (arrayHashElement.parent.parent.parent !is MethodReference) return null
+        val methodReference = if (function.parent.parent.parent is ArrayHashElement) {
+            val arrayHashElement = function.parent.parent.parent
 
-        val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return null
+            if (arrayHashElement !is ArrayHashElement) return null
+            if (! function.parent.isArrayHashValueOf(arrayHashElement)) return null
+            if (arrayHashElement.parent.parent.parent !is MethodReference) return null
+
+            arrayHashElement.parentOfType<MethodReference>() ?: return null
+        } else {
+            function.parent.parent.parent as MethodReference
+        }
+
         if (! methodReference.isCurrentClassFactoryState()) return null
 
         val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)

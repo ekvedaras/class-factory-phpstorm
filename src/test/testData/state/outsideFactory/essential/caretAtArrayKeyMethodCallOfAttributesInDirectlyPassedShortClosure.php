@@ -23,4 +23,4 @@ class AccountFactory extends ClassFactory {
     }
 }
 
-AccountFactory::new()->make(['age' => fn (array $attributes) => $attributes['id']-><caret>]);
+AccountFactory::new()->state(fn (array $attributes) => ['age' => $attributes['id']-><caret>]);

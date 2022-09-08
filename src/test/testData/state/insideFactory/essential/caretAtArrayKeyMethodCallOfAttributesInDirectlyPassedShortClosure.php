@@ -21,6 +21,9 @@ class AccountFactory extends ClassFactory {
             'age' => 1,
         ];
     }
-}
 
-AccountFactory::new()->state(['age' => fn (array $attributes) => $attributes['id']-><caret>]);
+    public function specialState(): static
+    {
+        return $this->state(fn (array $attributes) => ['age' => $attributes['id']-><caret>]);
+    }
+}

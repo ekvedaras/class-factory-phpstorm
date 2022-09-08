@@ -93,6 +93,14 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionContains("value")
     }
 
+    open fun testItCompletesObjectPropertiesForAttributesArrayInDirectlyPassedShortClosure()
+    {
+        myFixture.configureByFile("essential/caretAtArrayKeyMethodCallOfAttributesInDirectlyPassedShortClosure.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("value")
+    }
+
 //    These tests don't work due to a big in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
 //    See a workaround in build.gradle.kts
 
