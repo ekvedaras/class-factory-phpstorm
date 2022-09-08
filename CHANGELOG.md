@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 ### Fixed
+- Complete attributes array keys when closure is passed directly to class factory method instead of as an array hash value.
+
+## [1.1.1]
+### Fixed
 - Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
 
 ## [1.1.0]

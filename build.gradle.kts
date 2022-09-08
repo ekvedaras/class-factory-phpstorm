@@ -59,6 +59,11 @@ tasks {
         gradleVersion = properties("gradleVersion")
     }
 
+// Temporary workaround for bug in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
+//    test {
+//        systemProperty("java.system.class.loader", "com.intellij.util.lang.PathClassLoader")
+//    }
+
     patchPluginXml {
         version.set(properties("pluginVersion"))
         sinceBuild.set(properties("pluginSinceBuild"))

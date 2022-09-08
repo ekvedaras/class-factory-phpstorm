@@ -6,28 +6,28 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 
 internal abstract class EssentialTestCase : TestCase() {
     fun testItCompletesClassPropertiesInSimpleArray() {
-        myFixture.configureByFile("caretAtStringInSimpleArray.php")
+        myFixture.configureByFile("essential/caretAtStringInSimpleArray.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "age")
     }
 
     fun testItCompletesClassPropertiesInAssociativeArrayKey() {
-        myFixture.configureByFile("caretAtAssociativeArrayKey.php")
+        myFixture.configureByFile("essential/caretAtAssociativeArrayKey.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "age")
     }
 
     fun testItDoesNotCompleteClassPropertiesInAssociativeArrayValue() {
-        myFixture.configureByFile("caretAtAssociativeArrayValue.php")
+        myFixture.configureByFile("essential/caretAtAssociativeArrayValue.php")
         myFixture.completeBasic()
 
         assertTrue(myFixture.lookupElements?.isEmpty() ?: true)
     }
 
     fun testItCompletesPropertiesInOrderTheyAppearInConstructorAscending() {
-        myFixture.configureByFile("caretAtStringInSimpleArray.php")
+        myFixture.configureByFile("essential/caretAtStringInSimpleArray.php")
         myFixture.completeBasic()
 
         assertEquals("id", myFixture.lookupElementStrings?.first())
@@ -37,7 +37,7 @@ internal abstract class EssentialTestCase : TestCase() {
     }
 
     fun testItCompletesPropertiesInOrderTheyAppearInConstructorDescending() {
-        myFixture.configureByFile("caretAtStringInSimpleArrayButPropertiesSwapped.php")
+        myFixture.configureByFile("essential/caretAtStringInSimpleArrayButPropertiesSwapped.php")
         myFixture.completeBasic()
 
         assertEquals("age", myFixture.lookupElementStrings?.first())
@@ -47,7 +47,7 @@ internal abstract class EssentialTestCase : TestCase() {
     }
 
     fun testItExcludesPropertiesThatAreAlreadyDefined() {
-        myFixture.configureByFile("caretAtStringInNewValueWhenOnePropertyIsAlreadyDefined.php")
+        myFixture.configureByFile("essential/caretAtStringInNewValueWhenOnePropertyIsAlreadyDefined.php")
         myFixture.completeBasic()
 
         assertCompletionDoesNotContain("id")
@@ -55,7 +55,7 @@ internal abstract class EssentialTestCase : TestCase() {
     }
 
     fun testItCompletesNothingIfAllPropertiesAreAlreadyDefined() {
-        myFixture.configureByFile("caretAtStringInNewValueWhenAllPropertiesAreAlreadyDefined.php")
+        myFixture.configureByFile("essential/caretAtStringInNewValueWhenAllPropertiesAreAlreadyDefined.php")
         myFixture.completeBasic()
 
         assertTrue(myFixture.lookupElements?.isEmpty() ?: true)
@@ -63,7 +63,15 @@ internal abstract class EssentialTestCase : TestCase() {
 
     fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInClosure()
     {
-        myFixture.configureByFile("caretAtArrayKeyOfAttributesInClosure.php")
+        myFixture.configureByFile("essential/caretAtArrayKeyOfAttributesInClosure.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("id", "age")
+    }
+
+    open fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInDirectlyPassedClosure()
+    {
+        myFixture.configureByFile("essential/caretAtArrayKeyOfAttributesInDirectlyPassedClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "age")
@@ -71,7 +79,7 @@ internal abstract class EssentialTestCase : TestCase() {
 
     fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInShortClosure()
     {
-        myFixture.configureByFile("caretAtArrayKeyOfAttributesInShortClosure.php")
+        myFixture.configureByFile("essential/caretAtArrayKeyOfAttributesInShortClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "age")
@@ -79,13 +87,14 @@ internal abstract class EssentialTestCase : TestCase() {
 
     fun testItCompletesObjectPropertiesForAttributesArrayInShortClosure()
     {
-        myFixture.configureByFile("caretAtArrayKeyMethodCallOfAttributesInShortClosure.php")
+        myFixture.configureByFile("essential/caretAtArrayKeyMethodCallOfAttributesInShortClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("value")
     }
 
 //    These tests don't work due to a big in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
+//    See a workaround in build.gradle.kts
 
 //    fun testItReportsNotFoundProperties() {
 //        assertInspection("nonExistingProperty.php", PropertyNotFoundInspectionInDefinitionMethod())

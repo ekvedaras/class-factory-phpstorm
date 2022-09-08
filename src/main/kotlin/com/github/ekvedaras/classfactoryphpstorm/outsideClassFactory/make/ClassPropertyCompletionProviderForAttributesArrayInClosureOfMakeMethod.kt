@@ -32,15 +32,19 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfMakeMethod : C
         if (attributesArray.firstPsiChild !is Variable) return
 
         val function = attributesArray.parentOfType<Function>() ?: return
-        if (function.parent.parent.parent !is ArrayHashElement) return
         if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
 
-        val array = function.parent.parent.parent
+        val methodReference = if (function.parent.parent is ArrayHashElement) {
+            val array = function.parent.parent.parent
 
-        if (array !is ArrayHashElement) return
-        if (array.parent.parent.parent !is MethodReference) return
+            if (array !is ArrayHashElement) return
+            if (array.parent.parent.parent !is MethodReference) return
 
-        val methodReference = array.parentOfType<MethodReference>() ?: return
+            array.parentOfType<MethodReference>() ?: return
+        } else {
+            function.parent.parent.parent as MethodReference
+        }
+
         if (! methodReference.isClassFactoryMakeMethod()) return
 
         val makeMethodReference = MakeMethodReference(methodReference)
