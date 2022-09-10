@@ -1,6 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
+import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
+import com.intellij.usages.ReadWriteAccessUsageInfo2UsageAdapter
 import com.jetbrains.php.lang.inspections.PhpInspection
 
 internal abstract class EssentialTestCase : TestCase() {
@@ -112,7 +114,7 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionDoesNotContain("value")
     }
 
-//    These tests require a workaround in build.gradle.kts due to a bug in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
+    // These tests below require a workaround in build.gradle.kts due to a bug in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
 
     fun testItReportsNotFoundProperties() {
         assertInspection("essential/nonExistingProperty.php", propertyNotFoundInspection())
@@ -129,8 +131,16 @@ internal abstract class EssentialTestCase : TestCase() {
         )
     }
 
-//    fun testItResolvesReferencesInAssociativeArrayKeys() {
-//        val usages = myFixture.testFindUsagesUsingAction("filledDefinition.php")
-//        assertEquals(1, usages.size)
-//    }
+    fun testItResolvesReferencesInAssociativeArrayKeys() {
+        val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdInConstructorWithUsage.php")
+
+        assertEquals(1, usages.size)
+
+        val usage = usages.first() as ReadWriteAccessUsageInfo2UsageAdapter
+
+        assertEquals(ClassPropertyReference::class.java, usage.referenceClass)
+        assertTrue(usage.element?.textMatches("'id'") ?: false)
+        assertTrue(usage.element?.textRange?.startOffset == usage.navigationRange.startOffset - 1)
+        assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
+    }
 }
