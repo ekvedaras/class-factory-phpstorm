@@ -1,9 +1,13 @@
-package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state
+package com.github.ekvedaras.classfactoryphpstorm
 
-import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.entities.ClassFactoryMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
@@ -17,7 +21,7 @@ import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 
-class PropertyNotFoundInspectionInStateMethod : PhpInspection() {
+class PropertyNotFoundInspection : PhpInspection() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhpElementVisitor() {
             override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression?) {
@@ -31,10 +35,15 @@ class PropertyNotFoundInspectionInStateMethod : PhpInspection() {
                 if (arrayHashElement.parent.parent.parent !is MethodReference) return
 
                 val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return
-                if (!methodReference.isClassFactoryStateMethod()) return
 
-                val makeMethodReference = StateMethodReferenceOutsideFactory(methodReference)
-                val targetClass = makeMethodReference.classFactory.targetClass ?: return
+                val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
+                    methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+                    methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+                    methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                    else -> return
+                }
+
+                val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
 
                 if (targetClass.constructor?.getParameterByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(
