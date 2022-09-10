@@ -1,19 +1,12 @@
 package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
-import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
-import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiReference
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.*
@@ -44,7 +37,7 @@ class ClassFactoryPropertyMakeMethodTypeProvider : PhpTypeProvider4 {
             val arrayHashElement = function.parent.parent.parent
 
             if (arrayHashElement !is ArrayHashElement) return null
-            if (! function.parent.isArrayHashValueOf(arrayHashElement)) return null
+            if (!function.parent.isArrayHashValueOf(arrayHashElement)) return null
             if (arrayHashElement.parent.parent.parent !is MethodReference) return null
 
             arrayHashElement.parentOfType<MethodReference>() ?: return null
@@ -52,7 +45,7 @@ class ClassFactoryPropertyMakeMethodTypeProvider : PhpTypeProvider4 {
             function.parent.parent.parent as MethodReference
         }
 
-        if (! methodReference.isClassFactoryMakeMethod()) return null
+        if (!methodReference.isClassFactoryMakeMethod()) return null
 
         val stateMethodReference = MakeMethodReference(methodReference)
 

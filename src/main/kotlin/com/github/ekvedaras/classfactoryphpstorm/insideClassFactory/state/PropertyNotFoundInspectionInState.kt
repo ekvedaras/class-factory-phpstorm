@@ -31,7 +31,7 @@ class PropertyNotFoundInspectionInState : PhpInspection() {
                 if (arrayHashElement.parent.parent.parent !is MethodReference) return
 
                 val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return
-                if (! methodReference.isCurrentClassFactoryState()) return
+                if (!methodReference.isCurrentClassFactoryState()) return
 
                 val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
                 val targetClass = stateMethodReference.classFactory.targetClass ?: return

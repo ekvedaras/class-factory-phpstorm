@@ -32,7 +32,7 @@ class ClassFactoryPropertyReferenceProviderForAttributesArrayKeysInState : PsiRe
             val arrayHashElement = function.parent.parent.parent
 
             if (arrayHashElement !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
-            if (! function.parent.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY
+            if (!function.parent.isArrayHashValueOf(arrayHashElement)) return PsiReference.EMPTY_ARRAY
             if (arrayHashElement.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
             arrayHashElement.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY
@@ -40,7 +40,7 @@ class ClassFactoryPropertyReferenceProviderForAttributesArrayKeysInState : PsiRe
             function.parent.parent.parent as MethodReference
         }
 
-        if (! methodReference.isCurrentClassFactoryState()) return PsiReference.EMPTY_ARRAY
+        if (!methodReference.isCurrentClassFactoryState()) return PsiReference.EMPTY_ARRAY
 
         val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
         val targetClass = stateMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY

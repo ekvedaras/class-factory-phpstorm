@@ -6,7 +6,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.jetbrains.php.lang.psi.elements.Parameter
 
 class TargetClassConstructorParameter(val parameter: Parameter, private val targetClass: TargetClass) {
-    val lookup : LookupElement
+    val lookup: LookupElement
         get() = PrioritizedLookupElement.withPriority(
             LookupElementBuilder
                 .createWithIcon(parameter)

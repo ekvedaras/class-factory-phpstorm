@@ -3,8 +3,11 @@ package com.github.ekvedaras.classfactoryphpstorm
 import com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInDefinitionMethod
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
+import com.jetbrains.php.lang.inspections.PhpInspection
 
 internal abstract class EssentialTestCase : TestCase() {
+    abstract fun propertyNotFoundInspection(): PhpInspection
+
     fun testItCompletesClassPropertiesInSimpleArray() {
         myFixture.configureByFile("essential/caretAtStringInSimpleArray.php")
         myFixture.completeBasic()
@@ -117,12 +120,11 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionDoesNotContain("value")
     }
 
-//    These tests don't work due to a big in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
-//    See a workaround in build.gradle.kts
+//    These tests require a workaround in build.gradle.kts due to a bug in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
 
-//    fun testItReportsNotFoundProperties() {
-//        assertInspection("nonExistingProperty.php", PropertyNotFoundInspectionInDefinitionMethod())
-//    }
+    fun testItReportsNotFoundProperties() {
+        assertInspection("essential/nonExistingProperty.php", propertyNotFoundInspection())
+    }
 
 //    fun testItResolvesReferencesInAssociativeArrayKeys() {
 //        val usages = myFixture.testFindUsagesUsingAction("filledDefinition.php")

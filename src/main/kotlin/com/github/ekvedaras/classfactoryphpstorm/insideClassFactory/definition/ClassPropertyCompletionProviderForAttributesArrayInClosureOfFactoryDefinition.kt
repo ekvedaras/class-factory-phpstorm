@@ -11,7 +11,8 @@ import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.Function
 
-class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryDefinition : CompletionProvider<CompletionParameters>() {
+class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryDefinition :
+    CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
@@ -36,7 +37,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryDefinit
         if (arrayHashElement.parent.parent !is PhpReturn) return
 
         val method = arrayHashElement.parentOfType<Method>() ?: return
-        if (! method.isClassFactoryDefinition()) return
+        if (!method.isClassFactoryDefinition()) return
 
         val definitionMethod = DefinitionMethod(method)
         val targetClass = definitionMethod.classFactory.targetClass ?: return

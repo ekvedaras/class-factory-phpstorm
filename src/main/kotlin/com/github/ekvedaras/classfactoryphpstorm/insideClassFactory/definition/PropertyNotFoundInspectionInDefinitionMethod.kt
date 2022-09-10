@@ -1,10 +1,10 @@
 package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
-import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
@@ -32,7 +32,7 @@ class PropertyNotFoundInspectionInDefinitionMethod : PhpInspection() {
                 if (arrayHashElement.parent.parent !is PhpReturn) return
 
                 val method = arrayHashElement.parentOfType<Method>() ?: return
-                if (! method.isClassFactoryDefinition()) return
+                if (!method.isClassFactoryDefinition()) return
 
                 val definitionMethod = DefinitionMethod(method)
                 val targetClass = definitionMethod.classFactory.targetClass ?: return

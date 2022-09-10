@@ -3,16 +3,13 @@ package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryStateMethod
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiReference
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
@@ -34,7 +31,7 @@ class PropertyNotFoundInspectionInStateMethod : PhpInspection() {
                 if (arrayHashElement.parent.parent.parent !is MethodReference) return
 
                 val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return
-                if (! methodReference.isClassFactoryStateMethod()) return
+                if (!methodReference.isClassFactoryStateMethod()) return
 
                 val makeMethodReference = StateMethodReferenceOutsideFactory(methodReference)
                 val targetClass = makeMethodReference.classFactory.targetClass ?: return

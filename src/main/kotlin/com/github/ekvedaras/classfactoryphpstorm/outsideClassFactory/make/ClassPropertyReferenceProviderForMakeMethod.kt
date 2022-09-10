@@ -1,9 +1,9 @@
 package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
@@ -24,7 +24,7 @@ class ClassPropertyReferenceProviderForMakeMethod : PsiReferenceProvider() {
         if (arrayHashElement.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
         val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY
-        if (! methodReference.isClassFactoryMakeMethod()) return PsiReference.EMPTY_ARRAY
+        if (!methodReference.isClassFactoryMakeMethod()) return PsiReference.EMPTY_ARRAY
 
         val makeMethodReference = MakeMethodReference(methodReference)
         val targetClass = makeMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY

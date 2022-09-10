@@ -12,8 +12,11 @@ class MakeMethodReference(private val methodReference: MethodReference) {
     val classFactory: ClassFactory
 
     init {
-        if (! methodReference.isClassFactoryMakeMethod()) throw Exception("Given PSI method reference is not to ClassFactory make method.")
-        classFactory = ClassFactory(methodReference.getActualClassReference()?.getClass() ?: throw Exception("Failed to load ClassFactory from make method reference"))
+        if (!methodReference.isClassFactoryMakeMethod()) throw Exception("Given PSI method reference is not to ClassFactory make method.")
+        classFactory = ClassFactory(
+            methodReference.getActualClassReference()?.getClass()
+                ?: throw Exception("Failed to load ClassFactory from make method reference")
+        )
     }
 
     val definedProperties: List<ArrayHashElement>

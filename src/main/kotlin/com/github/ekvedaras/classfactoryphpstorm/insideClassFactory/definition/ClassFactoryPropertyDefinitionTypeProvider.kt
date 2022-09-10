@@ -35,12 +35,12 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
         val arrayHashElement = function.parent.parent.parent
 
         if (arrayHashElement !is ArrayHashElement) return null
-        if (! function.parent.isArrayHashValueOf(arrayHashElement)) return null
+        if (!function.parent.isArrayHashValueOf(arrayHashElement)) return null
 
         if (arrayHashElement.parent.parent !is PhpReturn) return null
 
         val method = arrayHashElement.parentOfType<Method>() ?: return null
-        if (! method.isClassFactoryDefinition()) return null
+        if (!method.isClassFactoryDefinition()) return null
 
         val definitionMethod = DefinitionMethod(method)
         val propertyDefinition = definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup()) ?: return null

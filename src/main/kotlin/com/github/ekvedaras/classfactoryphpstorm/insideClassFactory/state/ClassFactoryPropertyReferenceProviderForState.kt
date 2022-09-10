@@ -10,7 +10,9 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceProvider
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.ArrayHashElement
+import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
 class ClassFactoryPropertyReferenceProviderForState : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
@@ -22,7 +24,7 @@ class ClassFactoryPropertyReferenceProviderForState : PsiReferenceProvider() {
         if (arrayHashElement.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
         val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY
-        if (! methodReference.isCurrentClassFactoryState()) return PsiReference.EMPTY_ARRAY
+        if (!methodReference.isCurrentClassFactoryState()) return PsiReference.EMPTY_ARRAY
 
         val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
         val targetClass = stateMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY

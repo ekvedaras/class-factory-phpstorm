@@ -4,7 +4,9 @@ import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHash
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
-import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
@@ -28,7 +30,7 @@ class ClassPropertyCompletionProviderForStateMethod : CompletionProvider<Complet
         if (array is ArrayCreationExpression && array.parent.parent !is MethodReference) return
 
         val methodReference = array.parentOfType<MethodReference>() ?: return
-        if (! methodReference.isClassFactoryStateMethod()) return
+        if (!methodReference.isClassFactoryStateMethod()) return
 
         val makeMethodReference = StateMethodReferenceOutsideFactory(methodReference)
         val targetClass = makeMethodReference.classFactory.targetClass ?: return
@@ -39,9 +41,11 @@ class ClassPropertyCompletionProviderForStateMethod : CompletionProvider<Complet
             targetClass
                 .constructor
                 ?.parameters
-                ?.filterNot { alreadyDefinedProperties.find { definedProperty ->
-                    it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
-                } != null }
+                ?.filterNot {
+                    alreadyDefinedProperties.find { definedProperty ->
+                        it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
+                    } != null
+                }
                 ?.map { it.lookup } ?: return
         )
 

@@ -30,7 +30,7 @@ class ClassPropertyCompletionProviderForFactoryState : CompletionProvider<Comple
         if (array is ArrayCreationExpression && array.parent.parent !is MethodReference) return
 
         val methodReference = array.parentOfType<MethodReference>() ?: return
-        if (! methodReference.isCurrentClassFactoryState()) return
+        if (!methodReference.isCurrentClassFactoryState()) return
 
         val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
         val targetClass = stateMethodReference.classFactory.targetClass ?: return
@@ -41,9 +41,11 @@ class ClassPropertyCompletionProviderForFactoryState : CompletionProvider<Comple
             targetClass
                 .constructor
                 ?.parameters
-                ?.filterNot { alreadyDefinedProperties.find { definedProperty ->
-                    it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
-                } != null }
+                ?.filterNot {
+                    alreadyDefinedProperties.find { definedProperty ->
+                        it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
+                    } != null
+                }
                 ?.map { it.lookup } ?: return
         )
 

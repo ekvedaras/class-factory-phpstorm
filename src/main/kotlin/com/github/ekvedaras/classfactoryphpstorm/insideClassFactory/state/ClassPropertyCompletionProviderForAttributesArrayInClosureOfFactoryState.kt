@@ -1,8 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state
 
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
@@ -13,7 +11,8 @@ import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.Function
 
-class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryState : CompletionProvider<CompletionParameters>() {
+class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryState :
+    CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
@@ -44,7 +43,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryState :
             function.parent.parent.parent as MethodReference
         }
 
-        if (! methodReference.isCurrentClassFactoryState()) return
+        if (!methodReference.isCurrentClassFactoryState()) return
 
         val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
         val targetClass = stateMethodReference.classFactory.targetClass ?: return

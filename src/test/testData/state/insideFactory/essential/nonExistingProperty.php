@@ -14,7 +14,14 @@ class AccountFactory extends ClassFactory {
     {
         return [
             'id' => 'abc',
-            '<error desc="Property ages not found on class Account">ages</error>' => 1,
+            'age' => 1,
         ];
+    }
+
+    public function specialState(): static
+    {
+        return $this->state([
+            '<warning descr="Cannot resolve argument 'ages' of 'Account' class constructor">ages</warning>' => 1,
+        ]);
     }
 }

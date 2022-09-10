@@ -31,7 +31,7 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
         if (array is ArrayCreationExpression && array.parent !is PhpReturn) return
 
         val method = array.parentOfType<Method>() ?: return
-        if (! method.isClassFactoryDefinition()) return
+        if (!method.isClassFactoryDefinition()) return
 
         val definitionMethod = DefinitionMethod(method)
         val targetClass = definitionMethod.classFactory.targetClass ?: return
@@ -42,9 +42,11 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
             targetClass
                 .constructor
                 ?.parameters
-                ?.filterNot { alreadyDefinedProperties.find { definedProperty ->
-                    it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
-                } != null }
+                ?.filterNot {
+                    alreadyDefinedProperties.find { definedProperty ->
+                        it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
+                    } != null
+                }
                 ?.map { it.lookup } ?: return
         )
 

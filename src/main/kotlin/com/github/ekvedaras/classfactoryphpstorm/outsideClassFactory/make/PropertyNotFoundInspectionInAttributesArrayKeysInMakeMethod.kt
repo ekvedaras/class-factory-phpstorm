@@ -1,9 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
-import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
@@ -12,7 +10,6 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiReference
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.*
@@ -42,7 +39,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInMakeMethod : PhpInspectio
                     val arrayHashElement = function.parent.parent.parent
 
                     if (arrayHashElement !is ArrayHashElement) return
-                    if (! function.parent.isArrayHashValueOf(arrayHashElement)) return
+                    if (!function.parent.isArrayHashValueOf(arrayHashElement)) return
                     if (arrayHashElement.parent.parent.parent !is MethodReference) return
 
                     arrayHashElement.parentOfType<MethodReference>() ?: return
@@ -50,7 +47,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInMakeMethod : PhpInspectio
                     function.parent.parent.parent as MethodReference
                 }
 
-                if (! methodReference.isClassFactoryMakeMethod()) return
+                if (!methodReference.isClassFactoryMakeMethod()) return
 
                 val makeMethodReference = MakeMethodReference(methodReference)
                 val targetClass = makeMethodReference.classFactory.targetClass ?: return

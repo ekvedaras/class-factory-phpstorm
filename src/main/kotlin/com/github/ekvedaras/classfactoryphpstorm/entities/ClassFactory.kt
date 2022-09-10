@@ -7,7 +7,7 @@ import com.jetbrains.php.lang.psi.elements.*
 
 class ClassFactory(private val clazz: PhpClass) {
     init {
-        if (! clazz.isClassFactory()) throw Exception("Given PSI class must be an instance of ClassFactory")
+        if (!clazz.isClassFactory()) throw Exception("Given PSI class must be an instance of ClassFactory")
     }
 
     val targetClass: TargetClass?
@@ -21,7 +21,7 @@ class ClassFactory(private val clazz: PhpClass) {
         }
 
     private fun getClassField() = clazz.childrenOfType<PhpClassFieldsList>()
-        .firstOrNull { fieldList -> fieldList.childrenOfType<Field>().firstOrNull{ it.name == "class" } != null }
+        .firstOrNull { fieldList -> fieldList.childrenOfType<Field>().firstOrNull { it.name == "class" } != null }
         ?.childrenOfType<Field>()
         ?.firstOrNull { it.name == "class" }
 

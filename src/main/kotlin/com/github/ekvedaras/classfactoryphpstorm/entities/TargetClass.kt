@@ -3,7 +3,7 @@ package com.github.ekvedaras.classfactoryphpstorm.entities
 import com.jetbrains.php.lang.psi.elements.PhpClass
 
 class TargetClass(private val clazz: PhpClass) {
-    val constructor : TargetClassConstructor?
+    val constructor: TargetClassConstructor?
         get() {
             return TargetClassConstructor(clazz.constructor ?: return null, this)
         }

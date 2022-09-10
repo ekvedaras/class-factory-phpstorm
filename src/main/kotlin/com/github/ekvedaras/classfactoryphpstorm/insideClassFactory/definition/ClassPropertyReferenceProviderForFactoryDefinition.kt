@@ -1,9 +1,9 @@
 package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
+import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
@@ -25,7 +25,7 @@ class ClassPropertyReferenceProviderForFactoryDefinition : PsiReferenceProvider(
         if (arrayHashElement.parent.parent !is PhpReturn) return PsiReference.EMPTY_ARRAY
 
         val method = arrayHashElement.parentOfType<Method>() ?: return PsiReference.EMPTY_ARRAY
-        if (! method.isClassFactoryDefinition()) return PsiReference.EMPTY_ARRAY
+        if (!method.isClassFactoryDefinition()) return PsiReference.EMPTY_ARRAY
 
         val definitionMethod = DefinitionMethod(method)
         val targetClass = definitionMethod.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY

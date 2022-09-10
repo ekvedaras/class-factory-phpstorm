@@ -1,22 +1,18 @@
 package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make
 
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
-import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
-import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
-import com.jetbrains.php.lang.psi.elements.ArrayHashElement
-import com.jetbrains.php.lang.psi.elements.ArrayIndex
+import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.Function
-import com.jetbrains.php.lang.psi.elements.MethodReference
-import com.jetbrains.php.lang.psi.elements.Variable
 
-class ClassPropertyCompletionProviderForAttributesArrayInClosureOfMakeMethod : CompletionProvider<CompletionParameters>() {
+class ClassPropertyCompletionProviderForAttributesArrayInClosureOfMakeMethod :
+    CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
@@ -47,7 +43,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfMakeMethod : C
             function.parent.parent.parent as MethodReference
         }
 
-        if (! methodReference.isClassFactoryMakeMethod()) return
+        if (!methodReference.isClassFactoryMakeMethod()) return
 
         val makeMethodReference = MakeMethodReference(methodReference)
         val targetClass = makeMethodReference.classFactory.targetClass ?: return

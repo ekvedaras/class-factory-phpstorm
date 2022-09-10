@@ -1,15 +1,12 @@
 package com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isCurrentClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.entities.DefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiReference
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.*
@@ -40,7 +37,7 @@ class ClassFactoryPropertyStateTypeProvider : PhpTypeProvider4 {
             val arrayHashElement = function.parent.parent.parent
 
             if (arrayHashElement !is ArrayHashElement) return null
-            if (! function.parent.isArrayHashValueOf(arrayHashElement)) return null
+            if (!function.parent.isArrayHashValueOf(arrayHashElement)) return null
             if (arrayHashElement.parent.parent.parent !is MethodReference) return null
 
             arrayHashElement.parentOfType<MethodReference>() ?: return null
@@ -48,7 +45,7 @@ class ClassFactoryPropertyStateTypeProvider : PhpTypeProvider4 {
             function.parent.parent.parent as MethodReference
         }
 
-        if (! methodReference.isCurrentClassFactoryState()) return null
+        if (!methodReference.isCurrentClassFactoryState()) return null
 
         val stateMethodReference = StateMethodReferenceInsideFactory(methodReference)
 

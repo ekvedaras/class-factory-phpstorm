@@ -12,8 +12,11 @@ class StateMethodReferenceOutsideFactory(private val methodReference: MethodRefe
     val classFactory: ClassFactory
 
     init {
-        if (! methodReference.isClassFactoryStateMethod()) throw Exception("Given PSI method reference is not to ClassFactory state method outside factory.")
-        classFactory = ClassFactory(methodReference.getActualClassReference()?.getClass() ?: throw Exception("Failed to load ClassFactory from state method reference"))
+        if (!methodReference.isClassFactoryStateMethod()) throw Exception("Given PSI method reference is not to ClassFactory state method outside factory.")
+        classFactory = ClassFactory(
+            methodReference.getActualClassReference()?.getClass()
+                ?: throw Exception("Failed to load ClassFactory from state method reference")
+        )
     }
 
     val definedProperties: List<ArrayHashElement>
