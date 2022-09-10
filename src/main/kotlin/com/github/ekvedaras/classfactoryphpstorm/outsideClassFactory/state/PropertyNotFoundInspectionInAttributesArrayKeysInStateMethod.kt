@@ -12,8 +12,13 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
+import com.jetbrains.php.lang.psi.elements.ArrayHashElement
+import com.jetbrains.php.lang.psi.elements.ArrayIndex
 import com.jetbrains.php.lang.psi.elements.Function
+import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
+import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 
 class PropertyNotFoundInspectionInAttributesArrayKeysInStateMethod : PhpInspection() {
@@ -42,7 +47,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInStateMethod : PhpInspecti
                     if (!function.parent.isArrayHashValueOf(arrayHashElement)) return
                     if (arrayHashElement.parent.parent.parent !is MethodReference) return
 
-                    arrayHashElement.parentOfType<MethodReference>() ?: return
+                    arrayHashElement.parentOfType() ?: return
                 } else {
                     function.parent.parent.parent as MethodReference
                 }

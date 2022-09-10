@@ -3,7 +3,11 @@ package com.github.ekvedaras.classfactoryphpstorm.entities
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactory
 import com.intellij.psi.util.childrenOfType
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.ClassConstantReference
+import com.jetbrains.php.lang.psi.elements.ClassReference
+import com.jetbrains.php.lang.psi.elements.Field
+import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.PhpClassFieldsList
 
 class ClassFactory(private val clazz: PhpClass) {
     init {

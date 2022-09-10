@@ -1,12 +1,11 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
-import com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInDefinitionMethod
-import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.jetbrains.php.lang.inspections.PhpInspection
 
 internal abstract class EssentialTestCase : TestCase() {
     abstract fun propertyNotFoundInspection(): PhpInspection
+    abstract fun propertyNotFoundInAttributesArrayInspection(): PhpInspection
 
     fun testItCompletesClassPropertiesInSimpleArray() {
         myFixture.configureByFile("essential/caretAtStringInSimpleArray.php")
@@ -64,56 +63,49 @@ internal abstract class EssentialTestCase : TestCase() {
         assertTrue(myFixture.lookupElements?.isEmpty() ?: true)
     }
 
-    fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInClosure()
-    {
+    fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInClosure() {
         myFixture.configureByFile("essential/caretAtArrayKeyOfAttributesInClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "age")
     }
 
-    open fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInDirectlyPassedClosure()
-    {
+    open fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInDirectlyPassedClosure() {
         myFixture.configureByFile("essential/caretAtArrayKeyOfAttributesInDirectlyPassedClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "age")
     }
 
-    fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInShortClosure()
-    {
+    fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInShortClosure() {
         myFixture.configureByFile("essential/caretAtArrayKeyOfAttributesInShortClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "age")
     }
 
-    fun testItCompletesObjectPropertiesForAttributesArrayInShortClosure()
-    {
+    fun testItCompletesObjectPropertiesForAttributesArrayInShortClosure() {
         myFixture.configureByFile("essential/caretAtArrayKeyMethodCallOfAttributesInShortClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("value")
     }
 
-    open fun testItCompletesObjectPropertiesForAttributesArrayInDirectlyPassedShortClosure()
-    {
+    open fun testItCompletesObjectPropertiesForAttributesArrayInDirectlyPassedShortClosure() {
         myFixture.configureByFile("essential/caretAtArrayKeyMethodCallOfAttributesInDirectlyPassedShortClosure.php")
         myFixture.completeBasic()
 
         assertCompletionContains("value")
     }
 
-    fun testItDoesNotCompleteAndDoesNotCrashWhenClosureHasNoParameters()
-    {
+    fun testItDoesNotCompleteAndDoesNotCrashWhenClosureHasNoParameters() {
         myFixture.configureByFile("essential/caretAtArrayKeyInClosureWithoutParameters.php")
         myFixture.completeBasic()
 
         assertCompletionDoesNotContain("id", "age")
     }
 
-    fun testItDoesNotCompleteAndDoesNotCrashWhileResolveTypeWhenShortClosureHasNoParameters()
-    {
+    fun testItDoesNotCompleteAndDoesNotCrashWhileResolveTypeWhenShortClosureHasNoParameters() {
         myFixture.configureByFile("essential/caretAtArrayKeyMethodCallInShortClosureWithoutParameters.php")
         myFixture.completeBasic()
 
@@ -124,6 +116,17 @@ internal abstract class EssentialTestCase : TestCase() {
 
     fun testItReportsNotFoundProperties() {
         assertInspection("essential/nonExistingProperty.php", propertyNotFoundInspection())
+    }
+
+    fun testItReportsNotFoundPropertiesInAttributesArray() {
+        myFixture.configureByFile("essential/nonExistingPropertyInAttributesArray.php")
+        myFixture.elementAtCaret
+        // The above is needed otherwise, PhpCache is empty for \AccountFactory 🤷‍♂️
+
+        assertInspection(
+            "essential/nonExistingPropertyInAttributesArray.php",
+            propertyNotFoundInAttributesArrayInspection()
+        )
     }
 
 //    fun testItResolvesReferencesInAssociativeArrayKeys() {
