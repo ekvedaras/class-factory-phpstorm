@@ -1,8 +1,13 @@
-package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state
+package com.github.ekvedaras.classfactoryphpstorm
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.entities.ClassFactoryMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
@@ -21,9 +26,9 @@ import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
-class ClassFactoryPropertyStateMethodTypeProvider : PhpTypeProvider4 {
+class AttributesArrayValueTypeProvider : PhpTypeProvider4 {
     override fun getKey(): Char {
-        return '\u0312'
+        return '\u0311'
     }
 
     override fun getType(element: PsiElement): PhpType? {
@@ -47,16 +52,19 @@ class ClassFactoryPropertyStateMethodTypeProvider : PhpTypeProvider4 {
             if (!function.parent.isArrayHashValueOf(arrayHashElement)) return null
             if (arrayHashElement.parent.parent.parent !is MethodReference) return null
 
-            arrayHashElement.parentOfType<MethodReference>() ?: return null
+            arrayHashElement.parentOfType() ?: return null
         } else {
             function.parent.parent.parent as MethodReference
         }
 
-        if (!methodReference.isClassFactoryStateMethod()) return null
+        val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
+            methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+            methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+            methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+            else -> return null
+        }
 
-        val stateMethodReference = StateMethodReferenceOutsideFactory(methodReference)
-
-        val definitionMethod = stateMethodReference.classFactory.definitionMethod ?: return null
+        val definitionMethod = classFactoryMethodReference.classFactory.definitionMethod ?: return null
         val propertyDefinition = definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup()) ?: return null
 
         if (propertyDefinition.value?.firstPsiChild !is PhpTypedElement) return null

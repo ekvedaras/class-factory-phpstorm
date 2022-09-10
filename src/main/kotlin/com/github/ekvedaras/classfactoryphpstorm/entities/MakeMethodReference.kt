@@ -8,8 +8,8 @@ import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.MethodReference
 
-class MakeMethodReference(private val methodReference: MethodReference) {
-    val classFactory: ClassFactory
+class MakeMethodReference(private val methodReference: MethodReference) : ClassFactoryMethodReference {
+    override val classFactory: ClassFactory
 
     init {
         if (!methodReference.isClassFactoryMakeMethod()) throw Exception("Given PSI method reference is not to ClassFactory make method.")
@@ -19,7 +19,7 @@ class MakeMethodReference(private val methodReference: MethodReference) {
         )
     }
 
-    val definedProperties: List<ArrayHashElement>
+    override val definedProperties: List<ArrayHashElement>
         get() {
             var properties = arrayOf<ArrayHashElement>()
 

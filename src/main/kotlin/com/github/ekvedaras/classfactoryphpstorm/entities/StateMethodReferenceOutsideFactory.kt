@@ -8,8 +8,8 @@ import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.MethodReference
 
-class StateMethodReferenceOutsideFactory(private val methodReference: MethodReference) {
-    val classFactory: ClassFactory
+class StateMethodReferenceOutsideFactory(private val methodReference: MethodReference) : ClassFactoryMethodReference {
+    override val classFactory: ClassFactory
 
     init {
         if (!methodReference.isClassFactoryStateMethod()) throw Exception("Given PSI method reference is not to ClassFactory state method outside factory.")
@@ -19,7 +19,7 @@ class StateMethodReferenceOutsideFactory(private val methodReference: MethodRefe
         )
     }
 
-    val definedProperties: List<ArrayHashElement>
+    override val definedProperties: List<ArrayHashElement>
         get() {
             var properties = arrayOf<ArrayHashElement>()
 

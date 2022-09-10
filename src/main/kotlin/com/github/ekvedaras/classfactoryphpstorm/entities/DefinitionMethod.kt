@@ -9,8 +9,8 @@ import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 
-class DefinitionMethod(private val method: Method) {
-    val classFactory: ClassFactory
+class DefinitionMethod(private val method: Method) : ClassFactoryMethodReference {
+    override val classFactory: ClassFactory
 
     init {
         if (!method.isClassFactoryDefinition()) throw Exception("Given PSI method is not a ClassFactory definition method.")
@@ -19,7 +19,7 @@ class DefinitionMethod(private val method: Method) {
         )
     }
 
-    val definedProperties: List<ArrayHashElement>
+    override val definedProperties: List<ArrayHashElement>
         get() {
             var properties = arrayOf<ArrayHashElement>()
 
