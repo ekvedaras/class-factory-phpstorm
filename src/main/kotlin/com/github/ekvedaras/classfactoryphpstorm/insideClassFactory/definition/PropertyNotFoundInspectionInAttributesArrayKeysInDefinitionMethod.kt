@@ -33,7 +33,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod : PhpIns
 
                 val function = attributesArray.parentOfType<Function>() ?: return
                 if (function.parent.parent.parent !is ArrayHashElement) return
-                if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
+                if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
 
                 val arrayHashElement = function.parent.parent.parent
 

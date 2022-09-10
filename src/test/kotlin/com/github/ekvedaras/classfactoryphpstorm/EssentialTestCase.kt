@@ -101,6 +101,22 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionContains("value")
     }
 
+    fun testItDoesNotCompleteAndDoesNotCrashWhenClosureHasNoParameters()
+    {
+        myFixture.configureByFile("essential/caretAtArrayKeyInClosureWithoutParameters.php")
+        myFixture.completeBasic()
+
+        assertCompletionDoesNotContain("id", "age")
+    }
+
+    fun testItDoesNotCompleteAndDoesNotCrashWhileResolveTypeWhenShortClosureHasNoParameters()
+    {
+        myFixture.configureByFile("essential/caretAtArrayKeyMethodCallInShortClosureWithoutParameters.php")
+        myFixture.completeBasic()
+
+        assertCompletionDoesNotContain("value")
+    }
+
 //    These tests don't work due to a big in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
 //    See a workaround in build.gradle.kts
 

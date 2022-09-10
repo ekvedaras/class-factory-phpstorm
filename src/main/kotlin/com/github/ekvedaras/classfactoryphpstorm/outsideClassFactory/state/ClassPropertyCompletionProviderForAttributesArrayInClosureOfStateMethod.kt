@@ -27,7 +27,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfStateMethod : 
         if (attributesArray.firstPsiChild !is Variable) return
 
         val function = attributesArray.parentOfType<Function>() ?: return
-        if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
+        if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return
 

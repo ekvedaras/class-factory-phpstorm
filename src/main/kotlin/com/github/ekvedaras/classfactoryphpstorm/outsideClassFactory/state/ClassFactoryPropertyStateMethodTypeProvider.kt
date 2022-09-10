@@ -35,7 +35,7 @@ class ClassFactoryPropertyStateMethodTypeProvider : PhpTypeProvider4 {
         if (key !is StringLiteralExpression) return null
 
         val function = element.parentOfType<Function>() ?: return null
-        if (function.parameters[0].name != (element.firstPsiChild as Variable).name) return null
+        if (function.parameters.isEmpty() || function.parameters[0].name != (element.firstPsiChild as Variable).name) return null
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return null
 

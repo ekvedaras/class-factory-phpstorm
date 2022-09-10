@@ -30,7 +30,7 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
 
         val function = element.parentOfType<Function>() ?: return null
         if (function.parent.parent.parent !is ArrayHashElement) return null
-        if (function.parameters[0].name != (element.firstPsiChild as Variable).name) return null
+        if (function.parameters.isEmpty() || function.parameters[0].name != (element.firstPsiChild as Variable).name) return null
 
         val arrayHashElement = function.parent.parent.parent
 

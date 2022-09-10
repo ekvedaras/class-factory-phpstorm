@@ -25,7 +25,7 @@ class ClassPropertyReferenceProviderForAttributesArrayKeysInFactoryDefinition : 
 
         val function = attributesArray.parentOfType<Function>() ?: return PsiReference.EMPTY_ARRAY
         if (function.parent.parent.parent !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
-        if (function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return PsiReference.EMPTY_ARRAY
+        if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return PsiReference.EMPTY_ARRAY
 
         val arrayHashElement = function.parent.parent.parent
 
