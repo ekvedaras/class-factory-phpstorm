@@ -10,24 +10,18 @@
     <extensions defaultExtensionNs="com.intellij">
         <psi.referenceContributor language="PHP"
                                   implementation="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassPropertyReferenceContributorForFactoryDefinition"/>
+        <psi.referenceContributor language="PHP"
+                                  implementation="com.github.ekvedaras.classfactoryphpstorm.ClassPropertyReferenceContributor"/>
+
         <completion.contributor language="PHP"
                                 implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassPropertyCompletionContributorForFactoryDefinition"
                                 order="first"/>
-
-        <psi.referenceContributor language="PHP"
-                                  implementation="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state.ClassFactoryPropertyReferenceContributorForState"/>
         <completion.contributor language="PHP"
                                 implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state.ClassPropertyCompletionContributorForFactoryState"
                                 order="first"/>
-
-        <psi.referenceContributor language="PHP"
-                                  implementation="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.ClassPropertyReferenceContributorForMakeMethod"/>
         <completion.contributor language="PHP"
                                 implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.ClassPropertyCompletionContributorForMakeMethod"
                                 order="first"/>
-
-        <psi.referenceContributor language="PHP"
-                                  implementation="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state.ClassPropertyReferenceContributorForStateMethod"/>
         <completion.contributor language="PHP"
                                 implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state.ClassPropertyCompletionContributorForStateMethod"
                                 order="first"/>
@@ -40,7 +34,6 @@
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInDefinitionMethod"/>
-
         <localInspection language="PHP"
                          groupPath="PHP"
                          groupKey="name"
@@ -58,7 +51,6 @@
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod"/>
-
         <localInspection language="PHP"
                          groupPath="PHP"
                          groupKey="name"

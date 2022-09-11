@@ -1,7 +1,12 @@
-package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state
+package com.github.ekvedaras.classfactoryphpstorm
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryStateMethod
+import com.github.ekvedaras.classfactoryphpstorm.entities.ClassFactoryMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
 import com.intellij.openapi.project.DumbService
@@ -14,7 +19,7 @@ import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
-class ClassPropertyReferenceProviderForStateMethod : PsiReferenceProvider() {
+class ClassPropertyReferenceProvider : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
         if (DumbService.isDumb(element.project)) return PsiReference.EMPTY_ARRAY
 
@@ -24,10 +29,15 @@ class ClassPropertyReferenceProviderForStateMethod : PsiReferenceProvider() {
         if (arrayHashElement.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
         val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return PsiReference.EMPTY_ARRAY
-        if (!methodReference.isClassFactoryStateMethod()) return PsiReference.EMPTY_ARRAY
 
-        val makeMethodReference = StateMethodReferenceOutsideFactory(methodReference)
-        val targetClass = makeMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY
+        val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
+            methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+            methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+            methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+            else -> return PsiReference.EMPTY_ARRAY
+        }
+
+        val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY
 
         return arrayOf(ClassPropertyReference(element as StringLiteralExpression, targetClass))
     }
