@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [1.1.3]
 ### Fixed
 - Do not crash when closure has no parameters (#5)
 
