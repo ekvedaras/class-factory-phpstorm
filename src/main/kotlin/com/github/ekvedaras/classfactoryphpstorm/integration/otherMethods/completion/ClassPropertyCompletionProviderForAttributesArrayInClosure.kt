@@ -61,8 +61,6 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosure :
 
         val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
 
-        val alreadyDefinedProperties = classFactoryMethodReference.definedProperties
-
         result.addAllElements(
             targetClass
                 .constructor
