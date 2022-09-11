@@ -17,13 +17,7 @@
                                 implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassPropertyCompletionContributorForFactoryDefinition"
                                 order="first"/>
         <completion.contributor language="PHP"
-                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.state.ClassPropertyCompletionContributorForFactoryState"
-                                order="first"/>
-        <completion.contributor language="PHP"
-                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make.ClassPropertyCompletionContributorForMakeMethod"
-                                order="first"/>
-        <completion.contributor language="PHP"
-                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.state.ClassPropertyCompletionContributorForStateMethod"
+                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.ClassPropertyCompletionContributor"
                                 order="first"/>
 
         <localInspection language="PHP"

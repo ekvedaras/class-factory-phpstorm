@@ -1,7 +1,12 @@
-package com.github.ekvedaras.classfactoryphpstorm.outsideClassFactory.make
+package com.github.ekvedaras.classfactoryphpstorm
 
 import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryMakeMethod
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryState
+import com.github.ekvedaras.classfactoryphpstorm.Utilities.Companion.isClassFactoryStateMethod
+import com.github.ekvedaras.classfactoryphpstorm.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.entities.MakeMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceInsideFactory
+import com.github.ekvedaras.classfactoryphpstorm.entities.StateMethodReferenceOutsideFactory
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
@@ -15,7 +20,7 @@ import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.Variable
 
-class ClassPropertyCompletionProviderForAttributesArrayInClosureOfMakeMethod :
+class ClassPropertyCompletionProviderForAttributesArrayInClosure :
     CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
@@ -42,15 +47,21 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfMakeMethod :
             if (array !is ArrayHashElement) return
             if (array.parent.parent.parent !is MethodReference) return
 
-            array.parentOfType<MethodReference>() ?: return
+            array.parentOfType() ?: return
         } else {
             function.parent.parent.parent as MethodReference
         }
 
-        if (!methodReference.isClassFactoryMakeMethod()) return
+        val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
+            methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+            methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+            methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+            else -> return
+        }
 
-        val makeMethodReference = MakeMethodReference(methodReference)
-        val targetClass = makeMethodReference.classFactory.targetClass ?: return
+        val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
+
+        val alreadyDefinedProperties = classFactoryMethodReference.definedProperties
 
         result.addAllElements(
             targetClass
