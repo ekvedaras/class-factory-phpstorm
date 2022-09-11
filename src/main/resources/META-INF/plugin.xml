@@ -9,15 +9,15 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <psi.referenceContributor language="PHP"
-                                  implementation="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassPropertyReferenceContributorForFactoryDefinition"/>
+                                  implementation="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.reference.ClassPropertyReferenceContributorForFactoryDefinition"/>
         <psi.referenceContributor language="PHP"
-                                  implementation="com.github.ekvedaras.classfactoryphpstorm.ClassPropertyReferenceContributor"/>
+                                  implementation="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.reference.ClassPropertyReferenceContributor"/>
 
         <completion.contributor language="PHP"
-                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassPropertyCompletionContributorForFactoryDefinition"
+                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.completion.ClassPropertyCompletionContributorForFactoryDefinition"
                                 order="first"/>
         <completion.contributor language="PHP"
-                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.ClassPropertyCompletionContributor"
+                                implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.completion.ClassPropertyCompletionContributor"
                                 order="first"/>
 
         <localInspection language="PHP"
@@ -27,7 +27,7 @@
                          enabledByDefault="true"
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
-                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInDefinitionMethod"/>
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInDefinitionMethod"/>
         <localInspection language="PHP"
                          groupPath="PHP"
                          groupKey="name"
@@ -35,7 +35,7 @@
                          enabledByDefault="true"
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
-                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.PropertyNotFoundInspection"/>
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspection"/>
 
         <localInspection language="PHP"
                          groupPath="PHP"
@@ -44,7 +44,7 @@
                          enabledByDefault="true"
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
-                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod"/>
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod"/>
         <localInspection language="PHP"
                          groupPath="PHP"
                          groupKey="name"
@@ -52,14 +52,14 @@
                          enabledByDefault="true"
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
-                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.PropertyNotFoundInspectionInAttributesArrayKeys"/>
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInAttributesArrayKeys"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
         <typeProvider4
-                implementation="com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.ClassFactoryPropertyDefinitionTypeProvider"/>
+                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider"/>
         <typeProvider4
-                implementation="com.github.ekvedaras.classfactoryphpstorm.AttributesArrayValueTypeProvider"/>
+                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider"/>
     </extensions>
 
     <applicationListeners>

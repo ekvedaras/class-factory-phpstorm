@@ -1,7 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
-import com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod
-import com.github.ekvedaras.classfactoryphpstorm.insideClassFactory.definition.PropertyNotFoundInspectionInDefinitionMethod
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInDefinitionMethod
 import com.jetbrains.php.lang.inspections.PhpInspection
 
 internal class DefinitionMethodTest : EssentialTestCase() {

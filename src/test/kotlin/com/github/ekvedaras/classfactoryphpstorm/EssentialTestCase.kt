@@ -1,6 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
-import com.github.ekvedaras.classfactoryphpstorm.psiReferences.ClassPropertyReference
+import com.github.ekvedaras.classfactoryphpstorm.support.psiReferences.ClassPropertyReference
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.usages.ReadWriteAccessUsageInfo2UsageAdapter
 import com.jetbrains.php.lang.inspections.PhpInspection
