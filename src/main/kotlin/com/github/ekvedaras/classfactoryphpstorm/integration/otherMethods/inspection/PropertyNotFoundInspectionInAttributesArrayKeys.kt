@@ -70,7 +70,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeys : PhpInspection() {
                     holder.registerProblem(
                         expression,
                         MyBundle.message("classPropertyNotFound")
-                            .replace("{property}", expression.text.replace("\'", ""))
+                            .replace("{property}", expression.text.unquoteAndCleanup())
                             .replace("{class}", targetClass.name),
                         ProblemHighlightType.LIKE_UNKNOWN_SYMBOL,
                         TextRange(1, expression.textLength - 1)
