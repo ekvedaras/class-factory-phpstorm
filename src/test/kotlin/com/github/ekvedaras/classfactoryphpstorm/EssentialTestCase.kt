@@ -172,4 +172,18 @@ internal abstract class EssentialTestCase : TestCase() {
             assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
         }
     }
+
+    open fun testItResolvesReferencesInArrayReturnedByDirectlyPassedClosure() {
+        val usages =
+            myFixture.testFindUsagesUsingAction("essential/caretAtAgeInConstructorWithUsageInArrayReturnedByDirectlyPassedClosure.php")
+
+        assertEquals(2, usages.size)
+
+        usages.map { it as ReadWriteAccessUsageInfo2UsageAdapter }.forEach { usage ->
+            assertEquals(ClassPropertyReference::class.java, usage.referenceClass)
+            assertTrue(usage.element?.textMatches("'age'") ?: false)
+            assertTrue(usage.element?.textRange?.startOffset == usage.navigationRange.startOffset - 1)
+            assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
+        }
+    }
 }

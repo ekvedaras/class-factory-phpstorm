@@ -29,4 +29,8 @@ internal class DefinitionMethodTest : EssentialTestCase() {
     override fun testItReportsNotFoundPropertiesAsArrayKeysArrayInDirectlyPassedClosure() {
         // Not relevant
     }
+
+    override fun testItResolvesReferencesInArrayReturnedByDirectlyPassedClosure() {
+        // Not relevant
+    }
 }

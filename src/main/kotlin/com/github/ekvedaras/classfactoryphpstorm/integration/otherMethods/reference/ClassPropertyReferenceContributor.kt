@@ -16,5 +16,10 @@ class ClassPropertyReferenceContributor : PsiReferenceContributor() {
             PlatformPatterns.psiElement(StringLiteralExpression::class.java),
             ClassPropertyReferenceProviderForAttributesArrayKeys(),
         )
+
+        registrar.registerReferenceProvider(
+            PlatformPatterns.psiElement(StringLiteralExpression::class.java),
+            ClassPropertyReferenceProviderForArrayKeysInDirectlyPassedClosure(),
+        )
     }
 }

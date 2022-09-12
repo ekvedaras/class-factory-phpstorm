@@ -7,6 +7,7 @@
 - Complete properties in returned array keys of directly passed closure.
 - Detect unknown properties in return array keys when closure is passed directly to class factory method instead of
   as an array hash value.
+- Resolve references in returned array keys of directly passed closure.
 
 ## [1.1.3]
 ### Fixed
