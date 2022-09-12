@@ -8,6 +8,7 @@ import com.jetbrains.php.lang.inspections.PhpInspection
 internal abstract class EssentialTestCase : TestCase() {
     abstract fun propertyNotFoundInspection(): PhpInspection
     abstract fun propertyNotFoundInAttributesArrayInspection(): PhpInspection
+    abstract fun propertyNotFoundInArrayKeysInDirectlyPassedClosure(): PhpInspection
 
     fun testItCompletesClassPropertiesInSimpleArray() {
         myFixture.configureByFile("essential/caretAtStringInSimpleArray.php")
@@ -135,6 +136,13 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/nonExistingPropertyInAttributesArray.php",
             propertyNotFoundInAttributesArrayInspection()
+        )
+    }
+
+    open fun testItReportsNotFoundPropertiesAsArrayKeysArrayInDirectlyPassedClosure() {
+        assertInspection(
+            "essential/nonExistingPropertyInReturnedArrayOfDirectlyPassedClosure.php",
+            propertyNotFoundInArrayKeysInDirectlyPassedClosure()
         )
     }
 

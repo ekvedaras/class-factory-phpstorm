@@ -53,6 +53,14 @@
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInAttributesArrayKeys"/>
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="classPropertyNotFound"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
