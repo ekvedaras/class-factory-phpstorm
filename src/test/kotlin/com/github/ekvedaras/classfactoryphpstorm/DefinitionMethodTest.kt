@@ -17,4 +17,8 @@ internal class DefinitionMethodTest : EssentialTestCase() {
     override fun testItCompletesObjectPropertiesForAttributesArrayInDirectlyPassedShortClosure() {
         // Not relevant
     }
+
+    override fun testItCompletesPropertiesAsArrayKeysArrayInDirectlyPassedClosure() {
+        // Not relevant
+    }
 }

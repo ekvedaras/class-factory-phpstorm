@@ -23,5 +23,11 @@ class ClassPropertyCompletionContributor : CompletionContributor() {
             PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
             ClassPropertyCompletionProviderForAttributesArrayInClosure(),
         )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE),
+            ClassPropertyCompletionProviderForArrayKeysInDirectlyPassedClosure(),
+        )
     }
 }

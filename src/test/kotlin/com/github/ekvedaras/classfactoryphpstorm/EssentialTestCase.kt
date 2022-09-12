@@ -79,6 +79,13 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionContains("id", "age")
     }
 
+    open fun testItCompletesPropertiesAsArrayKeysArrayInDirectlyPassedClosure() {
+        myFixture.configureByFile("essential/caretAtArrayKeyInDirectlyPassedShortClosure.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("id", "age")
+    }
+
     fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInShortClosure() {
         myFixture.configureByFile("essential/caretAtArrayKeyOfAttributesInShortClosure.php")
         myFixture.completeBasic()

@@ -11,7 +11,7 @@ internal class StateMethodInsideFactoryTest : EssentialTestCase() {
         PropertyNotFoundInspectionInAttributesArrayKeys()
 
     fun testItCompletesAttributesInStateOfAccountFactory() {
-        myFixture.configureByFile("accountFactory.php")
+        myFixture.configureByFile("accountFactoryCaretAtAttributesArrayKey.php")
         myFixture.completeBasic()
 
         assertCompletionContains("id", "exists", "accountReference", "name", "tradingName", "currency", "ratingInputs")
