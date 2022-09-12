@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [1.1.4]
 ### Fixed
 - Complete properties in returned array keys of directly passed closure.
 - Detect unknown properties in return array keys when closure is passed directly to class factory method instead of
@@ -25,7 +27,6 @@
   as an array hash value.
 
 ## [1.1.1]
-
 ### Fixed
 - Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
 
