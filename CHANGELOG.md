@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+### Added
+- Detect missing class constructor property definitions.
 
 ## [1.1.4]
 ### Fixed

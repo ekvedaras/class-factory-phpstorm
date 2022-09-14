@@ -40,6 +40,15 @@
         <localInspection language="PHP"
                          groupPath="PHP"
                          groupKey="name"
+                         shortName="MissingClassPropertiesDefinitions"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="missingClassPropertiesDefinitions"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.MissingClassPropertiesDefinitions"/>
+
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
                          shortName="PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod"
                          enabledByDefault="true"
                          bundle="messages.MyBundle"

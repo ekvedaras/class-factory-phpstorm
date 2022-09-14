@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.MissingClassPropertiesDefinitions
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInDefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure
@@ -13,6 +14,10 @@ internal class DefinitionMethodTest : EssentialTestCase() {
 
     override fun propertyNotFoundInArrayKeysInDirectlyPassedClosure(): PhpInspection =
         PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure()
+
+    fun testItDetectsMissingPropertyDefinitions() {
+        assertInspection("missingPropertyDefinition.php", MissingClassPropertiesDefinitions())
+    }
 
     override fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInDirectlyPassedClosure() {
         // Not relevant
