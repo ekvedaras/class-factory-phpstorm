@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [1.2.1]
 ### Updated
 - Remove upper build limit to allow EAP usage.
 
