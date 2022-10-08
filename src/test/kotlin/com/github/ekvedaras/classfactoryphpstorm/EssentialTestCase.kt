@@ -24,6 +24,13 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionContains("id", "age")
     }
 
+    fun testItCompletesClassPropertiesInAssociativeArrayKeyWhenThereIsNoConstructor() {
+        myFixture.configureByFile("essential/caretAtAssociativeArrayKeyWhenThereIsNoConstructor.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("id", "age")
+    }
+
     fun testItDoesNotCompleteClassPropertiesInAssociativeArrayValue() {
         myFixture.configureByFile("essential/caretAtAssociativeArrayValue.php")
         myFixture.completeBasic()
@@ -128,6 +135,10 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection("essential/nonExistingProperty.php", propertyNotFoundInspection())
     }
 
+    fun testItReportsNotFoundPropertiesWhenThereIsNoConstructor() {
+        assertInspection("essential/nonExistingPropertyWhenThereIsNoConstructor.php", propertyNotFoundInspection())
+    }
+
     fun testItReportsNotFoundPropertiesInAttributesArray() {
         myFixture.configureByFile("essential/nonExistingPropertyInAttributesArray.php")
         myFixture.elementAtCaret
@@ -148,6 +159,19 @@ internal abstract class EssentialTestCase : TestCase() {
 
     fun testItResolvesReferencesInAssociativeArrayKeys() {
         val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdInConstructorWithUsage.php")
+
+        assertEquals(1, usages.size)
+
+        val usage = usages.first() as ReadWriteAccessUsageInfo2UsageAdapter
+
+        assertEquals(ClassPropertyReference::class.java, usage.referenceClass)
+        assertTrue(usage.element?.textMatches("'id'") ?: false)
+        assertTrue(usage.element?.textRange?.startOffset == usage.navigationRange.startOffset - 1)
+        assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
+    }
+
+    fun testItResolvesReferencesInAssociativeArrayKeysWhenThereIsNoConstructor() {
+        val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdPropertyWithUsage.php")
 
         assertEquals(1, usages.size)
 
