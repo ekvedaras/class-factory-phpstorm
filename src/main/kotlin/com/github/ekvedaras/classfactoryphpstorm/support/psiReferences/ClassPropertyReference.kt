@@ -12,9 +12,6 @@ class ClassPropertyReference(element: StringLiteralExpression, private val targe
     override fun resolve(): PsiElement? {
         rangeInElement = TextRange(1, element.textLength - 1)
 
-        return targetClass
-            .constructor
-            ?.getParameterByName(element.text.unquoteAndCleanup())
-            ?.parameter
+        return targetClass.getPropertyByName(element.text.unquoteAndCleanup())?.psiElement
     }
 }

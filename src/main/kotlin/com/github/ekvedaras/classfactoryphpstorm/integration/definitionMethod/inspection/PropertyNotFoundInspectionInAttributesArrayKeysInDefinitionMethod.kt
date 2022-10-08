@@ -52,7 +52,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod : PhpIns
                 val definitionMethod = DefinitionMethod(method)
                 val targetClass = definitionMethod.classFactory.targetClass ?: return
 
-                if (targetClass.constructor?.getParameterByName(expression.text.unquoteAndCleanup()) == null) {
+                if (targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(
                         expression,
                         MyBundle.message("classPropertyNotFound")

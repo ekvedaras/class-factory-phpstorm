@@ -4,27 +4,27 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
-import com.jetbrains.php.lang.psi.elements.Parameter
+import com.jetbrains.php.lang.psi.elements.Field
 
-class TargetClassConstructorParameter(val parameter: Parameter, private val targetClass: TargetClass) :
+class TargetClassField(val field: Field, private val targetClass: TargetClass) :
     TargetClassParameter {
     override val lookup: LookupElement
         get() = PrioritizedLookupElement.withPriority(
             LookupElementBuilder
-                .createWithIcon(parameter)
-                .withTypeText(parameter.type.toString()),
+                .createWithIcon(this.field)
+                .withTypeText(this.field.type.toString()),
             this.getPriority().toDouble()
         )
 
     override val name: String
-        get() = parameter.name
+        get() = this.field.name
 
     override val isOptional: Boolean
-        get() = parameter.isOptional
+        get() = this.field.defaultValue != null
 
     override val psiElement: PsiElement
-        get() = this.parameter
+        get() = this.field
 
-    override fun getPriority() = (targetClass.constructor?.totalParameters ?: 0) -
-            (targetClass.constructor?.getParameterIndex(this) ?: 0)
+    override fun getPriority() = (targetClass.fields.size ?: 0) -
+            (targetClass.fields.indexOf(this) ?: 0)
 }

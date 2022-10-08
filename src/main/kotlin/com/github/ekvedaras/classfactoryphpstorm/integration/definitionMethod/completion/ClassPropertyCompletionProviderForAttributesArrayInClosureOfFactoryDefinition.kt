@@ -48,10 +48,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryDefinit
         val targetClass = definitionMethod.classFactory.targetClass ?: return
 
         result.addAllElements(
-            targetClass
-                .constructor
-                ?.parameters
-                ?.map { it.lookup } ?: return
+            targetClass.properties.map { it.lookup } ?: return
         )
 
         result.stopHere()

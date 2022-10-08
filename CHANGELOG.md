@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+### Added
+- Support classes with not constructor (Spatie's DTOs for example)
 
 ## [1.2.1]
 ### Updated

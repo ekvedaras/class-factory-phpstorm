@@ -66,7 +66,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeys : PhpInspection() {
 
                 val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
 
-                if (targetClass.constructor?.getParameterByName(expression.text.unquoteAndCleanup()) == null) {
+                if (targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(
                         expression,
                         MyBundle.message("classPropertyNotFound")

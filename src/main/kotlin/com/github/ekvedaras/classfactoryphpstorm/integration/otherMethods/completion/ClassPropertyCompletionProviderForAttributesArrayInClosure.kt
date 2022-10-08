@@ -63,9 +63,8 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosure :
 
         result.addAllElements(
             targetClass
-                .constructor
-                ?.parameters
-                ?.map { it.lookup } ?: return
+                .properties
+                .map { it.lookup } ?: return
         )
 
         result.stopHere()

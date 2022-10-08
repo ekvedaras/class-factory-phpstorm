@@ -40,14 +40,13 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
 
         result.addAllElements(
             targetClass
-                .constructor
-                ?.parameters
-                ?.filterNot {
+                .properties
+                .filterNot {
                     alreadyDefinedProperties.find { definedProperty ->
-                        it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
+                        it.name == definedProperty.key?.text?.unquoteAndCleanup()
                     } != null
                 }
-                ?.map { it.lookup } ?: return
+                .map { it.lookup } ?: return
         )
 
         result.stopHere()

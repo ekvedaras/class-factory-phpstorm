@@ -32,12 +32,11 @@ class MissingClassPropertiesDefinitions : PhpInspection() {
                 val targetClass = definitionMethod.classFactory.targetClass ?: return
 
                 val alreadyDefinedProperties = definitionMethod.definedProperties
-                val missingProperties = targetClass.constructor
-                    ?.parameters
-                    ?.filterNot { it.parameter.isOptional }
-                    ?.filterNot {
+                val missingProperties = targetClass.properties
+                    .filterNot { it.isOptional }
+                    .filterNot {
                         alreadyDefinedProperties.find { definedProperty ->
-                            it.parameter.name == definedProperty.key?.text?.unquoteAndCleanup()
+                            it.name == definedProperty.key?.text?.unquoteAndCleanup()
                         } != null
                     } ?: return
 
@@ -46,7 +45,7 @@ class MissingClassPropertiesDefinitions : PhpInspection() {
                 holder.registerProblem(
                     expression,
                     MyBundle.message("missingClassPropertiesDefinitions")
-                        .replace("{properties}", missingProperties.joinToString { "'${it.parameter.name}'" })
+                        .replace("{properties}", missingProperties.joinToString { "'${it.name}'" })
                         .replace("{class}", targetClass.name),
                     ProblemHighlightType.WARNING,
                 )
