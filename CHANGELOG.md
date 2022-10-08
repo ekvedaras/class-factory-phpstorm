@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [1.3.0]
 ### Added
 - Support classes with not constructor (Spatie's DTOs for example)
 
@@ -37,7 +39,6 @@
   as an array hash value.
 
 ## [1.1.1]
-
 ### Fixed
 - Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
 
