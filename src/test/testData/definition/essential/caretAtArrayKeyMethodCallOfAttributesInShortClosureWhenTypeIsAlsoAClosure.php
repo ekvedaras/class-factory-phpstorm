@@ -27,12 +27,8 @@ class AccountFactory extends ClassFactory {
                 return $attributes['nickName'];
             },
             'middleName' => fn (array $attributes) => $attributes['firstName'],
-            'lastName' => function (array $attributes) {
-                return $attributes['firstName'];
-            },
-            'age<caret>' => function (array $attributes) {
-                return <warning descr="Incorrect type for property 'age' of 'Account' class">$attributes['id']</warning>;
-            },
+            'lastName' => fn (array $attributes) => $attributes['middleName']-><caret>,
+            'age' => fn (array $attributes) => (int) $attributes['id'],
         ];
     }
 }

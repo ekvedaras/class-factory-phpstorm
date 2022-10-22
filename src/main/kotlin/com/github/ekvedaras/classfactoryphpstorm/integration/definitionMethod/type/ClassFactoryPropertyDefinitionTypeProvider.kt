@@ -13,7 +13,9 @@ import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ArrayIndex
 import com.jetbrains.php.lang.psi.elements.Function
+import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.PhpExpression
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
@@ -51,11 +53,53 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
         if (!method.isClassFactoryDefinition()) return null
 
         val definitionMethod = DefinitionMethod(method)
-        val propertyDefinition = definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup()) ?: return null
+        val propertyDefinition = definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup())?.value ?: return null
 
-        if (propertyDefinition.value !is PhpTypedElement) return null
+        if (propertyDefinition.firstPsiChild is Function) {
+            val propertyDefinitionFunction = propertyDefinition.firstPsiChild as Function
+            if (propertyDefinitionFunction.type.filterMixed() != PhpType.EMPTY) {
+                return propertyDefinitionFunction.type.filterMixed()
+            }
 
-        return (propertyDefinition.value as PhpTypedElement).type
+            if (propertyDefinitionFunction.parameters.isEmpty()) return null
+
+            return when (propertyDefinitionFunction.firstPsiChild?.text) {
+                "function" -> this.resolveClosureType(propertyDefinitionFunction)
+                "fn" -> this.resolveShortClosureType(propertyDefinitionFunction)
+                else -> null
+            }
+        }
+
+        if (propertyDefinition !is PhpTypedElement) return null
+
+        return propertyDefinition.type
+    }
+
+    private fun resolveClosureType(function: Function): PhpType?
+    {
+        return this.getType(
+            function
+                .childrenOfType<GroupStatement>()
+                .firstOrNull()
+                ?.childrenOfType<PhpReturn>()
+                ?.filterNot { it.childrenOfType<ArrayAccessExpression>().isEmpty() }
+                ?.firstOrNull {
+                    it.childrenOfType<ArrayAccessExpression>()
+                        .firstOrNull()?.firstPsiChild is Variable && (it.childrenOfType<ArrayAccessExpression>()
+                        .firstOrNull()?.firstPsiChild as Variable).name == function.getParameter(0)?.name
+                } ?: return null
+        )
+    }
+
+    private fun resolveShortClosureType(function: Function): PhpType?
+    {
+        return this.getType(
+            function
+                .childrenOfType<ArrayAccessExpression>()
+                .firstOrNull {
+                    it.firstPsiChild is Variable && (it.firstPsiChild as Variable).name == function.getParameter(0)?.name
+                } ?: return null
+        )
     }
 
     override fun complete(p0: String?, p1: Project?): PhpType? {

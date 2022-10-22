@@ -112,6 +112,13 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionContains("value")
     }
 
+    fun testItCompletesObjectPropertiesForAttributesArrayInShortClosureWhenAttributeDefinitionIsAlsoAClosure() {
+        myFixture.configureByFile("essential/caretAtArrayKeyMethodCallOfAttributesInShortClosureWhenTypeIsAlsoAClosure.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("value")
+    }
+
     open fun testItCompletesObjectPropertiesForAttributesArrayInDirectlyPassedShortClosure() {
         myFixture.configureByFile("essential/caretAtArrayKeyMethodCallOfAttributesInDirectlyPassedShortClosure.php")
         myFixture.completeBasic()
