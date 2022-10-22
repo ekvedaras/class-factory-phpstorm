@@ -7,6 +7,13 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
 
+    <extensions defaultExtensionNs="com.jetbrains.php">
+        <typeProvider4
+                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider" order="first"/>
+        <typeProvider4
+                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider" order="first"/>
+    </extensions>
+
     <extensions defaultExtensionNs="com.intellij">
         <psi.referenceContributor language="PHP"
                                   implementation="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.reference.ClassPropertyReferenceContributorForFactoryDefinition"/>
@@ -70,13 +77,47 @@
                          bundle="messages.MyBundle"
                          key="classPropertyNotFound"
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure"/>
-    </extensions>
 
-    <extensions defaultExtensionNs="com.jetbrains.php">
-        <typeProvider4
-                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider"/>
-        <typeProvider4
-                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider"/>
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="IncorrectPropertyTypeInspectionInDefinitionMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="incorrectPropertyType"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.IncorrectPropertyTypeInspectionInDefinitionMethod"/>
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="incorrectPropertyType"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod"/>
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="IncorrectPropertyTypeInspection"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="incorrectPropertyType"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.IncorrectPropertyTypeInspection"/>
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="IncorrectPropertyTypeInspectionForClosureReturns"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="incorrectPropertyType"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.IncorrectPropertyTypeInspectionForClosureReturns"/>
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="incorrectPropertyType"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray"/>
     </extensions>
 
     <applicationListeners>

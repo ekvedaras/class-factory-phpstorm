@@ -53,9 +53,9 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
         val definitionMethod = DefinitionMethod(method)
         val propertyDefinition = definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup()) ?: return null
 
-        if (propertyDefinition.value?.firstPsiChild !is PhpTypedElement) return null
+        if (propertyDefinition.value !is PhpTypedElement) return null
 
-        return (propertyDefinition.value?.firstPsiChild as PhpTypedElement).type
+        return (propertyDefinition.value as PhpTypedElement).type
     }
 
     override fun complete(p0: String?, p1: Project?): PhpType? {

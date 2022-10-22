@@ -5,6 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.jetbrains.php.lang.psi.elements.Parameter
+import com.jetbrains.php.lang.psi.resolve.types.PhpType
 
 class TargetClassConstructorParameter(val parameter: Parameter, private val targetClass: TargetClass) :
     TargetClassParameter {
@@ -22,8 +23,11 @@ class TargetClassConstructorParameter(val parameter: Parameter, private val targ
     override val isOptional: Boolean
         get() = parameter.isOptional
 
-    override val psiElement: PsiElement
+    override val psiElement: Parameter
         get() = this.parameter
+
+    override val type: PhpType
+        get() = this.parameter.type
 
     override fun getPriority() = (targetClass.constructor?.totalParameters ?: 0) -
             (targetClass.constructor?.getParameterIndex(this) ?: 0)

@@ -14,6 +14,18 @@ internal class StateMethodOutsideFactoryTest : EssentialTestCase() {
     override fun propertyNotFoundInArrayKeysInDirectlyPassedClosure(): PhpInspection =
         PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure()
 
+    override fun incorrectPropertyTypeInspection(): PhpInspection {
+        TODO("Not yet implemented")
+    }
+
+    override fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection {
+        TODO("Not yet implemented")
+    }
+
+    override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection {
+        TODO("Not yet implemented")
+    }
+
     override fun testItResolvesReferencesInArrayReturnedByDirectlyPassedClosure() {
         // TODO: failing due to PhpCache having cached empty results. Find a workaround
     }

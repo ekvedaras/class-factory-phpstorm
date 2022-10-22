@@ -14,6 +14,18 @@ internal class StateMethodInsideFactoryTest : EssentialTestCase() {
     override fun propertyNotFoundInArrayKeysInDirectlyPassedClosure(): PhpInspection =
         PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure()
 
+    override fun incorrectPropertyTypeInspection(): PhpInspection {
+        TODO("Not yet implemented")
+    }
+
+    override fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection {
+        TODO("Not yet implemented")
+    }
+
+    override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection {
+        TODO("Not yet implemented")
+    }
+
     fun testItCompletesAttributesInStateOfAccountFactory() {
         myFixture.configureByFile("accountFactoryCaretAtAttributesArrayKey.php")
         myFixture.completeBasic()

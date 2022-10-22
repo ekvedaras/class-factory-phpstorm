@@ -10,6 +10,10 @@ internal abstract class EssentialTestCase : TestCase() {
     abstract fun propertyNotFoundInAttributesArrayInspection(): PhpInspection
     abstract fun propertyNotFoundInArrayKeysInDirectlyPassedClosure(): PhpInspection
 
+    abstract fun incorrectPropertyTypeInspection(): PhpInspection
+    abstract fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection
+    abstract fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection
+
     fun testItCompletesClassPropertiesInSimpleArray() {
         myFixture.configureByFile("essential/caretAtStringInSimpleArray.php")
         myFixture.completeBasic()
@@ -154,6 +158,34 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/nonExistingPropertyInReturnedArrayOfDirectlyPassedClosure.php",
             propertyNotFoundInArrayKeysInDirectlyPassedClosure()
+        )
+    }
+
+    fun testItReportsIncorrectPropertyTypes() {
+        assertInspection(
+            "essential/propertyWithWrongType.php",
+            incorrectPropertyTypeInspection(),
+        )
+    }
+
+    fun testItReportsIncorrectPropertyTypesWhenThereIsNoConstructor() {
+        assertInspection(
+            "essential/propertyWithWrongTypeWhenThereIsNoConstructor.php",
+            incorrectPropertyTypeInspection(),
+        )
+    }
+
+    fun testItReportsIncorrectPropertyTypesInClosureReturns() {
+        assertInspection(
+            "essential/propertyWithWrongTypeInClosureReturn.php",
+            incorrectPropertyTypeInClosureReturnsInspection(),
+        )
+    }
+
+    open fun testItReportsIncorrectPropertyTypesDirectlyPassedClosureReturnedArrayValues() {
+        assertInspection(
+            "essential/propertyWithWrongTypeInReturnedArrayOfDirectlyPassedClosure.php",
+            incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(),
         )
     }
 

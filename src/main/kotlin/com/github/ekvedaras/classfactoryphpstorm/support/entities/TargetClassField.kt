@@ -5,8 +5,9 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.jetbrains.php.lang.psi.elements.Field
+import com.jetbrains.php.lang.psi.resolve.types.PhpType
 
-class TargetClassField(val field: Field, private val targetClass: TargetClass) :
+class TargetClassField(private val field: Field, private val targetClass: TargetClass) :
     TargetClassParameter {
     override val lookup: LookupElement
         get() = PrioritizedLookupElement.withPriority(
@@ -22,8 +23,11 @@ class TargetClassField(val field: Field, private val targetClass: TargetClass) :
     override val isOptional: Boolean
         get() = this.field.defaultValue != null
 
-    override val psiElement: PsiElement
+    override val psiElement: Field
         get() = this.field
+
+    override val type: PhpType
+        get() = this.field.type
 
     override fun getPriority() = (targetClass.fields.size ?: 0) -
             (targetClass.fields.indexOf(this) ?: 0)
