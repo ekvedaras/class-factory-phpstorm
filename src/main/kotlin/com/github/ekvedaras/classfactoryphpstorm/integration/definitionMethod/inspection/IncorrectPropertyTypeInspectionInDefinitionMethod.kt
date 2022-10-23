@@ -1,9 +1,12 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
@@ -13,10 +16,13 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
+import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
+import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 
 class IncorrectPropertyTypeInspectionInDefinitionMethod : PhpInspection() {
@@ -41,7 +47,10 @@ class IncorrectPropertyTypeInspectionInDefinitionMethod : PhpInspection() {
                 val factoryValue = arrayHashElement.value ?: return
                 if (factoryValue !is PhpTypedElement) return
 
-                if (property.type != factoryValue.type) {
+                // TODO There must be a better way
+                val classFactoryUsed = factoryValue is MethodReference && factoryValue.classReference is ClassReference && (factoryValue.classReference as ClassReference).getClass()?.isClassFactory() == true
+
+                if ((classFactoryUsed && ClassFactory(((factoryValue as MethodReference).classReference as ClassReference).getClass() ?: return).targetClass?.type != property.type) || (!classFactoryUsed && property.type != factoryValue.type)) {
                     holder.registerProblem(
                         factoryValue,
                         MyBundle.message("incorrectPropertyType")

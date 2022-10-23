@@ -2,9 +2,12 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
@@ -14,11 +17,14 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
+import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
+import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 
 class IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod : PhpInspection() {
@@ -48,10 +54,14 @@ class IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod : PhpIn
                 val property = targetClass.getPropertyByName(key.text.unquoteAndCleanup()) ?: return
                 val factoryValue = expression.firstPsiChild ?: return
                 if (factoryValue !is PhpTypedElement) return
+
                 val factoryValueType =
                     ClassFactoryPropertyDefinitionTypeProvider().getType(factoryValue) ?: factoryValue.type
 
-                if (property.type != factoryValueType) {
+                // TODO There must be a better way
+                val classFactoryUsed = !factoryValueType.isAmbiguous && factoryValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project)?.isClassFactory() == true
+
+                if ((classFactoryUsed && ClassFactory(factoryValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type) || (!classFactoryUsed && property.type != factoryValueType)) {
                     holder.registerProblem(
                         factoryValue,
                         MyBundle.message("incorrectPropertyType")

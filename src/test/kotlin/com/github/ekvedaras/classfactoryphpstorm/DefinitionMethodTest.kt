@@ -57,4 +57,8 @@ internal class DefinitionMethodTest : EssentialTestCase() {
     override fun testItReportsIncorrectPropertyTypesDirectlyPassedClosureReturnedArrayValues() {
         // Not relevant
     }
+
+    override fun testItReportsIncorrectPropertyTypesDirectlyPassedClosureReturnedArrayValuesWithFactories() {
+        // Not relevant
+    }
 }

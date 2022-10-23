@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.support
 
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.PhpIndex
@@ -39,6 +40,11 @@ class Utilities private constructor() {
             this.name == "state" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
 
         fun PsiElement.isArrayHashValueOf(arrayHashElement: ArrayHashElement) = this == arrayHashElement.value
+
+        fun String.getClass(project: Project) = PhpIndex
+            .getInstance(project)
+            .getClassesByFQN(this)
+            .firstOrNull()
 
         fun ClassReference.getClass() = PhpIndex
             .getInstance(this.project)

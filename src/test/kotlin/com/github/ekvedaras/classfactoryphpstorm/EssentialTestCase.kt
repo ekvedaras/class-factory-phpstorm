@@ -187,11 +187,34 @@ internal abstract class EssentialTestCase : TestCase() {
         )
     }
 
+    fun testItReportsIncorrectPropertyTypesInClosureReturnsWithFactories() {
+        assertInspection(
+            "essential/propertyWithWrongTypeInClosureReturnWithFactories.php",
+            incorrectPropertyTypeInClosureReturnsInspection(),
+            true,
+        )
+    }
+
     open fun testItReportsIncorrectPropertyTypesDirectlyPassedClosureReturnedArrayValues() {
         assertInspection(
             "essential/propertyWithWrongTypeInReturnedArrayOfDirectlyPassedClosure.php",
             incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(),
             true,
+        )
+    }
+
+    open fun testItReportsIncorrectPropertyTypesDirectlyPassedClosureReturnedArrayValuesWithFactories() {
+        assertInspection(
+            "essential/propertyWithWrongTypeInReturnedArrayOfDirectlyPassedClosureWithFactories.php",
+            incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(),
+            true,
+        )
+    }
+
+    fun testItReportsIncorrectPropertyTypesWithFactories() {
+        assertInspection(
+            "essential/propertyWithWrongTypeWithFactories.php",
+            incorrectPropertyTypeInspection(),
         )
     }
 

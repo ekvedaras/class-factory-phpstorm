@@ -3,10 +3,13 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspe
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceInsideFactory
@@ -73,7 +76,25 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                     ClassFactoryPropertyDefinitionTypeProvider().getType(factoryDefinitionValue)
                         ?: factoryDefinitionValue.type
 
-                if (stateValueType != factoryDefinitionValueType) {
+                // TODO There must be a better way
+                val classFactoryUsedInState = !stateValueType.isAmbiguous && stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project)?.isClassFactory() == true
+                val classFactoryUsedInDefinition = !factoryDefinitionValueType.isAmbiguous && factoryDefinitionValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project)?.isClassFactory() == true
+
+                if (classFactoryUsedInState || classFactoryUsedInDefinition) {
+                    if (
+                        ((classFactoryUsedInState && ClassFactory(stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type))
+                        || ((classFactoryUsedInDefinition && ClassFactory(factoryDefinitionValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type))
+                    ) {
+                        holder.registerProblem(
+                            arrayHashElement.value ?: return,
+                            MyBundle.message("incorrectPropertyType")
+                                .replace("{property}", expression.text.unquoteAndCleanup())
+                                .replace("{class}", targetClass.name),
+                            ProblemHighlightType.WARNING,
+                            TextRange(0, arrayHashElement.value?.textLength ?: return)
+                        )
+                    }
+                } else if (stateValueType != factoryDefinitionValueType) {
                     holder.registerProblem(
                         arrayHashElement.value ?: return,
                         MyBundle.message("incorrectPropertyType")

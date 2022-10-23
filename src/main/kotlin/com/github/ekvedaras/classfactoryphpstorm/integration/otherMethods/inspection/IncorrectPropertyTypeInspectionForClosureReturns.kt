@@ -3,11 +3,14 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspe
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceInsideFactory
@@ -76,7 +79,10 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
                     ClassFactoryPropertyDefinitionTypeProvider().getType(factoryDefinitionValue)
                         ?: factoryDefinitionValue.type
 
-                if (stateValueType != factoryDefinitionValueType) {
+                // TODO There must be a better way
+                val classFactoryUsed = !stateValueType.isAmbiguous && stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project)?.isClassFactory() == true
+
+                if ((classFactoryUsed && ClassFactory(stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type) || (!classFactoryUsed && stateValueType != factoryDefinitionValueType)) {
                     holder.registerProblem(
                         stateValue,
                         MyBundle.message("incorrectPropertyType")
