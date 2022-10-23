@@ -1,6 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
@@ -16,6 +18,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
+import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.Function
@@ -52,17 +55,32 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
 
                 val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
                 val property = targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) ?: return
-                val factoryValue = arrayHashElement.value ?: return
-                if (factoryValue !is PhpTypedElement) return
 
-                if (property.type != factoryValue.type) {
+                val stateValue = arrayHashElement.value ?: return
+                if (stateValue !is PhpTypedElement) return
+
+                val stateValueType = if (stateValue is ArrayAccessExpression) {
+                    AttributesArrayValueTypeProvider().getType(stateValue) ?: stateValue.type
+                } else {
+                    stateValue.type
+                }
+
+                val factoryDefinitionValue =
+                    classFactoryMethodReference.classFactory.definitionMethod?.getPropertyDefinition(property.name)?.value
+                        ?: property.type
+                if (factoryDefinitionValue !is PhpTypedElement) return
+                val factoryDefinitionValueType =
+                    ClassFactoryPropertyDefinitionTypeProvider().getType(factoryDefinitionValue)
+                        ?: factoryDefinitionValue.type
+
+                if (stateValueType != factoryDefinitionValueType) {
                     holder.registerProblem(
-                        factoryValue,
+                        arrayHashElement.value ?: return,
                         MyBundle.message("incorrectPropertyType")
                             .replace("{property}", expression.text.unquoteAndCleanup())
                             .replace("{class}", targetClass.name),
                         ProblemHighlightType.WARNING,
-                        TextRange(0, factoryValue.textLength)
+                        TextRange(0, arrayHashElement.value?.textLength ?: return)
                     )
                 }
             }

@@ -14,12 +14,10 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.MethodReference
-import com.jetbrains.php.lang.psi.elements.Variable
 
 class ClassPropertyCompletionProviderForArrayKeysInDirectlyPassedClosure :
     CompletionProvider<CompletionParameters>() {
@@ -59,7 +57,7 @@ class ClassPropertyCompletionProviderForArrayKeysInDirectlyPassedClosure :
                         it.name == definedProperty.key?.text?.unquoteAndCleanup()
                     } != null
                 }
-                .map { it.lookup } ?: return
+                .map { it.lookup }
         )
 
         result.stopHere()

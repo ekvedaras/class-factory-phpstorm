@@ -18,8 +18,7 @@ class TargetClass(private val clazz: PhpClass) {
             return this.constructor?.parameters ?: this.fields
         }
 
-    fun getPropertyByName(name: String): TargetClassParameter?
-        = this.properties.firstOrNull { it.name == name }
+    fun getPropertyByName(name: String): TargetClassParameter? = this.properties.firstOrNull { it.name == name }
 
     val name = clazz.name
 }

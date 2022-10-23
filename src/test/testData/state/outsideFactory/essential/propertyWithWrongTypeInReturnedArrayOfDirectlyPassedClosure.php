@@ -23,12 +23,12 @@ class AccountFactory extends ClassFactory {
     }
 }
 
-AccountFactory::new()->make(fn (array $attributes) => [
+AccountFactory::new()->state(fn (array $attributes) => [
     'id' => new Id(),
     'age<caret>' => <warning descr="Incorrect type for property 'age' of 'Account' class">$attributes['id']</warning>,
 ]);
 
-AccountFactory::new()->make(fn (array $attributes) => [
+AccountFactory::new()->state(fn (array $attributes) => [
     'id' => new Id(),
     'age' => $attributes['age'],
 ]);

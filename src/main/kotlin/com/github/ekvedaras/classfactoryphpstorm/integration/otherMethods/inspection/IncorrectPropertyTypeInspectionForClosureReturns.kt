@@ -1,6 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
@@ -19,13 +21,11 @@ import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
-import com.jetbrains.php.lang.psi.elements.ArrayIndex
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
-import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 
 class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
@@ -58,17 +58,32 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
 
                 val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
                 val property = targetClass.getPropertyByName(key.text.unquoteAndCleanup()) ?: return
-                val factoryValue = expression.firstPsiChild ?: return
-                if (factoryValue !is PhpTypedElement) return
 
-                if (property.type != factoryValue.type) {
+                val stateValue = expression.firstPsiChild ?: return
+                if (stateValue !is PhpTypedElement) return
+
+                val stateValueType = if (stateValue is ArrayAccessExpression) {
+                    AttributesArrayValueTypeProvider().getType(stateValue) ?: stateValue.type
+                } else {
+                    stateValue.type
+                }
+
+                val factoryDefinitionValue =
+                    classFactoryMethodReference.classFactory.definitionMethod?.getPropertyDefinition(property.name)?.value
+                        ?: property.type
+                if (factoryDefinitionValue !is PhpTypedElement) return
+                val factoryDefinitionValueType =
+                    ClassFactoryPropertyDefinitionTypeProvider().getType(factoryDefinitionValue)
+                        ?: factoryDefinitionValue.type
+
+                if (stateValueType != factoryDefinitionValueType) {
                     holder.registerProblem(
-                        factoryValue,
+                        stateValue,
                         MyBundle.message("incorrectPropertyType")
                             .replace("{property}", key.text.unquoteAndCleanup())
                             .replace("{class}", targetClass.name),
                         ProblemHighlightType.WARNING,
-                        TextRange(0, factoryValue.textLength)
+                        TextRange(0, stateValue.textLength)
                     )
                 }
             }

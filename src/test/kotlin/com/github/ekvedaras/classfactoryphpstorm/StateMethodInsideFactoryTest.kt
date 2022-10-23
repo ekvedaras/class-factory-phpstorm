@@ -1,5 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm
 
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.IncorrectPropertyTypeInspection
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.IncorrectPropertyTypeInspectionForClosureReturns
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspection
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInAttributesArrayKeys
@@ -14,17 +17,12 @@ internal class StateMethodInsideFactoryTest : EssentialTestCase() {
     override fun propertyNotFoundInArrayKeysInDirectlyPassedClosure(): PhpInspection =
         PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure()
 
-    override fun incorrectPropertyTypeInspection(): PhpInspection {
-        TODO("Not yet implemented")
-    }
+    override fun incorrectPropertyTypeInspection(): PhpInspection = IncorrectPropertyTypeInspection()
+    override fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection =
+        IncorrectPropertyTypeInspectionForClosureReturns()
 
-    override fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection {
-        TODO("Not yet implemented")
-    }
-
-    override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection {
-        TODO("Not yet implemented")
-    }
+    override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection =
+        IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray()
 
     fun testItCompletesAttributesInStateOfAccountFactory() {
         myFixture.configureByFile("accountFactoryCaretAtAttributesArrayKey.php")

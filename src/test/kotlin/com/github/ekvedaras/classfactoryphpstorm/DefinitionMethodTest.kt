@@ -13,17 +13,20 @@ internal class DefinitionMethodTest : EssentialTestCase() {
 
     override fun propertyNotFoundInspection(): PhpInspection =
         PropertyNotFoundInspectionInDefinitionMethod()
+
     override fun propertyNotFoundInAttributesArrayInspection(): PhpInspection =
         PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod()
 
     override fun incorrectPropertyTypeInspection(): PhpInspection =
         IncorrectPropertyTypeInspectionInDefinitionMethod()
+
     override fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection =
         IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod()
 
 
     override fun propertyNotFoundInArrayKeysInDirectlyPassedClosure(): PhpInspection =
         PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure()
+
     override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection =
         PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure()
 

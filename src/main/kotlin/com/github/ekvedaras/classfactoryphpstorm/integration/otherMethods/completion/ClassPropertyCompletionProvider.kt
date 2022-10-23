@@ -55,7 +55,7 @@ class ClassPropertyCompletionProvider : CompletionProvider<CompletionParameters>
                         it.name == definedProperty.key?.text?.unquoteAndCleanup()
                     } != null
                 }
-                .map { it.lookup } ?: return
+                .map { it.lookup }
         )
 
         result.stopHere()

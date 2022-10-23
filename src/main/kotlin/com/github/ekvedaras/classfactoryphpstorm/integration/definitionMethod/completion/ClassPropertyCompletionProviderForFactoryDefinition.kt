@@ -46,7 +46,7 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
                         it.name == definedProperty.key?.text?.unquoteAndCleanup()
                     } != null
                 }
-                .map { it.lookup } ?: return
+                .map { it.lookup }
         )
 
         result.stopHere()

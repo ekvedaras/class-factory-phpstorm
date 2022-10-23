@@ -18,8 +18,11 @@ internal class MakeMethodFactoryTest : EssentialTestCase() {
         PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure()
 
     override fun incorrectPropertyTypeInspection(): PhpInspection = IncorrectPropertyTypeInspection()
-    override fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection = IncorrectPropertyTypeInspectionForClosureReturns()
-    override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection = IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray()
+    override fun incorrectPropertyTypeInClosureReturnsInspection(): PhpInspection =
+        IncorrectPropertyTypeInspectionForClosureReturns()
+
+    override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection =
+        IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray()
 
     override fun testItResolvesReferencesInArrayReturnedByDirectlyPassedClosure() {
         // TODO: failing due to PhpCache having cached empty results. Find a workaround

@@ -64,7 +64,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosure :
         result.addAllElements(
             targetClass
                 .properties
-                .map { it.lookup } ?: return
+                .map { it.lookup }
         )
 
         result.stopHere()

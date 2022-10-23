@@ -15,7 +15,6 @@ import com.jetbrains.php.lang.psi.elements.ArrayIndex
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
-import com.jetbrains.php.lang.psi.elements.PhpExpression
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
@@ -53,7 +52,8 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
         if (!method.isClassFactoryDefinition()) return null
 
         val definitionMethod = DefinitionMethod(method)
-        val propertyDefinition = definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup())?.value ?: return null
+        val propertyDefinition =
+            definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup())?.value ?: return null
 
         if (propertyDefinition.firstPsiChild is Function) {
             val propertyDefinitionFunction = propertyDefinition.firstPsiChild as Function
@@ -75,8 +75,7 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
         return propertyDefinition.type
     }
 
-    private fun resolveClosureType(function: Function): PhpType?
-    {
+    private fun resolveClosureType(function: Function): PhpType? {
         return this.getType(
             function
                 .childrenOfType<GroupStatement>()
@@ -91,8 +90,7 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
         )
     }
 
-    private fun resolveShortClosureType(function: Function): PhpType?
-    {
+    private fun resolveShortClosureType(function: Function): PhpType? {
         return this.getType(
             function
                 .childrenOfType<ArrayAccessExpression>()

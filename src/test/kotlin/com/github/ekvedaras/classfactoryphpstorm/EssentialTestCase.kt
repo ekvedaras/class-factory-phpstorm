@@ -151,13 +151,10 @@ internal abstract class EssentialTestCase : TestCase() {
     }
 
     fun testItReportsNotFoundPropertiesInAttributesArray() {
-        myFixture.configureByFile("essential/nonExistingPropertyInAttributesArray.php")
-        myFixture.elementAtCaret
-        // The above is needed otherwise, PhpCache is empty for \AccountFactory 🤷‍♂️
-
         assertInspection(
             "essential/nonExistingPropertyInAttributesArray.php",
-            propertyNotFoundInAttributesArrayInspection()
+            propertyNotFoundInAttributesArrayInspection(),
+            true,
         )
     }
 
@@ -186,6 +183,7 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/propertyWithWrongTypeInClosureReturn.php",
             incorrectPropertyTypeInClosureReturnsInspection(),
+            true,
         )
     }
 
@@ -193,6 +191,7 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/propertyWithWrongTypeInReturnedArrayOfDirectlyPassedClosure.php",
             incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(),
+            true,
         )
     }
 

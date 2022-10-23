@@ -38,7 +38,7 @@ class MissingClassPropertiesDefinitions : PhpInspection() {
                         alreadyDefinedProperties.find { definedProperty ->
                             it.name == definedProperty.key?.text?.unquoteAndCleanup()
                         } != null
-                    } ?: return
+                    }
 
                 if (missingProperties.isEmpty()) return
 
