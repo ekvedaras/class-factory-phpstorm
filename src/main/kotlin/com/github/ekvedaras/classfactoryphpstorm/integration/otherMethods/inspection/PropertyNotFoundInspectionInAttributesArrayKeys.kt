@@ -5,6 +5,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isA
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
@@ -41,7 +42,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeys : PhpInspection() {
                 if (attributesArray.firstPsiChild !is Variable) return
 
                 val function = attributesArray.parentOfType<Function>() ?: return
-                if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
+                if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
 
                 if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return
 

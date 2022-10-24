@@ -2,6 +2,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.r
 
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.psiReferences.ClassPropertyReference
 import com.intellij.openapi.project.DumbService
@@ -31,7 +32,7 @@ class ClassPropertyReferenceProviderForAttributesArrayKeysInFactoryDefinition : 
 
         val function = attributesArray.parentOfType<Function>() ?: return PsiReference.EMPTY_ARRAY
         if (function.parent.parent.parent !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
-        if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return PsiReference.EMPTY_ARRAY
+        if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return PsiReference.EMPTY_ARRAY
 
         val arrayHashElement = function.parent.parent.parent
 

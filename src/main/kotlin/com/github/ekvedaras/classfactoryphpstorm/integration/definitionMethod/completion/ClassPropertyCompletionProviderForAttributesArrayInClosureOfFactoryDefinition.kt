@@ -1,6 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.completion
 
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
@@ -34,7 +35,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosureOfFactoryDefinit
 
         val function = attributesArray.parentOfType<Function>() ?: return
         if (function.parent.parent.parent !is ArrayHashElement) return
-        if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
+        if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
 
         val arrayHashElement = function.parent.parent.parent
 

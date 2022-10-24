@@ -38,6 +38,7 @@ class DefinitionMethod(private val method: Method) : ClassFactoryMethodReference
             return properties.toList()
         }
 
-    fun getPropertyDefinition(name: String) =
-        definedProperties.firstOrNull { it.key?.text?.unquoteAndCleanup() == name }
+    fun getPropertyDefinition(name: String): ClassFactoryPropertyDefinition? {
+        return ClassFactoryPropertyDefinition(definedProperties.firstOrNull { it.key?.text?.unquoteAndCleanup() == name } ?: return null)
+    }
 }

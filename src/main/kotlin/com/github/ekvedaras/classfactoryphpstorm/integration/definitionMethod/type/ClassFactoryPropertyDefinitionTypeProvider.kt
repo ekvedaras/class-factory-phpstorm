@@ -1,8 +1,11 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type
 
+import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClosureState
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
@@ -23,7 +26,11 @@ import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
-class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
+class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
+    companion object {
+        fun PhpTypedElement.getClassFactoryDefinitionType(): PhpType? = ClassFactoryPropertyDefinitionTypeProvider().getType(this)
+    }
+
     override fun getKey(): Char {
         return '\u0310'
     }
@@ -39,7 +46,7 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
 
         val function = element.parentOfType<Function>() ?: return null
         if (function.parent.parent.parent !is ArrayHashElement) return null
-        if (function.parameters.isEmpty() || function.parameters[0].name != (element.firstPsiChild as Variable).name) return null
+        if (! (element.firstPsiChild as Variable).isNthFunctionParameter(function)) return null
 
         val arrayHashElement = function.parent.parent.parent
 
@@ -53,51 +60,15 @@ class ClassFactoryPropertyDefinitionTypeProvider : PhpTypeProvider4 {
 
         val definitionMethod = DefinitionMethod(method)
         val propertyDefinition =
-            definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup())?.value ?: return null
+            definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup()) ?: return null
 
-        if (propertyDefinition.firstPsiChild is Function) {
-            val propertyDefinitionFunction = propertyDefinition.firstPsiChild as Function
-            if (propertyDefinitionFunction.type.filterMixed() != PhpType.EMPTY) {
-                return propertyDefinitionFunction.type.filterMixed()
-            }
-
-            if (propertyDefinitionFunction.parameters.isEmpty()) return null
-
-            return when (propertyDefinitionFunction.firstPsiChild?.text) {
-                "function" -> this.resolveClosureType(propertyDefinitionFunction)
-                "fn" -> this.resolveShortClosureType(propertyDefinitionFunction)
-                else -> null
-            }
+        if (propertyDefinition.isClosure()) {
+            return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(this)
         }
 
-        if (propertyDefinition !is PhpTypedElement) return null
+        if (propertyDefinition.value !is PhpTypedElement) return null
 
-        return propertyDefinition.type
-    }
-
-    private fun resolveClosureType(function: Function): PhpType? {
-        return this.getType(
-            function
-                .childrenOfType<GroupStatement>()
-                .firstOrNull()
-                ?.childrenOfType<PhpReturn>()
-                ?.filterNot { it.childrenOfType<ArrayAccessExpression>().isEmpty() }
-                ?.firstOrNull {
-                    it.childrenOfType<ArrayAccessExpression>()
-                        .firstOrNull()?.firstPsiChild is Variable && (it.childrenOfType<ArrayAccessExpression>()
-                        .firstOrNull()?.firstPsiChild as Variable).name == function.getParameter(0)?.name
-                } ?: return null
-        )
-    }
-
-    private fun resolveShortClosureType(function: Function): PhpType? {
-        return this.getType(
-            function
-                .childrenOfType<ArrayAccessExpression>()
-                .firstOrNull {
-                    it.firstPsiChild is Variable && (it.firstPsiChild as Variable).name == function.getParameter(0)?.name
-                } ?: return null
-        )
+        return propertyDefinition.value.type
     }
 
     override fun complete(p0: String?, p1: Project?): PhpType? {

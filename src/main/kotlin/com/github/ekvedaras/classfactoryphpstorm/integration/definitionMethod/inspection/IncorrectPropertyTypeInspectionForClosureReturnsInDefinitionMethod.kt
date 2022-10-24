@@ -2,6 +2,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider.Companion.getClassFactoryDefinitionType
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
@@ -54,12 +55,9 @@ class IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod : PhpIn
                 val property = targetClass.getPropertyByName(key.text.unquoteAndCleanup()) ?: return
                 val factoryValue = expression.firstPsiChild ?: return
                 if (factoryValue !is PhpTypedElement) return
+                val factoryValueType = factoryValue.getClassFactoryDefinitionType() ?: factoryValue.type
 
-                val factoryValueType =
-                    ClassFactoryPropertyDefinitionTypeProvider().getType(factoryValue) ?: factoryValue.type
-
-                // TODO There must be a better way
-                val classFactoryUsed = !factoryValueType.isAmbiguous && factoryValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project)?.isClassFactory() == true
+                val classFactoryUsed = factoryValueType.isClassFactory(expression.project)
 
                 if ((classFactoryUsed && ClassFactory(factoryValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type) || (!classFactoryUsed && property.type != factoryValueType)) {
                     holder.registerProblem(

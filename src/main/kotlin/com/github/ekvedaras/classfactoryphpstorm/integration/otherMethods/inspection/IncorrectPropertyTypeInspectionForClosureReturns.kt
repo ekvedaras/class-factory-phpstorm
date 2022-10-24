@@ -2,7 +2,9 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspe
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider.Companion.getClassFactoryDefinitionType
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider.Companion.getClassFactoryStateType
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
@@ -64,23 +66,15 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
 
                 val stateValue = expression.firstPsiChild ?: return
                 if (stateValue !is PhpTypedElement) return
-
-                val stateValueType = if (stateValue is ArrayAccessExpression) {
-                    AttributesArrayValueTypeProvider().getType(stateValue) ?: stateValue.type
-                } else {
-                    stateValue.type
-                }
+                val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type
 
                 val factoryDefinitionValue =
                     classFactoryMethodReference.classFactory.definitionMethod?.getPropertyDefinition(property.name)?.value
                         ?: property.type
                 if (factoryDefinitionValue !is PhpTypedElement) return
-                val factoryDefinitionValueType =
-                    ClassFactoryPropertyDefinitionTypeProvider().getType(factoryDefinitionValue)
-                        ?: factoryDefinitionValue.type
+                val factoryDefinitionValueType = factoryDefinitionValue.getClassFactoryDefinitionType() ?: factoryDefinitionValue.type
 
-                // TODO There must be a better way
-                val classFactoryUsed = !stateValueType.isAmbiguous && stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project)?.isClassFactory() == true
+                val classFactoryUsed = stateValueType.isClassFactory(expression.project)
 
                 if ((classFactoryUsed && ClassFactory(stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type) || (!classFactoryUsed && stateValueType != factoryDefinitionValueType)) {
                     holder.registerProblem(

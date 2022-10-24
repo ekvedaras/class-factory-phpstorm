@@ -3,6 +3,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.codeInspection.ProblemHighlightType
@@ -38,7 +39,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod : PhpIns
 
                 val function = attributesArray.parentOfType<Function>() ?: return
                 if (function.parent.parent.parent !is ArrayHashElement) return
-                if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return
+                if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
 
                 val arrayHashElement = function.parent.parent.parent
 

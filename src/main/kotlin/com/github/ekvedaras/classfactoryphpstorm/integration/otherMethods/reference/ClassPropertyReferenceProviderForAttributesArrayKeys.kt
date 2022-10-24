@@ -4,6 +4,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isA
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceInsideFactory
@@ -34,7 +35,7 @@ class ClassPropertyReferenceProviderForAttributesArrayKeys : PsiReferenceProvide
         if (attributesArray.firstPsiChild !is Variable) return PsiReference.EMPTY_ARRAY
 
         val function = attributesArray.parentOfType<Function>() ?: return PsiReference.EMPTY_ARRAY
-        if (function.parameters.isEmpty() || function.parameters[0].name != (attributesArray.firstPsiChild as Variable).name) return PsiReference.EMPTY_ARRAY
+        if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return PsiReference.EMPTY_ARRAY
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
