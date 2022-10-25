@@ -1,24 +1,17 @@
 package com.github.ekvedaras.classfactoryphpstorm.support
 
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.PhpIndex
-import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
-import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpClass
-import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
-import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
 class Utilities private constructor() {
     companion object {
@@ -28,8 +21,11 @@ class Utilities private constructor() {
             (this.extendsList.lastChild is ClassReference) && (this.extendsList.lastChild as ClassReference).name == "ClassFactory"
 
         // TODO There must be a better way
+        fun PhpType.getFirstClass(project: Project) =
+            this.types.firstOrNull { it.contains("#C") }?.substringAfter("#C")?.substringBefore('.')?.getClass(project)
+
         fun PhpType.isClassFactory(project: Project) =
-            !this.isAmbiguous && this.types.first().substringAfter("#C").substringBefore('.').getClass(project)?.isClassFactory() == true
+            !this.isAmbiguous && this.getFirstClass(project)?.isClassFactory() == true
 
         fun Method.isClassFactoryDefinition() =
             this.name == "definition" && this.containingClass?.isClassFactory() ?: false

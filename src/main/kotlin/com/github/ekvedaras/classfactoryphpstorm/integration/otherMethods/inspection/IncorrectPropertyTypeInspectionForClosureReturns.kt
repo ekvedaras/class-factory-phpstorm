@@ -1,9 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
-import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
-import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider.Companion.getClassFactoryDefinitionType
-import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider.Companion.getClassFactoryStateType
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
@@ -68,11 +65,11 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
                 if (stateValue !is PhpTypedElement) return
                 val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type
 
-                val factoryDefinitionValue =
-                    classFactoryMethodReference.classFactory.definitionMethod?.getPropertyDefinition(property.name)?.value
-                        ?: property.type
-                if (factoryDefinitionValue !is PhpTypedElement) return
-                val factoryDefinitionValueType = factoryDefinitionValue.getClassFactoryDefinitionType() ?: factoryDefinitionValue.type
+                val factoryDefinitionValueType = classFactoryMethodReference
+                    .classFactory
+                    .definitionMethod
+                    ?.getPropertyDefinition(property.name)
+                    ?.typeForDefinition()
 
                 val classFactoryUsed = stateValueType.isClassFactory(expression.project)
 

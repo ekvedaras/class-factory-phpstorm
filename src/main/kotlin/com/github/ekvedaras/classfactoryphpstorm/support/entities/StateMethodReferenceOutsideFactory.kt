@@ -2,6 +2,7 @@ package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getFirstClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
