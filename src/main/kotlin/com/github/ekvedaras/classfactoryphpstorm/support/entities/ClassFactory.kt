@@ -16,7 +16,11 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType
 class ClassFactory(private val clazz: PhpClass) {
     companion object {
         fun PhpType.asClassFactory(project: Project): ClassFactory? {
-            return try { ClassFactory(this.getFirstClass(project) ?: return null) } catch (e: DomainException) { null }
+            return try {
+                ClassFactory(this.getFirstClass(project) ?: return null)
+            } catch (e: DomainException) {
+                null
+            }
         }
     }
 
@@ -27,8 +31,12 @@ class ClassFactory(private val clazz: PhpClass) {
     init {
         if (!clazz.isClassFactory()) throw ClassFactoryException.givenClassIsNotClassFactory()
 
-        targetClass = TargetClass(this.getClassField()?.getClassReference()?.getClass() ?: throw ClassFactoryException.unableToFindTargetClass())
-        definitionMethod = DefinitionMethod(clazz.ownMethods.firstOrNull { it.name == "definition" } ?: throw ClassFactoryException.unableToFindDefinitionMethod(), this)
+        targetClass = TargetClass(
+            this.getClassField()?.getClassReference()?.getClass()
+                ?: throw ClassFactoryException.unableToFindTargetClass()
+        )
+        definitionMethod = DefinitionMethod(clazz.ownMethods.firstOrNull { it.name == "definition" }
+            ?: throw ClassFactoryException.unableToFindDefinitionMethod(), this)
     }
 
     private fun getClassField() = clazz.childrenOfType<PhpClassFieldsList>()

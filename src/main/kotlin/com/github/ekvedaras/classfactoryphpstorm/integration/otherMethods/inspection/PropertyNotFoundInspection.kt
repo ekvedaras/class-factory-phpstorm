@@ -42,14 +42,17 @@ class PropertyNotFoundInspection : PhpInspection() {
                     when (true) {
                         methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
                         methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(
+                            methodReference
+                        )
+
                         else -> return
                     }
                 } catch (e: DomainException) {
                     return
                 }
 
-                val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
+                val targetClass = classFactoryMethodReference.classFactory.targetClass
 
                 if (targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(

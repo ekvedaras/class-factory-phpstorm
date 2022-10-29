@@ -37,7 +37,10 @@ class StateMethodReferenceInsideFactory(private val methodReference: MethodRefer
 
 internal class StateMethodReferenceInsideFactoryException(message: String) : DomainException(message) {
     companion object {
-        fun notStateMethodReference() = StateMethodReferenceInsideFactoryException("Given PSI method reference is not to ClassFactory state method inside factory.")
-        fun unableToFindMethodClass() = StateMethodReferenceInsideFactoryException("Failed to load make the class of state method reference")
+        fun notStateMethodReference() =
+            StateMethodReferenceInsideFactoryException("Given PSI method reference is not to ClassFactory state method inside factory.")
+
+        fun unableToFindMethodClass() =
+            StateMethodReferenceInsideFactoryException("Failed to load make the class of state method reference")
     }
 }

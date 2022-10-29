@@ -42,7 +42,7 @@ class ClassPropertyReferenceProvider : PsiReferenceProvider() {
             return PsiReference.EMPTY_ARRAY
         }
 
-        val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY
+        val targetClass = classFactoryMethodReference.classFactory.targetClass
 
         return arrayOf(ClassPropertyReference(element as StringLiteralExpression, targetClass))
     }

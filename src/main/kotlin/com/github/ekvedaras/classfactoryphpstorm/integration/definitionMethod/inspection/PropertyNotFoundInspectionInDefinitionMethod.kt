@@ -35,7 +35,11 @@ class PropertyNotFoundInspectionInDefinitionMethod : PhpInspection() {
                 val method = arrayHashElement.parentOfType<Method>() ?: return
                 if (!method.isClassFactoryDefinition()) return
 
-                val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return }
+                val definitionMethod = try {
+                    DefinitionMethod(method)
+                } catch (e: DomainException) {
+                    return
+                }
 
                 if (definitionMethod.classFactory.targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(

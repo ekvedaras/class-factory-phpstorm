@@ -55,7 +55,10 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                     when (true) {
                         methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
                         methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(
+                            methodReference
+                        )
+
                         else -> return
                     }
                 } catch (e: DomainException) {
@@ -74,15 +77,22 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                     classFactoryMethodReference.classFactory.definitionMethod.getPropertyDefinition(property.name)?.value
                         ?: property.type
                 if (factoryDefinitionValue !is PhpTypedElement) return
-                val factoryDefinitionValueType = factoryDefinitionValue.getClassFactoryDefinitionType() ?: factoryDefinitionValue.type
+                val factoryDefinitionValueType =
+                    factoryDefinitionValue.getClassFactoryDefinitionType() ?: factoryDefinitionValue.type
 
                 val classFactoryUsedInState = stateValueType.isClassFactory(expression.project)
                 val classFactoryUsedInDefinition = factoryDefinitionValueType.isClassFactory(expression.project)
 
                 if (classFactoryUsedInState || classFactoryUsedInDefinition) {
                     if (
-                        ((classFactoryUsedInState && ClassFactory(stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass.type != property.type))
-                        || ((classFactoryUsedInDefinition && ClassFactory(factoryDefinitionValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass.type != property.type))
+                        ((classFactoryUsedInState && ClassFactory(
+                            stateValueType.types.first().substringAfter("#C").substringBefore('.')
+                                .getClass(expression.project) ?: return
+                        ).targetClass.type != property.type))
+                        || ((classFactoryUsedInDefinition && ClassFactory(
+                            factoryDefinitionValueType.types.first().substringAfter("#C").substringBefore('.')
+                                .getClass(expression.project) ?: return
+                        ).targetClass.type != property.type))
                     ) {
                         holder.registerProblem(
                             arrayHashElement.value ?: return,

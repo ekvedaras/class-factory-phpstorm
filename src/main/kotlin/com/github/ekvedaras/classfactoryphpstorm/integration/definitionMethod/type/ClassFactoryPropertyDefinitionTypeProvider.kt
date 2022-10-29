@@ -8,7 +8,6 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isC
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -17,10 +16,8 @@ import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ArrayIndex
-import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.Method
-import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpClass
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReturn
@@ -71,7 +68,11 @@ class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
         val classFactoryReference = incompleteType.substringAfter("#${this.key}").substringBefore('.')
         val key = incompleteType.substringAfter('.').substringBefore('|')
 
-        val classFactory = try { ClassFactory(classFactoryReference.getClass(project) ?: return null) } catch (e: DomainException) { return null }
+        val classFactory = try {
+            ClassFactory(classFactoryReference.getClass(project) ?: return null)
+        } catch (e: DomainException) {
+            return null
+        }
 
         val propertyDefinition =
             classFactory.definitionMethod.getPropertyDefinition(key) ?: return null

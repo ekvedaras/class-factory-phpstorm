@@ -28,8 +28,17 @@ class ClassPropertyReferenceProviderForFactoryDefinition : PsiReferenceProvider(
         val method = arrayHashElement.parentOfType<Method>() ?: return PsiReference.EMPTY_ARRAY
         if (!method.isClassFactoryDefinition()) return PsiReference.EMPTY_ARRAY
 
-        val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return PsiReference.EMPTY_ARRAY }
+        val definitionMethod = try {
+            DefinitionMethod(method)
+        } catch (e: DomainException) {
+            return PsiReference.EMPTY_ARRAY
+        }
 
-        return arrayOf(ClassPropertyReference(element as StringLiteralExpression, definitionMethod.classFactory.targetClass))
+        return arrayOf(
+            ClassPropertyReference(
+                element as StringLiteralExpression,
+                definitionMethod.classFactory.targetClass
+            )
+        )
     }
 }

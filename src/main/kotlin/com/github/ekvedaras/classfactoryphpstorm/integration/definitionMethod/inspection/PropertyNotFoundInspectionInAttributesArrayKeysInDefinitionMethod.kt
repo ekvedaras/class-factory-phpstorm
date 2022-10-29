@@ -40,7 +40,7 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod : PhpIns
 
                 val function = attributesArray.parentOfType<Function>() ?: return
                 if (function.parent.parent.parent !is ArrayHashElement) return
-                if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
+                if (!(attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
 
                 val arrayHashElement = function.parent.parent.parent
 
@@ -51,7 +51,11 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod : PhpIns
                 val method = arrayHashElement.parentOfType<Method>() ?: return
                 if (!method.isClassFactoryDefinition()) return
 
-                val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return }
+                val definitionMethod = try {
+                    DefinitionMethod(method)
+                } catch (e: DomainException) {
+                    return
+                }
 
                 if (definitionMethod.classFactory.targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(

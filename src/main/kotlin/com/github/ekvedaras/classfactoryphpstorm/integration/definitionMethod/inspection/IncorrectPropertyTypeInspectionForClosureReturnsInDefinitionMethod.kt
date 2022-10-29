@@ -30,29 +30,30 @@ class IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod : PhpIn
                 }
 
                 val definition = try {
-                    ClassFactoryPropertyDefinition(attributeAccess.function.parent.parent.parent as? ArrayHashElement ?: return)
+                    ClassFactoryPropertyDefinition(
+                        attributeAccess.function.parent.parent.parent as? ArrayHashElement ?: return
+                    )
                 } catch (e: DomainException) {
                     return
                 }
 
                 if (!attributeAccess.function.parent.isArrayHashValueOf(definition.element)) return
 
-                val property = definition.method.classFactory.targetClass.getPropertyByName(definition.propertyName) ?: return
+                val property =
+                    definition.method.classFactory.targetClass.getPropertyByName(definition.propertyName) ?: return
 
-                if (property.type != (attributeAccess.getCompleteType().asClassFactory(expression.project)?.targetClass?.type ?: attributeAccess.getCompleteType())) {
+                if (property.type != (attributeAccess.getCompleteType()
+                        .asClassFactory(expression.project)?.targetClass?.type ?: attributeAccess.getCompleteType())
+                ) {
                     holder.registerProblem(
                         attributeAccess.element,
                         MyBundle.message("incorrectPropertyType")
                             .replace("{property}", property.name)
-                            .replace("{class}",  definition.method.classFactory.targetClass.name),
+                            .replace("{class}", definition.method.classFactory.targetClass.name),
                         ProblemHighlightType.WARNING,
                         TextRange(0, attributeAccess.element.textLength)
                     )
                 }
-
-//                if ((factoryValueType.asClassFactory(expression.project)?.targetClass?.type != property.type) || (!classFactoryUsed && property.type != factoryValueType)) {
-//
-//                }
             }
         }
     }

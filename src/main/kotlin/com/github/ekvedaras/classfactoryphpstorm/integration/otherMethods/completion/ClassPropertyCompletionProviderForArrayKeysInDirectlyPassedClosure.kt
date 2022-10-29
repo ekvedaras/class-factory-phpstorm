@@ -50,7 +50,7 @@ class ClassPropertyCompletionProviderForArrayKeysInDirectlyPassedClosure :
             return
         }
 
-        val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
+        val targetClass = classFactoryMethodReference.classFactory.targetClass
 
         val alreadyDefinedProperties = classFactoryMethodReference.definedProperties
 

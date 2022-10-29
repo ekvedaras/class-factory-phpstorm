@@ -26,6 +26,7 @@ class TargetClassConstructor(private val constructor: Method, private val target
 
 internal class TargetClassConstructorException(message: String) : DomainException(message) {
     companion object {
-        fun notConstructor(given: Method) = TargetClassConstructorException("Given PSI method name must be __construct. ${given.name} given.")
+        fun notConstructor(given: Method) =
+            TargetClassConstructorException("Given PSI method name must be __construct. ${given.name} given.")
     }
 }

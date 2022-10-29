@@ -41,13 +41,16 @@ class DefinitionMethod(private val method: Method, ofClassFactory: ClassFactory?
         }
 
     fun getPropertyDefinition(name: String): ClassFactoryPropertyDefinition? {
-        return ClassFactoryPropertyDefinition(definedProperties.firstOrNull { it.key?.text?.unquoteAndCleanup() == name } ?: return null)
+        return ClassFactoryPropertyDefinition(definedProperties.firstOrNull { it.key?.text?.unquoteAndCleanup() == name }
+            ?: return null)
     }
 }
 
 internal class DefinitionMethodException(message: String) : DomainException(message) {
     companion object {
-        fun notClassFactoryDefinition() = DefinitionMethodException("Given PSI method is not a ClassFactory definition method")
+        fun notClassFactoryDefinition() =
+            DefinitionMethodException("Given PSI method is not a ClassFactory definition method")
+
         fun noContainingClassFound() = DefinitionMethodException("Failed to load class of definition method")
     }
 }

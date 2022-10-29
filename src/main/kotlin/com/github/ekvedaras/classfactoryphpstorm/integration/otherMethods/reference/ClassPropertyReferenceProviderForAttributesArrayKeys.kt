@@ -36,7 +36,7 @@ class ClassPropertyReferenceProviderForAttributesArrayKeys : PsiReferenceProvide
         if (attributesArray.firstPsiChild !is Variable) return PsiReference.EMPTY_ARRAY
 
         val function = attributesArray.parentOfType<Function>() ?: return PsiReference.EMPTY_ARRAY
-        if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return PsiReference.EMPTY_ARRAY
+        if (!(attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return PsiReference.EMPTY_ARRAY
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
 
@@ -63,7 +63,7 @@ class ClassPropertyReferenceProviderForAttributesArrayKeys : PsiReferenceProvide
             return PsiReference.EMPTY_ARRAY
         }
 
-        val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY
+        val targetClass = classFactoryMethodReference.classFactory.targetClass
 
         return arrayOf(ClassPropertyReference(element as StringLiteralExpression, targetClass))
     }

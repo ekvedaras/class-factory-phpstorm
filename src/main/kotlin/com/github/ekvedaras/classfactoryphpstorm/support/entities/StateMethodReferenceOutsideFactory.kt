@@ -3,7 +3,6 @@ package com.github.ekvedaras.classfactoryphpstorm.support.entities
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getFirstClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
@@ -38,7 +37,10 @@ class StateMethodReferenceOutsideFactory(private val methodReference: MethodRefe
 
 internal class StateMethodReferenceOutsideFactoryException(message: String) : DomainException(message) {
     companion object {
-        fun notStateMethodReference() = StateMethodReferenceOutsideFactoryException("Given PSI method reference is not to ClassFactory state method outside factory.")
-        fun unableToFindMethodClass() = StateMethodReferenceOutsideFactoryException("Failed to load make the class of state method reference")
+        fun notStateMethodReference() =
+            StateMethodReferenceOutsideFactoryException("Given PSI method reference is not to ClassFactory state method outside factory.")
+
+        fun unableToFindMethodClass() =
+            StateMethodReferenceOutsideFactoryException("Failed to load make the class of state method reference")
     }
 }

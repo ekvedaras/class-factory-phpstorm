@@ -39,7 +39,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosure :
         if (attributesArray.firstPsiChild !is Variable) return
 
         val function = attributesArray.parentOfType<Function>() ?: return
-        if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
+        if (!(attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return
 
@@ -65,7 +65,7 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosure :
             return
         }
 
-        val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
+        val targetClass = classFactoryMethodReference.classFactory.targetClass
 
         result.addAllElements(
             targetClass

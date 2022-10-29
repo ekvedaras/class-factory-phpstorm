@@ -37,7 +37,10 @@ class MakeMethodReference(private val methodReference: MethodReference) : ClassF
 
 internal class MakeMethodReferenceException(message: String) : DomainException(message) {
     companion object {
-        fun notMakeMethodReference() = MakeMethodReferenceException("Given PSI method reference is not to ClassFactory make method.")
-        fun unableToFindMethodClass() = MakeMethodReferenceException("Failed to load make the class of make method reference")
+        fun notMakeMethodReference() =
+            MakeMethodReferenceException("Given PSI method reference is not to ClassFactory make method.")
+
+        fun unableToFindMethodClass() =
+            MakeMethodReferenceException("Failed to load make the class of make method reference")
     }
 }

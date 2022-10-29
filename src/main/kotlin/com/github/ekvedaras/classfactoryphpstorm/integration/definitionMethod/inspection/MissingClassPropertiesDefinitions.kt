@@ -29,7 +29,11 @@ class MissingClassPropertiesDefinitions : PhpInspection() {
                 val method = expression.parentOfType<Method>() ?: return
                 if (!method.isClassFactoryDefinition()) return
 
-                val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return }
+                val definitionMethod = try {
+                    DefinitionMethod(method)
+                } catch (e: DomainException) {
+                    return
+                }
 
                 val alreadyDefinedProperties = definitionMethod.definedProperties
                 val missingProperties = definitionMethod

@@ -3,25 +3,14 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isMostLikelyClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isMostLikelyClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory.Companion.asClassFactory
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClosureState
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceInsideFactory
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceOutsideFactory
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -32,16 +21,13 @@ import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ArrayIndex
 import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
-import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpClass
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
-import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
-import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
 class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
     companion object {
@@ -69,7 +55,7 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
         if (key !is StringLiteralExpression) return null
 
         val function = element.parentOfType<Function>() ?: return null
-        if (! (element.firstPsiChild as Variable).isNthFunctionParameter(function)) return null
+        if (!(element.firstPsiChild as Variable).isNthFunctionParameter(function)) return null
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return null
 
@@ -85,7 +71,7 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
             function.parent.parent.parent as MethodReference
         }
 
-        if (! methodReference.isClassFactoryState() && ! methodReference.isMostLikelyClassFactoryMakeMethod() && ! methodReference.isMostLikelyClassFactoryStateMethod()) {
+        if (!methodReference.isClassFactoryState() && !methodReference.isMostLikelyClassFactoryMakeMethod() && !methodReference.isMostLikelyClassFactoryStateMethod()) {
             return null
         }
 
@@ -103,14 +89,19 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
         val classFactoryReference = incompleteType.substringAfter("#${this.key}").substringBefore('.')
         val key = incompleteType.substringAfter('.').substringBefore('|')
 
-        val classFactory = try { ClassFactory(classFactoryReference.getClass(project) ?: return null) } catch (e: DomainException) { return null }
+        val classFactory = try {
+            ClassFactory(classFactoryReference.getClass(project) ?: return null)
+        } catch (e: DomainException) {
+            return null
+        }
 
         val propertyDefinition = classFactory
             .definitionMethod
             .getPropertyDefinition(key) ?: return null
 
         if (propertyDefinition.isClosure()) {
-            return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(ClassFactoryPropertyDefinitionTypeProvider())
+            return propertyDefinition.asClosureState()
+                ?.resolveReturnedTypeFromClassFactory(ClassFactoryPropertyDefinitionTypeProvider())
         }
 
         return propertyDefinition.value.type

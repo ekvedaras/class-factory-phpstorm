@@ -47,22 +47,30 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
                     when (true) {
                         methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
                         methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(
+                            methodReference
+                        )
+
                         else -> return
                     }
                 } catch (e: DomainException) {
                     return
                 }
 
-                val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
+                val targetClass = classFactoryMethodReference.classFactory.targetClass
                 val property = targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) ?: return
                 val factoryValue = arrayHashElement.value ?: return
                 if (factoryValue !is PhpTypedElement) return
 
                 // TODO There must be a better way
-                val classFactoryUsed = factoryValue is MethodReference && factoryValue.classReference is ClassReference && (factoryValue.classReference as ClassReference).getClass()?.isClassFactory() == true
+                val classFactoryUsed =
+                    factoryValue is MethodReference && factoryValue.classReference is ClassReference && (factoryValue.classReference as ClassReference).getClass()
+                        ?.isClassFactory() == true
 
-                if ((classFactoryUsed && ClassFactory(((factoryValue as MethodReference).classReference as ClassReference).getClass() ?: return).targetClass?.type != property.type) || (!classFactoryUsed && property.type != factoryValue.type)) {
+                if ((classFactoryUsed && ClassFactory(
+                        ((factoryValue as MethodReference).classReference as ClassReference).getClass() ?: return
+                    ).targetClass.type != property.type) || (!classFactoryUsed && property.type != factoryValue.type)
+                ) {
                     holder.registerProblem(
                         factoryValue,
                         MyBundle.message("incorrectPropertyType")

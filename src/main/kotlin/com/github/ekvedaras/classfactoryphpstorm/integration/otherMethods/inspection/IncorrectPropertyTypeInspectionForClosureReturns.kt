@@ -22,7 +22,6 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
-import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.MethodReference
@@ -56,17 +55,24 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
                     when (true) {
                         methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
                         methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(
+                            methodReference
+                        )
+
                         else -> return
                     }
                 } catch (e: DomainException) {
                     return
                 }
 
-                val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
+                val targetClass = classFactoryMethodReference.classFactory.targetClass
                 val property = targetClass.getPropertyByName(key.text.unquoteAndCleanup()) ?: return
 
-                val stateValue = if (expression.firstPsiChild is MethodReference) { (expression.firstPsiChild as MethodReference).firstPsiChild } else { expression.firstPsiChild } ?: return
+                val stateValue = if (expression.firstPsiChild is MethodReference) {
+                    (expression.firstPsiChild as MethodReference).firstPsiChild
+                } else {
+                    expression.firstPsiChild
+                } ?: return
 
                 if (stateValue !is PhpTypedElement) return
 
@@ -80,7 +86,11 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
 
                 val classFactoryUsed = stateValueType.isClassFactory(expression.project)
 
-                if ((classFactoryUsed && ClassFactory(stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type) || (!classFactoryUsed && stateValueType != factoryDefinitionValueType)) {
+                if ((classFactoryUsed && ClassFactory(
+                        stateValueType.types.first().substringAfter("#C").substringBefore('.')
+                            .getClass(expression.project) ?: return
+                    ).targetClass.type != property.type) || (!classFactoryUsed && stateValueType != factoryDefinitionValueType)
+                ) {
                     holder.registerProblem(
                         stateValue,
                         MyBundle.message("incorrectPropertyType")

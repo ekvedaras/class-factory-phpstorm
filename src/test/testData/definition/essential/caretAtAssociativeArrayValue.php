@@ -14,6 +14,7 @@ class AccountFactory extends ClassFactory {
     {
         return [
             'id' => '<caret>',
+            'age' => 1,
         ];
     }
 }

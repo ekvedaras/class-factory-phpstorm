@@ -33,7 +33,7 @@ class ClassPropertyReferenceProviderForAttributesArrayKeysInFactoryDefinition : 
 
         val function = attributesArray.parentOfType<Function>() ?: return PsiReference.EMPTY_ARRAY
         if (function.parent.parent.parent !is ArrayHashElement) return PsiReference.EMPTY_ARRAY
-        if (! (attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return PsiReference.EMPTY_ARRAY
+        if (!(attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return PsiReference.EMPTY_ARRAY
 
         val arrayHashElement = function.parent.parent.parent
 
@@ -44,8 +44,17 @@ class ClassPropertyReferenceProviderForAttributesArrayKeysInFactoryDefinition : 
         val method = arrayHashElement.parentOfType<Method>() ?: return PsiReference.EMPTY_ARRAY
         if (!method.isClassFactoryDefinition()) return PsiReference.EMPTY_ARRAY
 
-        val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return PsiReference.EMPTY_ARRAY }
+        val definitionMethod = try {
+            DefinitionMethod(method)
+        } catch (e: DomainException) {
+            return PsiReference.EMPTY_ARRAY
+        }
 
-        return arrayOf(ClassPropertyReference(element as StringLiteralExpression, definitionMethod.classFactory.targetClass))
+        return arrayOf(
+            ClassPropertyReference(
+                element as StringLiteralExpression,
+                definitionMethod.classFactory.targetClass
+            )
+        )
     }
 }

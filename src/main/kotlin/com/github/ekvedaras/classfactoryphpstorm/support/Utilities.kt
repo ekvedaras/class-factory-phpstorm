@@ -43,8 +43,11 @@ class Utilities private constructor() {
             null
         }
 
-        fun MethodReference.isMostLikelyClassFactoryMakeMethod() = this.name == "make" && this.getActualClassReference()?.fqn?.endsWith("Factory") == true
-        fun MethodReference.isMostLikelyClassFactoryStateMethod() = this.name == "state" && this.getActualClassReference()?.fqn?.endsWith("Factory") == true
+        fun MethodReference.isMostLikelyClassFactoryMakeMethod() =
+            this.name == "make" && this.getActualClassReference()?.fqn?.endsWith("Factory") == true
+
+        fun MethodReference.isMostLikelyClassFactoryStateMethod() =
+            this.name == "state" && this.getActualClassReference()?.fqn?.endsWith("Factory") == true
 
         fun MethodReference.isClassFactoryMakeMethod() =
             this.name == "make" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
@@ -62,6 +65,7 @@ class Utilities private constructor() {
         fun ClassReference.getClass() = this.fqn?.getClass(this.project)
 
         fun Function.isShort(): Boolean = this.firstChild?.textMatches("fn") == true
-        fun Variable.isNthFunctionParameter(function: Function, n: Int = 0): Boolean = function.parameters.size > n && function.parameters[n].name == this.name
+        fun Variable.isNthFunctionParameter(function: Function, n: Int = 0): Boolean =
+            function.parameters.size > n && function.parameters[n].name == this.name
     }
 }
