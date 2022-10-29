@@ -34,11 +34,17 @@ class ClassFactoryPropertyDefinition(val element : ArrayHashElement) {
     }
 
     fun typeForDefinition(): PhpType {
-        return ClassFactoryPropertyDefinitionTypeProvider().getType(this.value) ?: this.value.type
-    }
+        val provider = ClassFactoryPropertyDefinitionTypeProvider()
 
-    fun typeForState(): PhpType {
-        return AttributesArrayValueTypeProvider().getType(this.value) ?: this.value.type
+        if (this.isClosure()) {
+            return this.asClosureState()?.resolveReturnedTypeFromClassFactory(provider) ?: this.value.type
+        }
+
+        val type = provider.getType(this.value)
+
+        if (type?.isComplete == true) return type
+
+        return provider.complete(type.toString(), element.project) ?: this.value.type
     }
 }
 

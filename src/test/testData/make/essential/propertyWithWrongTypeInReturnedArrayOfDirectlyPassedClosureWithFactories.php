@@ -52,7 +52,7 @@ class AccountFactory extends ClassFactory {
 
 AccountFactory::new()->make(fn (array $attributes) => [
     'id' => new Id(),
-    'age<caret>' => <warning descr="Incorrect type for property 'age' of 'Account' class">$attributes['id']</warning>,
+    'age' => <warning descr="Incorrect type for property 'age' of 'Account' class">$attributes['id']</warning>,
 ]);
 
 AccountFactory::new()->make(fn (array $attributes) => [

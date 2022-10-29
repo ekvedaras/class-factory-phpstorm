@@ -1,7 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isShortClosure
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isShort
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.Function
@@ -19,7 +19,7 @@ class ClosureState(val closure: Function) {
 
         if (closure.parameters.isEmpty()) return null
 
-        if (closure.isShortClosure()) {
+        if (closure.isShort()) { // TODO: returns false for: fn (array $attributes) => $attributes['firstName']
             val type = using.getType(
                 closure
                     .childrenOfType<ArrayAccessExpression>()

@@ -6,6 +6,8 @@ import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.in
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.PropertyNotFoundInspectionInDefinitionMethod
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure
+import com.github.ekvedaras.classfactoryphpstorm.support.psiReferences.ClassPropertyReference
+import com.intellij.usages.ReadWriteAccessUsageInfo2UsageAdapter
 import com.jetbrains.php.lang.inspections.PhpInspection
 
 internal class DefinitionMethodTest : EssentialTestCase() {
@@ -32,6 +34,32 @@ internal class DefinitionMethodTest : EssentialTestCase() {
 
     fun testItDetectsMissingPropertyDefinitions() {
         assertInspection("missingPropertyDefinition.php", MissingClassPropertiesDefinitions())
+    }
+
+    override fun testItResolvesReferencesInAssociativeArrayKeys() {
+        val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdInConstructorWithUsage.php")
+
+        assertEquals(1, usages.size)
+
+        val usage = usages.first() as ReadWriteAccessUsageInfo2UsageAdapter
+
+        assertEquals(ClassPropertyReference::class.java, usage.referenceClass)
+        assertTrue(usage.element?.textMatches("'id'") ?: false)
+        assertTrue(usage.element?.textRange?.startOffset == usage.navigationRange.startOffset - 1)
+        assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
+    }
+
+    override fun testItResolvesReferencesInAssociativeArrayKeysWhenThereIsNoConstructor() {
+        val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdPropertyWithUsage.php")
+
+        assertEquals(1, usages.size)
+
+        val usage = usages.first() as ReadWriteAccessUsageInfo2UsageAdapter
+
+        assertEquals(ClassPropertyReference::class.java, usage.referenceClass)
+        assertTrue(usage.element?.textMatches("'id'") ?: false)
+        assertTrue(usage.element?.textRange?.startOffset == usage.navigationRange.startOffset - 1)
+        assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
     }
 
     override fun testItCompletesPropertiesAsArrayKeysOfAttributesArrayInDirectlyPassedClosure() {

@@ -61,7 +61,7 @@ class Utilities private constructor() {
 
         fun ClassReference.getClass() = this.fqn?.getClass(this.project)
 
-        fun Function.isShortClosure(): Boolean = this.firstPsiChild?.textMatches("fn") == true
+        fun Function.isShort(): Boolean = this.firstChild?.textMatches("fn") == true
         fun Variable.isNthFunctionParameter(function: Function, n: Int = 0): Boolean = function.parameters.size > n && function.parameters[n].name == this.name
     }
 }

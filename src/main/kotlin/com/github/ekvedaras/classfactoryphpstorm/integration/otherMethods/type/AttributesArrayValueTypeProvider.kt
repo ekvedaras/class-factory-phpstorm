@@ -1,9 +1,12 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type
 
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
@@ -12,6 +15,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isM
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory.Companion.asClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClosureState
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
@@ -30,6 +34,7 @@ import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.PhpClass
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
@@ -40,7 +45,14 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
 class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
     companion object {
-        fun PhpTypedElement.getClassFactoryStateType() = AttributesArrayValueTypeProvider().getType(this)
+        fun PhpTypedElement.getClassFactoryStateType(): PhpType? {
+            val provider = AttributesArrayValueTypeProvider()
+            val type = provider.getType(this)
+
+            if (type?.isComplete == true) return type
+
+            return provider.complete(type.toString(), this.project)
+        }
     }
 
     override fun getKey(): Char {
@@ -77,6 +89,10 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
             return null
         }
 
+        if (methodReference.isClassFactoryState()) {
+            return PhpType().add("#${this.key}${methodReference.parentOfType<PhpClass>()?.fqn}.${key.text.unquoteAndCleanup()}")
+        }
+
 
         return PhpType().add("#${this.key}${((methodReference.classReference as MethodReference).classReference as ClassReference).fqn}.${key.text.unquoteAndCleanup()}")
     }
@@ -94,7 +110,7 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
             .getPropertyDefinition(key) ?: return null
 
         if (propertyDefinition.isClosure()) {
-            return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(this)
+            return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(ClassFactoryPropertyDefinitionTypeProvider())
         }
 
         return propertyDefinition.value.type

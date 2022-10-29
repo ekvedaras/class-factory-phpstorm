@@ -66,14 +66,16 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
                 val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
                 val property = targetClass.getPropertyByName(key.text.unquoteAndCleanup()) ?: return
 
-                val stateValue = expression.firstPsiChild ?: return
+                val stateValue = if (expression.firstPsiChild is MethodReference) { (expression.firstPsiChild as MethodReference).firstPsiChild } else { expression.firstPsiChild } ?: return
+
                 if (stateValue !is PhpTypedElement) return
+
                 val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type
 
                 val factoryDefinitionValueType = classFactoryMethodReference
                     .classFactory
                     .definitionMethod
-                    ?.getPropertyDefinition(property.name)
+                    .getPropertyDefinition(property.name)
                     ?.typeForDefinition()
 
                 val classFactoryUsed = stateValueType.isClassFactory(expression.project)

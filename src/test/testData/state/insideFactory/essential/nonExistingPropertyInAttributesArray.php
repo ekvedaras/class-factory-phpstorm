@@ -21,7 +21,7 @@ class AccountFactory extends ClassFactory {
     public function specialState(): static
     {
         return $this->state([
-            'id<caret>' => function (array $attributes) {
+            'id' => function (array $attributes) {
                 return $attributes['<warning descr="Cannot resolve argument 'ages' of 'Account' class constructor">ages</warning>'];
             },
         ]);

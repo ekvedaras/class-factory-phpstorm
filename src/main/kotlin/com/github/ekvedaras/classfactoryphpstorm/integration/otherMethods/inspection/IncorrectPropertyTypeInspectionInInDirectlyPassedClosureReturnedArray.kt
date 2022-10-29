@@ -38,8 +38,8 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
 
                 if (DumbService.isDumb(expression.project)) return
 
-                val arrayReturnedByClosure = expression.parent.parent.parent
-                val arrayHashElement = expression.parent.parent
+                val arrayReturnedByClosure = expression.parent.parent.parent.parent.parent
+                val arrayHashElement = expression.parent.parent.parent.parent
 
                 if (arrayHashElement !is ArrayHashElement) return
                 if (arrayReturnedByClosure !is ArrayCreationExpression) return
@@ -48,6 +48,8 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
 
                 if (function.parent.parent.parent !is MethodReference) return
                 val methodReference = function.parent.parent.parent as MethodReference
+
+                val key = arrayHashElement.key ?: return
 
                 val classFactoryMethodReference: ClassFactoryMethodReference = try {
                     when (true) {
@@ -60,8 +62,8 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                     return
                 }
 
-                val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return
-                val property = targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) ?: return
+                val targetClass = classFactoryMethodReference.classFactory.targetClass
+                val property = targetClass.getPropertyByName(key.text.unquoteAndCleanup()) ?: return
 
                 val stateValue = arrayHashElement.value ?: return
                 if (stateValue !is PhpTypedElement) return
@@ -69,7 +71,7 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                 val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type
 
                 val factoryDefinitionValue =
-                    classFactoryMethodReference.classFactory.definitionMethod?.getPropertyDefinition(property.name)?.value
+                    classFactoryMethodReference.classFactory.definitionMethod.getPropertyDefinition(property.name)?.value
                         ?: property.type
                 if (factoryDefinitionValue !is PhpTypedElement) return
                 val factoryDefinitionValueType = factoryDefinitionValue.getClassFactoryDefinitionType() ?: factoryDefinitionValue.type
@@ -79,13 +81,13 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
 
                 if (classFactoryUsedInState || classFactoryUsedInDefinition) {
                     if (
-                        ((classFactoryUsedInState && ClassFactory(stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type))
-                        || ((classFactoryUsedInDefinition && ClassFactory(factoryDefinitionValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass?.type != property.type))
+                        ((classFactoryUsedInState && ClassFactory(stateValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass.type != property.type))
+                        || ((classFactoryUsedInDefinition && ClassFactory(factoryDefinitionValueType.types.first().substringAfter("#C").substringBefore('.').getClass(expression.project) ?: return).targetClass.type != property.type))
                     ) {
                         holder.registerProblem(
                             arrayHashElement.value ?: return,
                             MyBundle.message("incorrectPropertyType")
-                                .replace("{property}", expression.text.unquoteAndCleanup())
+                                .replace("{property}", key.text.unquoteAndCleanup())
                                 .replace("{class}", targetClass.name),
                             ProblemHighlightType.WARNING,
                             TextRange(0, arrayHashElement.value?.textLength ?: return)
@@ -95,7 +97,7 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                     holder.registerProblem(
                         arrayHashElement.value ?: return,
                         MyBundle.message("incorrectPropertyType")
-                            .replace("{property}", expression.text.unquoteAndCleanup())
+                            .replace("{property}", key.text.unquoteAndCleanup())
                             .replace("{class}", targetClass.name),
                         ProblemHighlightType.WARNING,
                         TextRange(0, arrayHashElement.value?.textLength ?: return)

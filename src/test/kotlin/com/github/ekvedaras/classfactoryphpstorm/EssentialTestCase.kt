@@ -214,7 +214,7 @@ internal abstract class EssentialTestCase : TestCase() {
         )
     }
 
-    fun testItResolvesReferencesInAssociativeArrayKeys() {
+    open fun testItResolvesReferencesInAssociativeArrayKeys() {
         val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdInConstructorWithUsage.php")
 
         assertEquals(2, usages.size)
@@ -227,7 +227,7 @@ internal abstract class EssentialTestCase : TestCase() {
         assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
     }
 
-    fun testItResolvesReferencesInAssociativeArrayKeysWhenThereIsNoConstructor() {
+    open fun testItResolvesReferencesInAssociativeArrayKeysWhenThereIsNoConstructor() {
         val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdPropertyWithUsage.php")
 
         assertEquals(2, usages.size)
