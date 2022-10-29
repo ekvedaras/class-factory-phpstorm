@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.intellij.psi.util.childrenOfType
@@ -9,13 +10,14 @@ import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 
-class DefinitionMethod(private val method: Method) : ClassFactoryMethodReference {
+class DefinitionMethod(private val method: Method, ofClassFactory: ClassFactory? = null) : ClassFactoryMethodReference {
     override val classFactory: ClassFactory
 
     init {
-        if (!method.isClassFactoryDefinition()) throw Exception("Given PSI method is not a ClassFactory definition method.")
-        classFactory = ClassFactory(
-            method.containingClass ?: throw Exception("Failed to load ClassFactory from definition method")
+        if (!method.isClassFactoryDefinition()) throw DefinitionMethodException.notClassFactoryDefinition()
+
+        classFactory = ofClassFactory ?: ClassFactory(
+            method.containingClass ?: throw DefinitionMethodException.noContainingClassFound()
         )
     }
 
@@ -40,5 +42,12 @@ class DefinitionMethod(private val method: Method) : ClassFactoryMethodReference
 
     fun getPropertyDefinition(name: String): ClassFactoryPropertyDefinition? {
         return ClassFactoryPropertyDefinition(definedProperties.firstOrNull { it.key?.text?.unquoteAndCleanup() == name } ?: return null)
+    }
+}
+
+internal class DefinitionMethodException(message: String) : DomainException(message) {
+    companion object {
+        fun notClassFactoryDefinition() = DefinitionMethodException("Given PSI method is not a ClassFactory definition method")
+        fun noContainingClassFound() = DefinitionMethodException("Failed to load class of definition method")
     }
 }

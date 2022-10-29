@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.completion
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
@@ -36,11 +37,15 @@ class ClassPropertyCompletionProvider : CompletionProvider<CompletionParameters>
 
         val methodReference = array.parentOfType<MethodReference>() ?: return
 
-        val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
-            methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
-            methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-            methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
-            else -> return
+        val classFactoryMethodReference: ClassFactoryMethodReference = try {
+            when (true) {
+                methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+                methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+                methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                else -> return
+            }
+        } catch (e: DomainException) {
+            return
         }
 
         val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return

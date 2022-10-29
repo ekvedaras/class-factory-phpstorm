@@ -65,6 +65,6 @@ AccountFactory::new()->make(['lastName' => function (array $attributes) {
     return $attributes['lastName']->make();
 }]);
 
-AccountFactory::new()->make(['lastName<caret>' => function (array $attributes) {
+AccountFactory::new()->make(['<caret>lastName' => function (array $attributes) {
     return $attributes['lastName'];
 }]);

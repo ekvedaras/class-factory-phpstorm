@@ -1,6 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
@@ -42,11 +43,15 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
 
                 val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return
 
-                val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
-                    methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
-                    methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-                    methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
-                    else -> return
+                val classFactoryMethodReference: ClassFactoryMethodReference = try {
+                    when (true) {
+                        methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+                        methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                        else -> return
+                    }
+                } catch (e: DomainException) {
+                    return
                 }
 
                 val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return

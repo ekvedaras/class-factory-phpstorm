@@ -20,15 +20,7 @@ internal abstract class TestCase : BasePlatformTestCase() {
     protected fun assertInspection(
         @TestDataFile filePath: String,
         inspection: InspectionProfileEntry,
-        inspectCaretFirst: Boolean = false
     ) {
-
-        if (inspectCaretFirst) {
-            myFixture.configureByFile(filePath)
-            myFixture.elementAtCaret
-            // The above is needed sometimes otherwise, PhpCache is empty
-        }
-
         myFixture.enableInspections(inspection)
         myFixture.testHighlighting(filePath)
     }

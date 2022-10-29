@@ -3,6 +3,7 @@ package com.github.ekvedaras.classfactoryphpstorm
 import com.github.ekvedaras.classfactoryphpstorm.support.psiReferences.ClassPropertyReference
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.usages.ReadWriteAccessUsageInfo2UsageAdapter
+import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.inspections.PhpInspection
 
 internal abstract class EssentialTestCase : TestCase() {
@@ -154,7 +155,6 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/nonExistingPropertyInAttributesArray.php",
             propertyNotFoundInAttributesArrayInspection(),
-            true,
         )
     }
 
@@ -183,7 +183,6 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/propertyWithWrongTypeInClosureReturn.php",
             incorrectPropertyTypeInClosureReturnsInspection(),
-            true,
         )
     }
 
@@ -191,7 +190,6 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/propertyWithWrongTypeInClosureReturnWithFactories.php",
             incorrectPropertyTypeInClosureReturnsInspection(),
-            true,
         )
     }
 
@@ -199,7 +197,6 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/propertyWithWrongTypeInReturnedArrayOfDirectlyPassedClosure.php",
             incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(),
-            true,
         )
     }
 
@@ -207,7 +204,6 @@ internal abstract class EssentialTestCase : TestCase() {
         assertInspection(
             "essential/propertyWithWrongTypeInReturnedArrayOfDirectlyPassedClosureWithFactories.php",
             incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(),
-            true,
         )
     }
 
@@ -221,7 +217,7 @@ internal abstract class EssentialTestCase : TestCase() {
     fun testItResolvesReferencesInAssociativeArrayKeys() {
         val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdInConstructorWithUsage.php")
 
-        assertEquals(1, usages.size)
+        assertEquals(2, usages.size)
 
         val usage = usages.first() as ReadWriteAccessUsageInfo2UsageAdapter
 
@@ -234,7 +230,7 @@ internal abstract class EssentialTestCase : TestCase() {
     fun testItResolvesReferencesInAssociativeArrayKeysWhenThereIsNoConstructor() {
         val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdPropertyWithUsage.php")
 
-        assertEquals(1, usages.size)
+        assertEquals(2, usages.size)
 
         val usage = usages.first() as ReadWriteAccessUsageInfo2UsageAdapter
 

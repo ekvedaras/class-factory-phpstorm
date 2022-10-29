@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.reference
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
@@ -43,9 +44,8 @@ class ClassPropertyReferenceProviderForAttributesArrayKeysInFactoryDefinition : 
         val method = arrayHashElement.parentOfType<Method>() ?: return PsiReference.EMPTY_ARRAY
         if (!method.isClassFactoryDefinition()) return PsiReference.EMPTY_ARRAY
 
-        val definitionMethod = DefinitionMethod(method)
-        val targetClass = definitionMethod.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY
+        val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return PsiReference.EMPTY_ARRAY }
 
-        return arrayOf(ClassPropertyReference(element as StringLiteralExpression, targetClass))
+        return arrayOf(ClassPropertyReference(element as StringLiteralExpression, definitionMethod.classFactory.targetClass))
     }
 }

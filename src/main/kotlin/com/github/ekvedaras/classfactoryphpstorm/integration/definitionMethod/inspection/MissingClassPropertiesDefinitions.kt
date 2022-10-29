@@ -1,6 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
@@ -28,11 +29,13 @@ class MissingClassPropertiesDefinitions : PhpInspection() {
                 val method = expression.parentOfType<Method>() ?: return
                 if (!method.isClassFactoryDefinition()) return
 
-                val definitionMethod = DefinitionMethod(method)
-                val targetClass = definitionMethod.classFactory.targetClass ?: return
+                val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return }
 
                 val alreadyDefinedProperties = definitionMethod.definedProperties
-                val missingProperties = targetClass.properties
+                val missingProperties = definitionMethod
+                    .classFactory
+                    .targetClass
+                    .properties
                     .filterNot { it.isOptional }
                     .filterNot {
                         alreadyDefinedProperties.find { definedProperty ->
@@ -46,7 +49,7 @@ class MissingClassPropertiesDefinitions : PhpInspection() {
                     expression,
                     MyBundle.message("missingClassPropertiesDefinitions")
                         .replace("{properties}", missingProperties.joinToString { "'${it.name}'" })
-                        .replace("{class}", targetClass.name),
+                        .replace("{class}", definitionMethod.classFactory.targetClass.name),
                     ProblemHighlightType.WARNING,
                 )
             }

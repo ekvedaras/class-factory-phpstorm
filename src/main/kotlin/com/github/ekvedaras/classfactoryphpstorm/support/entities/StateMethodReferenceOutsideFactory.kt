@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getFirstClass
@@ -13,10 +14,10 @@ class StateMethodReferenceOutsideFactory(private val methodReference: MethodRefe
     override val classFactory: ClassFactory
 
     init {
-        if (!methodReference.isClassFactoryStateMethod()) throw Exception("Given PSI method reference is not to ClassFactory state method outside factory.")
+        if (!methodReference.isClassFactoryStateMethod()) throw StateMethodReferenceOutsideFactoryException.notStateMethodReference()
         classFactory = ClassFactory(
             methodReference.getActualClassReference()?.getClass()
-                ?: throw Exception("Failed to load ClassFactory from state method reference")
+                ?: throw StateMethodReferenceOutsideFactoryException.unableToFindMethodClass()
         )
     }
 
@@ -33,4 +34,11 @@ class StateMethodReferenceOutsideFactory(private val methodReference: MethodRefe
 
             return properties.toList()
         }
+}
+
+internal class StateMethodReferenceOutsideFactoryException(message: String) : DomainException(message) {
+    companion object {
+        fun notStateMethodReference() = StateMethodReferenceOutsideFactoryException("Given PSI method reference is not to ClassFactory state method outside factory.")
+        fun unableToFindMethodClass() = StateMethodReferenceOutsideFactoryException("Failed to load make the class of state method reference")
+    }
 }

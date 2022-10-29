@@ -43,6 +43,9 @@ class Utilities private constructor() {
             null
         }
 
+        fun MethodReference.isMostLikelyClassFactoryMakeMethod() = this.name == "make" && this.getActualClassReference()?.fqn?.endsWith("Factory") == true
+        fun MethodReference.isMostLikelyClassFactoryStateMethod() = this.name == "state" && this.getActualClassReference()?.fqn?.endsWith("Factory") == true
+
         fun MethodReference.isClassFactoryMakeMethod() =
             this.name == "make" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
 

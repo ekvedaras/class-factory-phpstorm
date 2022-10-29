@@ -1,10 +1,11 @@
 package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.jetbrains.php.lang.psi.elements.Method
 
 class TargetClassConstructor(private val constructor: Method, private val targetClass: TargetClass) {
     init {
-        if (constructor.name != "__construct") throw Exception("Given PSI method name must be __construct. ${constructor.name} given.")
+        if (constructor.name != "__construct") throw TargetClassConstructorException.notConstructor(constructor)
     }
 
     val parameters: List<TargetClassConstructorParameter>
@@ -20,5 +21,11 @@ class TargetClassConstructor(private val constructor: Method, private val target
 
     fun getParameterIndex(parameter: TargetClassConstructorParameter) = this.parameters.indexOfFirst {
         it.parameter.name == parameter.parameter.name
+    }
+}
+
+internal class TargetClassConstructorException(message: String) : DomainException(message) {
+    companion object {
+        fun notConstructor(given: Method) = TargetClassConstructorException("Given PSI method name must be __construct. ${given.name} given.")
     }
 }

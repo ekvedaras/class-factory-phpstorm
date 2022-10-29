@@ -1,6 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
@@ -50,15 +51,14 @@ class PropertyNotFoundInspectionInAttributesArrayKeysInDefinitionMethod : PhpIns
                 val method = arrayHashElement.parentOfType<Method>() ?: return
                 if (!method.isClassFactoryDefinition()) return
 
-                val definitionMethod = DefinitionMethod(method)
-                val targetClass = definitionMethod.classFactory.targetClass ?: return
+                val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return }
 
-                if (targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) == null) {
+                if (definitionMethod.classFactory.targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) == null) {
                     holder.registerProblem(
                         expression,
                         MyBundle.message("classPropertyNotFound")
                             .replace("{property}", expression.text.unquoteAndCleanup())
-                            .replace("{class}", targetClass.name),
+                            .replace("{class}", definitionMethod.classFactory.targetClass.name),
                         ProblemHighlightType.LIKE_UNKNOWN_SYMBOL,
                         TextRange(1, expression.textLength - 1)
                     )

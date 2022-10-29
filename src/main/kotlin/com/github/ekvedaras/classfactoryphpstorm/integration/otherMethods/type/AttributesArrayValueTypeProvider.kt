@@ -1,17 +1,23 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type
 
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isMostLikelyClassFactoryMakeMethod
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isMostLikelyClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClosureState
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceOutsideFactory
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -20,6 +26,7 @@ import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ArrayIndex
+import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.MethodReference
@@ -66,28 +73,31 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
             function.parent.parent.parent as MethodReference
         }
 
-        val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
-            methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
-            methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-            methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
-            else -> return null
+        if (! methodReference.isClassFactoryState() && ! methodReference.isMostLikelyClassFactoryMakeMethod() && ! methodReference.isMostLikelyClassFactoryStateMethod()) {
+            return null
         }
 
-        val definitionMethod = classFactoryMethodReference.classFactory.definitionMethod ?: return null
-        val propertyDefinition =
-            definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup()) ?: return null
+
+        return PhpType().add("#${this.key}${((methodReference.classReference as MethodReference).classReference as ClassReference).fqn}.${key.text.unquoteAndCleanup()}")
+    }
+
+    override fun complete(incompleteType: String?, project: Project?): PhpType? {
+        if (incompleteType == null || project == null) return null
+
+        val classFactoryReference = incompleteType.substringAfter("#${this.key}").substringBefore('.')
+        val key = incompleteType.substringAfter('.').substringBefore('|')
+
+        val classFactory = try { ClassFactory(classFactoryReference.getClass(project) ?: return null) } catch (e: DomainException) { return null }
+
+        val propertyDefinition = classFactory
+            .definitionMethod
+            .getPropertyDefinition(key) ?: return null
 
         if (propertyDefinition.isClosure()) {
             return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(this)
         }
 
-        if (propertyDefinition.value !is PhpTypedElement) return null
-
         return propertyDefinition.value.type
-    }
-
-    override fun complete(p0: String?, p1: Project?): PhpType? {
-        return null
     }
 
     override fun getBySignature(

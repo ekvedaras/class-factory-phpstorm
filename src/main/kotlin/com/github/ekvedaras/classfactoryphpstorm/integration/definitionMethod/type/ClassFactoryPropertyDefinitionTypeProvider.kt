@@ -1,11 +1,13 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type
 
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClosureState
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
@@ -15,20 +17,22 @@ import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ArrayIndex
+import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
-import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.PhpClass
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
-import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
 class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
     companion object {
-        fun PhpTypedElement.getClassFactoryDefinitionType(): PhpType? = ClassFactoryPropertyDefinitionTypeProvider().getType(this)
+        fun PhpTypedElement.getClassFactoryDefinitionType(): PhpType? =
+            ClassFactoryPropertyDefinitionTypeProvider().getType(this)
     }
 
     override fun getKey(): Char {
@@ -46,7 +50,7 @@ class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
 
         val function = element.parentOfType<Function>() ?: return null
         if (function.parent.parent.parent !is ArrayHashElement) return null
-        if (! (element.firstPsiChild as Variable).isNthFunctionParameter(function)) return null
+        if (!(element.firstPsiChild as Variable).isNthFunctionParameter(function)) return null
 
         val arrayHashElement = function.parent.parent.parent
 
@@ -58,21 +62,25 @@ class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
         val method = arrayHashElement.parentOfType<Method>() ?: return null
         if (!method.isClassFactoryDefinition()) return null
 
-        val definitionMethod = DefinitionMethod(method)
+        return PhpType().add("#${this.key}${(method.containingClass as PhpClass).fqn}.${key.text.unquoteAndCleanup()}")
+    }
+
+    override fun complete(incompleteType: String?, project: Project?): PhpType? {
+        if (incompleteType == null || project == null) return null
+
+        val classFactoryReference = incompleteType.substringAfter("#${this.key}").substringBefore('.')
+        val key = incompleteType.substringAfter('.').substringBefore('|')
+
+        val classFactory = try { ClassFactory(classFactoryReference.getClass(project) ?: return null) } catch (e: DomainException) { return null }
+
         val propertyDefinition =
-            definitionMethod.getPropertyDefinition(key.text.unquoteAndCleanup()) ?: return null
+            classFactory.definitionMethod.getPropertyDefinition(key) ?: return null
 
         if (propertyDefinition.isClosure()) {
             return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(this)
         }
 
-        if (propertyDefinition.value !is PhpTypedElement) return null
-
         return propertyDefinition.value.type
-    }
-
-    override fun complete(p0: String?, p1: Project?): PhpType? {
-        return null
     }
 
     override fun getBySignature(

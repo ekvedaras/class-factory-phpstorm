@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.completion
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
@@ -33,13 +34,14 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
         val method = array.parentOfType<Method>() ?: return
         if (!method.isClassFactoryDefinition()) return
 
-        val definitionMethod = DefinitionMethod(method)
-        val targetClass = definitionMethod.classFactory.targetClass ?: return
+        val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return }
 
         val alreadyDefinedProperties = definitionMethod.definedProperties
 
         result.addAllElements(
-            targetClass
+            definitionMethod
+                .classFactory
+                .targetClass
                 .properties
                 .filterNot {
                     alreadyDefinedProperties.find { definedProperty ->

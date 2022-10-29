@@ -3,6 +3,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspe
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider.Companion.getClassFactoryDefinitionType
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider.Companion.getClassFactoryStateType
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
@@ -48,11 +49,15 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                 if (function.parent.parent.parent !is MethodReference) return
                 val methodReference = function.parent.parent.parent as MethodReference
 
-                val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
-                    methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
-                    methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-                    methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
-                    else -> return
+                val classFactoryMethodReference: ClassFactoryMethodReference = try {
+                    when (true) {
+                        methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+                        methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+                        methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                        else -> return
+                    }
+                } catch (e: DomainException) {
+                    return
                 }
 
                 val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return

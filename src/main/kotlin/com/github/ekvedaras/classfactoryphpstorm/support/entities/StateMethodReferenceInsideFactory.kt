@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
@@ -12,10 +13,10 @@ class StateMethodReferenceInsideFactory(private val methodReference: MethodRefer
     override val classFactory: ClassFactory
 
     init {
-        if (!methodReference.isClassFactoryState()) throw Exception("Given PSI method reference is not to ClassFactory state method inside factory.")
+        if (!methodReference.isClassFactoryState()) throw StateMethodReferenceInsideFactoryException.notStateMethodReference()
         classFactory = ClassFactory(
             methodReference.parentOfType<Method>()?.containingClass
-                ?: throw Exception("Failed to load ClassFactory from state method reference")
+                ?: throw StateMethodReferenceInsideFactoryException.unableToFindMethodClass()
         )
     }
 
@@ -32,4 +33,11 @@ class StateMethodReferenceInsideFactory(private val methodReference: MethodRefer
 
             return properties.toList()
         }
+}
+
+internal class StateMethodReferenceInsideFactoryException(message: String) : DomainException(message) {
+    companion object {
+        fun notStateMethodReference() = StateMethodReferenceInsideFactoryException("Given PSI method reference is not to ClassFactory state method inside factory.")
+        fun unableToFindMethodClass() = StateMethodReferenceInsideFactoryException("Failed to load make the class of state method reference")
+    }
 }

@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.reference
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
@@ -33,11 +34,15 @@ class ClassPropertyReferenceProviderForArrayKeysInDirectlyPassedClosure : PsiRef
         if (function.parent.parent.parent !is MethodReference) return PsiReference.EMPTY_ARRAY
         val methodReference = function.parent.parent.parent as MethodReference
 
-        val classFactoryMethodReference: ClassFactoryMethodReference = when (true) {
-            methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
-            methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
-            methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
-            else -> return PsiReference.EMPTY_ARRAY
+        val classFactoryMethodReference: ClassFactoryMethodReference = try {
+            when (true) {
+                methodReference.isClassFactoryState() -> StateMethodReferenceInsideFactory(methodReference)
+                methodReference.isClassFactoryMakeMethod() -> MakeMethodReference(methodReference)
+                methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(methodReference)
+                else -> return PsiReference.EMPTY_ARRAY
+            }
+        } catch (e: DomainException) {
+            return PsiReference.EMPTY_ARRAY
         }
 
         val targetClass = classFactoryMethodReference.classFactory.targetClass ?: return PsiReference.EMPTY_ARRAY

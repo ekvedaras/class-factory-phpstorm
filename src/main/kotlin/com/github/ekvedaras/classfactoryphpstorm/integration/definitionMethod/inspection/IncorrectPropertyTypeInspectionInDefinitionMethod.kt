@@ -1,6 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
@@ -40,9 +41,8 @@ class IncorrectPropertyTypeInspectionInDefinitionMethod : PhpInspection() {
                 val method = arrayHashElement.parentOfType<Method>() ?: return
                 if (!method.isClassFactoryDefinition()) return
 
-                val definitionMethod = DefinitionMethod(method)
-                val targetClass = definitionMethod.classFactory.targetClass ?: return
-                val property = targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) ?: return
+                val definitionMethod = try { DefinitionMethod(method) } catch (e: DomainException) { return }
+                val property = definitionMethod.classFactory.targetClass.getPropertyByName(expression.text.unquoteAndCleanup()) ?: return
                 val factoryValue = arrayHashElement.value ?: return
                 if (factoryValue !is PhpTypedElement) return
 
@@ -54,7 +54,7 @@ class IncorrectPropertyTypeInspectionInDefinitionMethod : PhpInspection() {
                         factoryValue,
                         MyBundle.message("incorrectPropertyType")
                             .replace("{property}", expression.text.unquoteAndCleanup())
-                            .replace("{class}", targetClass.name),
+                            .replace("{class}", definitionMethod.classFactory.targetClass.name),
                         ProblemHighlightType.WARNING,
                         TextRange(0, factoryValue.textLength)
                     )

@@ -13,23 +13,27 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType
 class ClosureState(val closure: Function) {
 
     fun resolveReturnedTypeFromClassFactory(using: ClassFactoryPhpTypeProvider): PhpType? {
-        if (closure.type.filterMixed() != PhpType.EMPTY) {
+        if (closure.type.isComplete && closure.type.filterMixed() != PhpType.EMPTY) {
             return closure.type.filterMixed()
         }
 
         if (closure.parameters.isEmpty()) return null
 
         if (closure.isShortClosure()) {
-            return using.getType(
+            val type = using.getType(
                 closure
                     .childrenOfType<ArrayAccessExpression>()
                     .firstOrNull {
                         it.firstPsiChild is Variable && (it.firstPsiChild as Variable).name == closure.getParameter(0)?.name
                     } ?: return null
             )
+
+            if (type?.isComplete == true) return type
+
+            return using.complete(type.toString(), closure.project)
         }
 
-        return using.getType(
+        val type = using.getType(
             closure
                 .childrenOfType<GroupStatement>()
                 .firstOrNull()
@@ -39,7 +43,12 @@ class ClosureState(val closure: Function) {
                     it.childrenOfType<ArrayAccessExpression>()
                         .firstOrNull()?.firstPsiChild is Variable && (it.childrenOfType<ArrayAccessExpression>()
                         .firstOrNull()?.firstPsiChild as Variable).name == closure.getParameter(0)?.name
-                } ?: return null
+                }
+                ?.firstPsiChild ?: return null
         )
+
+        if (type?.isComplete == true) return type
+
+        return using.complete(type.toString(), closure.project)
     }
 }

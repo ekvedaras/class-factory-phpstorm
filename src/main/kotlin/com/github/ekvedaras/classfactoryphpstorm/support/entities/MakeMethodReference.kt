@@ -1,5 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
@@ -12,10 +13,10 @@ class MakeMethodReference(private val methodReference: MethodReference) : ClassF
     override val classFactory: ClassFactory
 
     init {
-        if (!methodReference.isClassFactoryMakeMethod()) throw Exception("Given PSI method reference is not to ClassFactory make method.")
+        if (!methodReference.isClassFactoryMakeMethod()) throw MakeMethodReferenceException.notMakeMethodReference()
         classFactory = ClassFactory(
             methodReference.getActualClassReference()?.getClass()
-                ?: throw Exception("Failed to load ClassFactory from make method reference")
+                ?: throw MakeMethodReferenceException.unableToFindMethodClass()
         )
     }
 
@@ -32,4 +33,11 @@ class MakeMethodReference(private val methodReference: MethodReference) : ClassF
 
             return properties.toList()
         }
+}
+
+internal class MakeMethodReferenceException(message: String) : DomainException(message) {
+    companion object {
+        fun notMakeMethodReference() = MakeMethodReferenceException("Given PSI method reference is not to ClassFactory make method.")
+        fun unableToFindMethodClass() = MakeMethodReferenceException("Failed to load make the class of make method reference")
+    }
 }
