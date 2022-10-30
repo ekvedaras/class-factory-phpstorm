@@ -186,6 +186,13 @@ internal abstract class EssentialTestCase : TestCase() {
         )
     }
 
+    fun testItReportsIncorrectPropertyTypesWhenReturnedByClosure() {
+        assertInspection(
+            "essential/propertyWithWrongTypeReturnedByClosure.php",
+            incorrectPropertyTypeInClosureReturnsInspection(),
+        )
+    }
+
     fun testItReportsIncorrectPropertyTypesInClosureReturnsWithFactories() {
         assertInspection(
             "essential/propertyWithWrongTypeInClosureReturnWithFactories.php",

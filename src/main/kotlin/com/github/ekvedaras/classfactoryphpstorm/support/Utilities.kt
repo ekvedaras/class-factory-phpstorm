@@ -1,15 +1,19 @@
 package com.github.ekvedaras.classfactoryphpstorm.support
 
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory.Companion.asClassFactory
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
+import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 
@@ -26,6 +30,8 @@ class Utilities private constructor() {
 
         fun PhpType.isClassFactory(project: Project) =
             !this.isAmbiguous && this.getFirstClass(project)?.isClassFactory() == true
+
+        fun PhpType.classFactoryTargetOrSelf(project: Project) = this.asClassFactory(project)?.targetClass?.type ?: this
 
         fun Method.isClassFactoryDefinition() =
             this.name == "definition" && this.containingClass?.isClassFactory() ?: false
@@ -65,6 +71,12 @@ class Utilities private constructor() {
         fun ClassReference.getClass() = this.fqn?.getClass(this.project)
 
         fun Function.isShort(): Boolean = this.firstChild?.textMatches("fn") == true
+        fun Function.returnedValue(): PsiElement? = if (this.isShort()) {
+            this.lastChild
+        } else {
+            this.childrenOfType<GroupStatement>().firstOrNull()?.childrenOfType<PhpReturn>()?.firstOrNull()
+        }
+
         fun Variable.isNthFunctionParameter(function: Function, n: Int = 0): Boolean =
             function.parameters.size > n && function.parameters[n].name == this.name
     }

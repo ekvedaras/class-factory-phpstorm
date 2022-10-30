@@ -39,7 +39,7 @@ class ClosureState(val closure: Function) {
 
         if (closure.parameters.isEmpty()) return null
 
-        if (closure.isShort()) { // TODO: returns false for: fn (array $attributes) => $attributes['firstName']
+        if (closure.isShort()) {
             val type = using.getType(
                 closure
                     .childrenOfType<ArrayAccessExpression>()

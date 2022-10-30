@@ -10,14 +10,14 @@ import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 
-class DefinitionMethod(private val method: Method, ofClassFactory: ClassFactory? = null) : ClassFactoryMethodReference {
+class DefinitionMethod(val element: Method, ofClassFactory: ClassFactory? = null) : ClassFactoryMethodReference {
     override val classFactory: ClassFactory
 
     init {
-        if (!method.isClassFactoryDefinition()) throw DefinitionMethodException.notClassFactoryDefinition()
+        if (!element.isClassFactoryDefinition()) throw DefinitionMethodException.notClassFactoryDefinition()
 
         classFactory = ofClassFactory ?: ClassFactory(
-            method.containingClass ?: throw DefinitionMethodException.noContainingClassFound()
+            element.containingClass ?: throw DefinitionMethodException.noContainingClassFound()
         )
     }
 
@@ -25,7 +25,7 @@ class DefinitionMethod(private val method: Method, ofClassFactory: ClassFactory?
         get() {
             var properties = arrayOf<ArrayHashElement>()
 
-            method.childrenOfType<GroupStatement>().forEach { groupStatement ->
+            element.childrenOfType<GroupStatement>().forEach { groupStatement ->
                 groupStatement.childrenOfType<PhpReturn>().forEach { definitionReturn: PhpReturn ->
                     definitionReturn.childrenOfType<ArrayCreationExpression>()
                         .forEach { definition: ArrayCreationExpression ->

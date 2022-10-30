@@ -2,6 +2,7 @@ package com.github.ekvedaras.classfactoryphpstorm.support.entities
 
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
@@ -20,6 +21,7 @@ class AttributeAccess(val element: ArrayAccessExpression) {
     val function: Function
     val attributesParameter: Parameter
     val accessVariable: Variable
+    val attributeName: String
 
     init {
         accessVariable =
@@ -30,6 +32,9 @@ class AttributeAccess(val element: ArrayAccessExpression) {
         if (attributesParameter.name != accessVariable.name) {
             throw AttributeAccessException.notAttributesVariable(attributesParameter, accessVariable)
         }
+
+        attributeName =
+            element.index?.text?.unquoteAndCleanup() ?: throw AttributeAccessException.attributesArrayIndexNotFound()
     }
 
     fun getCompleteType(): PhpType {
@@ -53,5 +58,7 @@ internal class AttributeAccessException(message: String) : DomainException(messa
 
         fun notAttributesVariable(attributesParameter: Parameter, variable: Variable) =
             AttributeAccessException("Attribute must be accessed via first parent function parameter \"${attributesParameter.name}\" but \"${variable.name}\" is used")
+
+        fun attributesArrayIndexNotFound() = AttributeAccessException("Attributes array access index not found")
     }
 }

@@ -9,9 +9,11 @@
 
     <extensions defaultExtensionNs="com.jetbrains.php">
         <typeProvider4
-                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider" order="first"/>
+                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider"
+                order="first"/>
         <typeProvider4
-                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider" order="first"/>
+                implementation="com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider"
+                order="first"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -94,6 +96,14 @@
                          bundle="messages.MyBundle"
                          key="incorrectPropertyType"
                          implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod"/>
+        <localInspection language="PHP"
+                         groupPath="PHP"
+                         groupKey="name"
+                         shortName="IncorrectPropertyTypeInspectionForShortClosureReturnsInDefinitionMethod"
+                         enabledByDefault="true"
+                         bundle="messages.MyBundle"
+                         key="incorrectPropertyType"
+                         implementationClass="com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.inspection.IncorrectPropertyTypeInspectionForShortClosureReturnsInDefinitionMethod"/>
         <localInspection language="PHP"
                          groupPath="PHP"
                          groupKey="name"

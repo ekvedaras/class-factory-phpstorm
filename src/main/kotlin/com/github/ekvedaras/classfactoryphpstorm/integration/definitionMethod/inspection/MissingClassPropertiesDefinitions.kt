@@ -2,7 +2,6 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
-import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
 import com.intellij.codeInspection.ProblemHighlightType
@@ -12,25 +11,18 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
-import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 
 class MissingClassPropertiesDefinitions : PhpInspection() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhpElementVisitor() {
-            override fun visitPhpArrayCreationExpression(expression: ArrayCreationExpression?) {
-                if (expression == null) return
-
+            override fun visitPhpArrayCreationExpression(expression: ArrayCreationExpression) {
                 if (DumbService.isDumb(expression.project)) return
-
                 if (expression.parent !is PhpReturn) return
 
-                val method = expression.parentOfType<Method>() ?: return
-                if (!method.isClassFactoryDefinition()) return
-
                 val definitionMethod = try {
-                    DefinitionMethod(method)
+                    DefinitionMethod(expression.parentOfType() ?: return)
                 } catch (e: DomainException) {
                     return
                 }
