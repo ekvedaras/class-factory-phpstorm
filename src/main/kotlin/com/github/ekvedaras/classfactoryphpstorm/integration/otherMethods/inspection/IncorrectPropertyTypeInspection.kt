@@ -70,7 +70,7 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
 
                 if ((classFactoryUsed && ClassFactory(
                         ((factoryValue as MethodReference).classReference as ClassReference).getClass() ?: return
-                    ).targetClass.type != property.type) || (!classFactoryUsed && property.type.types.intersect(factoryValue.type.unwrapClosureValue(expression.project).types).isEmpty())
+                    ).targetClass.type != property.type) || (!classFactoryUsed && property.type.types.intersect(factoryValue.type.unwrapClosureValue(expression.project).global(expression.project).types).isEmpty())
                 ) {
                     holder.registerProblem(
                         factoryValue,

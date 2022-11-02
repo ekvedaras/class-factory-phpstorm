@@ -38,6 +38,7 @@ class IncorrectPropertyTypeInspectionInDefinitionMethod : PhpInspection() {
                         definition.typeForDefinition()
                             .classFactoryTargetOrSelf(expression.project)
                             .unwrapClosureValue(expression.project)
+                            .global(expression.project)
                             .types
                 ).isEmpty()) {
                     holder.registerProblem(

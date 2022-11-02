@@ -104,7 +104,7 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                             TextRange(0, arrayHashElement.value?.textLength ?: return)
                         )
                     }
-                } else if (stateValueType.types.intersect(factoryDefinitionValueType.types).isEmpty()) {
+                } else if (stateValueType.global(expression.project).types.intersect(factoryDefinitionValueType.global(expression.project).types).isEmpty()) {
                     holder.registerProblem(
                         arrayHashElement.value ?: return,
                         MyBundle.message("incorrectPropertyType")

@@ -185,6 +185,13 @@ internal abstract class EssentialTestCase : TestCase() {
         )
     }
 
+    fun testItCanHandleClassMethods() {
+        assertInspection(
+            "essential/propertyWithClassTypeButMethodCalled.php",
+            incorrectPropertyTypeInspection(),
+        )
+    }
+
     fun testItReportsIncorrectPropertyTypesWhenThereIsNoConstructor() {
         assertInspection(
             "essential/propertyWithWrongTypeWhenThereIsNoConstructor.php",

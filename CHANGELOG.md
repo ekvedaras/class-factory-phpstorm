@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Fixed
 - Handle nullable types (#13)
+- Always complete the type before comparing with property type
 
 ## [2.0.0]
 ### Added

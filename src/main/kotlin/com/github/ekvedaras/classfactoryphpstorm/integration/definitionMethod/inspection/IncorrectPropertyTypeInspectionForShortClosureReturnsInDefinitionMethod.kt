@@ -33,7 +33,7 @@ class IncorrectPropertyTypeInspectionForShortClosureReturnsInDefinitionMethod : 
                     .targetClass
                     .getPropertyByName(closure.definition.propertyName) ?: return
 
-                val closureType = closure.type()
+                val closureType = closure.type()?.global(expression.project)
 
                 if (closureType != null && property.type.types.intersect(closureType.types).isEmpty()) {
                     holder.registerProblem(
