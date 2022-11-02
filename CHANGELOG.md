@@ -6,6 +6,7 @@
 ### Fixed
 - Handle nullable types (#13)
 - Always complete the type before comparing with property type
+- Edge case with class reference resolving (#12)
 
 ## [2.0.0]
 ### Added

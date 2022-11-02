@@ -5,6 +5,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAc
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
@@ -72,8 +73,7 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
             return PhpType().add("#${this.key}${methodReference.parentOfType<PhpClass>()?.fqn}.${attributeAccess.attributeName}")
         }
 
-
-        return PhpType().add("#${this.key}${((methodReference.classReference as MethodReference).classReference as ClassReference).fqn}.${attributeAccess.attributeName}")
+        return PhpType().add("#${this.key}${(methodReference.getActualClassReference() ?: return null).fqn}.${attributeAccess.attributeName}")
     }
 
     override fun complete(incompleteType: String?, project: Project?): PhpType? {

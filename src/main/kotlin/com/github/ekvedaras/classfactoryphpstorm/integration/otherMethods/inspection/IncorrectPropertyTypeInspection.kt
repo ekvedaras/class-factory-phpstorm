@@ -7,6 +7,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.method.make.MakeMethodRe
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceOutsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
@@ -24,6 +25,7 @@ import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ClassReference
+import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
@@ -41,6 +43,7 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
                 if (arrayHashElement !is ArrayHashElement) return
                 if (expression.isArrayHashValueOf(arrayHashElement)) return
                 if (arrayHashElement.parent.parent.parent !is MethodReference) return
+                if (arrayHashElement.value?.firstPsiChild is Function) return /** @see com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.inspection.IncorrectPropertyTypeInspectionForClosureReturns */
 
                 val methodReference = arrayHashElement.parentOfType<MethodReference>() ?: return
 
@@ -65,11 +68,11 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
 
                 // TODO There must be a better way
                 val classFactoryUsed =
-                    factoryValue is MethodReference && factoryValue.classReference is ClassReference && (factoryValue.classReference as ClassReference).getClass()
+                    factoryValue is MethodReference && factoryValue.getActualClassReference()?.getClass()
                         ?.isClassFactory() == true
 
                 if ((classFactoryUsed && ClassFactory(
-                        ((factoryValue as MethodReference).classReference as ClassReference).getClass() ?: return
+                        ((factoryValue as MethodReference).getActualClassReference() ?: return).getClass() ?: return
                     ).targetClass.type != property.type) || (!classFactoryUsed && property.type.types.intersect(factoryValue.type.unwrapClosureValue(expression.project).global(expression.project).types).isEmpty())
                 ) {
                     holder.registerProblem(
