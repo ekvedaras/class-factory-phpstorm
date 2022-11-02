@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [2.0.0]
 ### Added
 - Detect when property type inside factory does not match class (or factory definition) property type
 - Support for `ClosureValue`
