@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.PhpIndex
+import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.ClassReference
 import com.jetbrains.php.lang.psi.elements.Function
@@ -13,6 +14,7 @@ import com.jetbrains.php.lang.psi.elements.GroupStatement
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.PhpExpression
 import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
@@ -53,6 +55,18 @@ class Utilities private constructor() {
             ((this.classReference as MethodReference).firstPsiChild as MethodReference).getActualClassReference()
         } else {
             null
+        }
+
+        fun PsiElement.firstArrayAccessExpressionDescendant() : ArrayAccessExpression? {
+            val child = this.childrenOfType<ArrayAccessExpression>().firstOrNull()
+            if (child != null) return child
+
+            val methodReferences = this.childrenOfType<MethodReference>()
+
+            return methodReferences
+                .firstOrNull { it.firstArrayAccessExpressionDescendant() != null }
+                ?.firstArrayAccessExpressionDescendant()
+
         }
 
         fun MethodReference.isMostLikelyClassFactoryMakeMethod() =

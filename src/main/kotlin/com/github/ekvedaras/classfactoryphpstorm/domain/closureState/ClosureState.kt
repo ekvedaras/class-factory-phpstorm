@@ -2,6 +2,7 @@ package com.github.ekvedaras.classfactoryphpstorm.domain.closureState
 
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ClassFactoryPropertyDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.firstArrayAccessExpressionDescendant
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isShort
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
@@ -22,17 +23,6 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType
  * }
  */
 class ClosureState(val closure: Function) {
-    val definition: ClassFactoryPropertyDefinition?
-
-    init {
-        definition = if (closure.parent.parent.parent is ArrayHashElement) {
-            ClassFactoryPropertyDefinition(closure.parent.parent.parent as ArrayHashElement)
-        } else {
-            null
-        }
-
-    }
-
     fun resolveReturnedTypeFromClassFactory(using: ClassFactoryPhpTypeProvider): PhpType? {
         if (closure.type.isComplete && closure.type.filterMixed() != PhpType.EMPTY) {
             return closure.type.filterMixed()
@@ -42,11 +32,7 @@ class ClosureState(val closure: Function) {
 
         if (closure.isShort()) {
             val type = using.getType(
-                closure
-                    .childrenOfType<ArrayAccessExpression>()
-                    .firstOrNull {
-                        it.firstPsiChild is Variable && (it.firstPsiChild as Variable).name == closure.getParameter(0)?.name
-                    } ?: return null
+                closure.firstArrayAccessExpressionDescendant() ?: return null
             )
 
             if (type?.isComplete == true) return type
