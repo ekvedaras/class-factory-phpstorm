@@ -1,5 +1,7 @@
-package com.github.ekvedaras.classfactoryphpstorm.support.entities
+package com.github.ekvedaras.classfactoryphpstorm.domain.method.make
 
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass

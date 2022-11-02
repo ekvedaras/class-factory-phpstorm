@@ -1,6 +1,6 @@
 package com.github.ekvedaras.classfactoryphpstorm.support
 
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory.Companion.asClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory.Companion.asClassFactory
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.childrenOfType

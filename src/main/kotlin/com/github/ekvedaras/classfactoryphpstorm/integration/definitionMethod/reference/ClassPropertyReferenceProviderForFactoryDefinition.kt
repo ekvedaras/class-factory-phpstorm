@@ -1,8 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.reference
 
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryPropertyDefinition
-import com.github.ekvedaras.classfactoryphpstorm.support.psiReferences.ClassPropertyReference
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ClassFactoryPropertyDefinition
+import com.github.ekvedaras.classfactoryphpstorm.support.ClassPropertyReference
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference

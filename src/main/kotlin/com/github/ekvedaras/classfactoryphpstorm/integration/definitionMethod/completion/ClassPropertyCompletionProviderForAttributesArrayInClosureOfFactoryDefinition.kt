@@ -1,8 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.completion
 
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.AttributeAccess
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClosureDefinition.Companion.asClosureDefinition
+import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ClosureDefinition.Companion.asClosureDefinition
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet

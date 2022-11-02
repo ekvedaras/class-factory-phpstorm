@@ -1,8 +1,9 @@
-package com.github.ekvedaras.classfactoryphpstorm.support.entities
+package com.github.ekvedaras.classfactoryphpstorm.domain.method.definition
 
+import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory.Companion.asClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory.Companion.asClassFactory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression

@@ -1,4 +1,4 @@
-package com.github.ekvedaras.classfactoryphpstorm.support.entities
+package com.github.ekvedaras.classfactoryphpstorm.domain.closureState
 
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException

@@ -2,7 +2,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ReturnInClosureDefinition
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ReturnInClosureDefinition
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService

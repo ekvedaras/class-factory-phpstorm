@@ -1,7 +1,7 @@
-package com.github.ekvedaras.classfactoryphpstorm.support.psiReferences
+package com.github.ekvedaras.classfactoryphpstorm.support
 
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.TargetClass
+import com.github.ekvedaras.classfactoryphpstorm.domain.targetClass.TargetClass
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase

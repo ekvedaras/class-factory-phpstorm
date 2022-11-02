@@ -3,7 +3,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.DefinitionMethod
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService

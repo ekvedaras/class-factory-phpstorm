@@ -2,8 +2,8 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.c
 
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryPropertyDefinition
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.DefinitionMethod
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ClassFactoryPropertyDefinition
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.DefinitionMethod
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet

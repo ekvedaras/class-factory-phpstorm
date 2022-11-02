@@ -7,10 +7,10 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isC
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceInsideFactory
-import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceOutsideFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactoryMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.make.MakeMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceInsideFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceOutsideFactory
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService

@@ -1,7 +1,10 @@
-package com.github.ekvedaras.classfactoryphpstorm.support.entities
+package com.github.ekvedaras.classfactoryphpstorm.domain.method.definition
 
-import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isShort
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.returnedValue
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
@@ -12,35 +15,40 @@ import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 
 /**
- * public function specialState(): static
+ * protected function definition(): array
  * {
- *      return $this->state([
+ *      return [
  *          'id' => fn () => 1,
  *                   ^---------
- *      ]);
+ *      ];
  * }
  */
-class ClosureState(val closure: Function) {
-    val definition: ClassFactoryPropertyDefinition?
-
-    init {
-        definition = if (closure.parent.parent.parent is ArrayHashElement) {
-            ClassFactoryPropertyDefinition(closure.parent.parent.parent as ArrayHashElement)
-        } else {
+class ClosureDefinition(val closure: Function) {
+    companion object {
+        fun Function.asClosureDefinition(): ClosureDefinition? = try {
+            ClosureDefinition(this)
+        } catch (e: DomainException) {
             null
         }
-
     }
 
-    fun resolveReturnedTypeFromClassFactory(using: ClassFactoryPhpTypeProvider): PhpType? {
+    val returnedValue = closure.returnedValue()
+    val definition: ClassFactoryPropertyDefinition = ClassFactoryPropertyDefinition(
+        closure.parent.parent.parent as? ArrayHashElement
+            ?: throw ClosureDefinitionException.notChildOfArrayHashElement(closure.parent.parent.parent)
+    )
+
+    fun type(): PhpType? {
         if (closure.type.isComplete && closure.type.filterMixed() != PhpType.EMPTY) {
             return closure.type.filterMixed()
         }
 
         if (closure.parameters.isEmpty()) return null
 
+        val typeProvider = ClassFactoryPropertyDefinitionTypeProvider()
+
         if (closure.isShort()) {
-            val type = using.getType(
+            val type = typeProvider.getType(
                 closure
                     .childrenOfType<ArrayAccessExpression>()
                     .firstOrNull {
@@ -50,10 +58,10 @@ class ClosureState(val closure: Function) {
 
             if (type?.isComplete == true) return type
 
-            return using.complete(type.toString(), closure.project)
+            return typeProvider.complete(type.toString(), closure.project)
         }
 
-        val type = using.getType(
+        val type = typeProvider.getType(
             closure
                 .childrenOfType<GroupStatement>()
                 .firstOrNull()
@@ -69,6 +77,13 @@ class ClosureState(val closure: Function) {
 
         if (type?.isComplete == true) return type
 
-        return using.complete(type.toString(), closure.project)
+        return typeProvider.complete(type.toString(), closure.project)
+    }
+}
+
+internal class ClosureDefinitionException(message: String) : DomainException(message) {
+    companion object {
+        fun notChildOfArrayHashElement(given: PsiElement) =
+            ClosureDefinitionException("Closure is not child of array hash element. Found parent: ${given.javaClass}")
     }
 }

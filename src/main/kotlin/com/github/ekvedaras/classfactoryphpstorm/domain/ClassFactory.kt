@@ -1,5 +1,7 @@
-package com.github.ekvedaras.classfactoryphpstorm.support.entities
+package com.github.ekvedaras.classfactoryphpstorm.domain
 
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.DefinitionMethod
+import com.github.ekvedaras.classfactoryphpstorm.domain.targetClass.TargetClass
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getFirstClass

@@ -1,4 +1,4 @@
-package com.github.ekvedaras.classfactoryphpstorm.support.entities
+package com.github.ekvedaras.classfactoryphpstorm.domain.targetClass
 
 import com.jetbrains.php.lang.psi.elements.PhpClass
 
