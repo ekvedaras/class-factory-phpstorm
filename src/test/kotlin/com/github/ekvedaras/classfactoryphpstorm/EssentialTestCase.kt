@@ -178,6 +178,13 @@ internal abstract class EssentialTestCase : TestCase() {
         )
     }
 
+    fun testItCanHandleNullableTypes() {
+        assertInspection(
+            "essential/propertyWithNullableType.php",
+            incorrectPropertyTypeInspection(),
+        )
+    }
+
     fun testItReportsIncorrectPropertyTypesWhenThereIsNoConstructor() {
         assertInspection(
             "essential/propertyWithWrongTypeWhenThereIsNoConstructor.php",

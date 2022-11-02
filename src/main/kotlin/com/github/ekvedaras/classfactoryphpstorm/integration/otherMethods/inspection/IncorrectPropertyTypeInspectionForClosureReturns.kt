@@ -90,7 +90,7 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
                 if ((classFactoryUsed && ClassFactory(
                         stateValueType.types.first().substringAfter("#C").substringBefore('.')
                             .getClass(expression.project) ?: return
-                    ).targetClass.type != property.type) || (!classFactoryUsed && stateValueType != factoryDefinitionValueType)
+                    ).targetClass.type != property.type) || (!classFactoryUsed && factoryDefinitionValueType != null && stateValueType.types.intersect(factoryDefinitionValueType.types).isEmpty())
                 ) {
                     holder.registerProblem(
                         stateValue,

@@ -31,7 +31,7 @@ class IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod : PhpIn
                     .targetClass
                     .getPropertyByName(returnInClosure.definition.propertyName) ?: return
 
-                if (property.type != returnInClosure.type) {
+                if (returnInClosure.type != null && property.type.types.intersect(returnInClosure.type.types).isEmpty()) {
                     holder.registerProblem(
                         returnInClosure.value,
                         MyBundle.message("incorrectPropertyType")

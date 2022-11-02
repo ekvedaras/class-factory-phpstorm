@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+### Fixed
+- Handle nullable types (#13)
 
 ## [2.0.0]
 ### Added

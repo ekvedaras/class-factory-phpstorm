@@ -34,7 +34,12 @@ class IncorrectPropertyTypeInspectionInDefinitionMethod : PhpInspection() {
                 val property =
                     definition.method.classFactory.targetClass.getPropertyByName(definition.propertyName) ?: return
 
-                if (property.type != definition.typeForDefinition().classFactoryTargetOrSelf(expression.project).unwrapClosureValue(expression.project)) {
+                if (property.type.types.intersect(
+                        definition.typeForDefinition()
+                            .classFactoryTargetOrSelf(expression.project)
+                            .unwrapClosureValue(expression.project)
+                            .types
+                ).isEmpty()) {
                     holder.registerProblem(
                         definition.value,
                         MyBundle.message("incorrectPropertyType")

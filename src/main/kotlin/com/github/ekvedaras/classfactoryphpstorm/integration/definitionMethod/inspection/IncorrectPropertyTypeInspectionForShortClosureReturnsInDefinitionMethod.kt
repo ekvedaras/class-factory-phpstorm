@@ -33,7 +33,9 @@ class IncorrectPropertyTypeInspectionForShortClosureReturnsInDefinitionMethod : 
                     .targetClass
                     .getPropertyByName(closure.definition.propertyName) ?: return
 
-                if (property.type != closure.type()) {
+                val closureType = closure.type()
+
+                if (closureType != null && property.type.types.intersect(closureType.types).isEmpty()) {
                     holder.registerProblem(
                         closure.returnedValue ?: return,
                         MyBundle.message("incorrectPropertyType")
