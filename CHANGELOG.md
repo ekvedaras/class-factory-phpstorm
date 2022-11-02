@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [2.0.1]
 ### Fixed
 - Handle nullable types (#13)
 - Always complete the type before comparing with property type
@@ -51,7 +53,6 @@
   as an array hash value.
 
 ## [1.1.1]
-
 ### Fixed
 - Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
 
