@@ -48,12 +48,12 @@ class ClassPropertyCompletionProvider : CompletionProvider<CompletionParameters>
             return
         }
 
-        val targetClass = classFactoryMethodReference.classFactory.targetClass
-
         val alreadyDefinedProperties = classFactoryMethodReference.definedProperties
 
         result.addAllElements(
-            targetClass
+            classFactoryMethodReference
+                .classFactory
+                .targetClass
                 .properties
                 .filterNot {
                     alreadyDefinedProperties.find { definedProperty ->

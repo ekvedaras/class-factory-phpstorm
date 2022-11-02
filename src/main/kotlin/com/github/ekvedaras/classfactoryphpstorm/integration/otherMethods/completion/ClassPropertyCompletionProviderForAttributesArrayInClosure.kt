@@ -5,6 +5,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isC
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactoryMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.MakeMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.StateMethodReferenceInsideFactory
@@ -27,19 +28,15 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosure :
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         if (DumbService.isDumb(parameters.position.project)) return
 
-        val key = parameters.position
-        val attributesArray = key.parent.parent.parent
+        val attributeAccess = try {
+            AttributeAccess(parameters.position.parent.parent.parent as? ArrayAccessExpression ?: return)
+        } catch (e: DomainException) { return }
 
-        if (key.parent.parent !is ArrayIndex) return
-        if (attributesArray !is ArrayAccessExpression) return
-        if (attributesArray.firstPsiChild !is Variable) return
-
-        val function = attributesArray.parentOfType<Function>() ?: return
-        if (!(attributesArray.firstPsiChild as Variable).isNthFunctionParameter(function)) return
+        val function = attributeAccess.function
 
         if (function.parent.parent.parent !is ArrayHashElement && function.parent.parent.parent !is MethodReference) return
 
@@ -65,10 +62,10 @@ class ClassPropertyCompletionProviderForAttributesArrayInClosure :
             return
         }
 
-        val targetClass = classFactoryMethodReference.classFactory.targetClass
-
         result.addAllElements(
-            targetClass
+            classFactoryMethodReference
+                .classFactory
+                .targetClass
                 .properties
                 .map { it.lookup }
         )

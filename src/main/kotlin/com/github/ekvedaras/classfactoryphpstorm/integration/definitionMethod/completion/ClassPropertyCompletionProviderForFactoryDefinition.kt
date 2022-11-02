@@ -34,11 +34,8 @@ class ClassPropertyCompletionProviderForFactoryDefinition : CompletionProvider<C
                 ).method
 
                 /**
-                 * return [
-                 *      'id' => 1,
-                 *      '<caret>',
-                 *      ^--------
-                 * ];
+                 * return ['<caret>'];
+                 *        ^----------
                  */
                 is ArrayCreationExpression -> DefinitionMethod(
                     parameters.position.parent.parent.parent.parent.parent.parent as? Method ?: return

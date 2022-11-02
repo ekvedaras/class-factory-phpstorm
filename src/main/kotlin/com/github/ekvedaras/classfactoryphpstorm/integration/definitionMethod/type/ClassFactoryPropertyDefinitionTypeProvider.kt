@@ -7,7 +7,9 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isA
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isNthFunctionParameter
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.support.entities.ClosureDefinition.Companion.asClosureDefinition
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -39,15 +41,12 @@ class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
     override fun getType(element: PsiElement): PhpType? {
         if (DumbService.isDumb(element.project)) return null
 
-        if (element !is ArrayAccessExpression) return null
-        if (element.firstPsiChild !is Variable) return null
+        val attributeAccess = try {
+            AttributeAccess(element as? ArrayAccessExpression ?: return null)
+        } catch (e: DomainException) { return null }
 
-        val key = element.childrenOfType<ArrayIndex>().firstOrNull()?.firstPsiChild ?: return null
-        if (key !is StringLiteralExpression) return null
-
-        val function = element.parentOfType<Function>() ?: return null
+        val function = attributeAccess.function
         if (function.parent.parent.parent !is ArrayHashElement) return null
-        if (!(element.firstPsiChild as Variable).isNthFunctionParameter(function)) return null
 
         val arrayHashElement = function.parent.parent.parent
 
@@ -59,7 +58,7 @@ class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
         val method = arrayHashElement.parentOfType<Method>() ?: return null
         if (!method.isClassFactoryDefinition()) return null
 
-        return PhpType().add("#${this.key}${(method.containingClass as PhpClass).fqn}.${key.text.unquoteAndCleanup()}")
+        return PhpType().add("#${this.key}${(method.containingClass as PhpClass).fqn}.${attributeAccess.attributeName}")
     }
 
     override fun complete(incompleteType: String?, project: Project?): PhpType? {
