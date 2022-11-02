@@ -7,7 +7,7 @@ class Account {
     ) {}
 }
 
-class AccountFactory extends ClassFactory {
+class AccountFactory extends EKvedaras\ClassFactory\ClassFactory {
     protected string $class = Account::class;
 
     protected function definition(): array

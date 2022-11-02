@@ -22,7 +22,7 @@ class Utilities private constructor() {
         fun String.unquoteAndCleanup() = this.replace("IntellijIdeaRulezzz", "").trim('\'', '"').trim()
 
         fun PhpClass.isClassFactory() =
-            (this.extendsList.lastChild is ClassReference) && (this.extendsList.lastChild as ClassReference).name == "ClassFactory"
+            (this.extendsList.lastChild is ClassReference) && (this.extendsList.lastChild as ClassReference).fqn == "\\EKvedaras\\ClassFactory\\ClassFactory"
 
         // TODO There must be a better way
         fun PhpType.getFirstClass(project: Project) =

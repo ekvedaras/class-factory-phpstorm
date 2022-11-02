@@ -1,12 +1,12 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type
 
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
-import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
-import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -35,7 +35,9 @@ class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
 
         val attributeAccess = try {
             AttributeAccess(element as? ArrayAccessExpression ?: return null)
-        } catch (e: DomainException) { return null }
+        } catch (e: DomainException) {
+            return null
+        }
 
         val function = attributeAccess.function
         if (function.parent.parent.parent !is ArrayHashElement) return null

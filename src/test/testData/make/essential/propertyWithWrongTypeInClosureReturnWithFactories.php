@@ -19,7 +19,7 @@ class Account {
     ) {}
 }
 
-class IdFactory extends ClassFactory {
+class IdFactory extends EKvedaras\ClassFactory\ClassFactory {
     protected string $class = Id::class;
 
     protected function definition(): array
@@ -28,7 +28,7 @@ class IdFactory extends ClassFactory {
     }
 }
 
-class NameFactory extends ClassFactory {
+class NameFactory extends EKvedaras\ClassFactory\ClassFactory {
     protected string $class = Name::class;
 
     protected function definition(): array
@@ -37,7 +37,7 @@ class NameFactory extends ClassFactory {
     }
 }
 
-class AccountFactory extends ClassFactory {
+class AccountFactory extends EKvedaras\ClassFactory\ClassFactory {
     protected string $class = Account::class;
 
     protected function definition(): array

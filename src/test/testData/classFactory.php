@@ -34,3 +34,15 @@ abstract class ClassFactory
     {
     }
 }
+
+class ClosureValue
+{
+    public function __construct(public readonly Closure $value)
+    {
+    }
+
+    public static function of(Closure $value): self
+    {
+        return new self($value);
+    }
+}

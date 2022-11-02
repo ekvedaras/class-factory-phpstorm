@@ -20,8 +20,8 @@ class Account
     }
 }
 
-/** @extends ClassFactory<Account> */
-class AccountFactory extends ClassFactory
+/** @extends EKvedaras\ClassFactory\ClassFactory<Account> */
+class AccountFactory extends EKvedaras\ClassFactory\ClassFactory
 {
     protected string $class = Account::class;
 

@@ -1,14 +1,14 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.completion
 
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactoryMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.make.MakeMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceInsideFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceOutsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
-import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactoryMethodReference
-import com.github.ekvedaras.classfactoryphpstorm.domain.method.make.MakeMethodReference
-import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceInsideFactory
-import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceOutsideFactory
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
