@@ -4,6 +4,7 @@ import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ClassFactoryPropertyDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.classFactoryTargetOrSelf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
@@ -33,7 +34,7 @@ class IncorrectPropertyTypeInspectionInDefinitionMethod : PhpInspection() {
                 val property =
                     definition.method.classFactory.targetClass.getPropertyByName(definition.propertyName) ?: return
 
-                if (property.type != definition.typeForDefinition().classFactoryTargetOrSelf(expression.project)) {
+                if (property.type != definition.typeForDefinition().classFactoryTargetOrSelf(expression.project).unwrapClosureValue(expression.project)) {
                     holder.registerProblem(
                         definition.value,
                         MyBundle.message("incorrectPropertyType")

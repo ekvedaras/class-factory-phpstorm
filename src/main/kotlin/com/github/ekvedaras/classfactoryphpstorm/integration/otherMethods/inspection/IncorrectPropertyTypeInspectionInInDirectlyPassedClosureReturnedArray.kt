@@ -15,6 +15,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isC
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
@@ -71,14 +72,14 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                 val stateValue = arrayHashElement.value ?: return
                 if (stateValue !is PhpTypedElement) return
 
-                val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type
+                val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type.unwrapClosureValue(expression.project)
 
                 val factoryDefinitionValue =
                     classFactoryMethodReference.classFactory.definitionMethod.getPropertyDefinition(property.name)?.value
                         ?: property.type
                 if (factoryDefinitionValue !is PhpTypedElement) return
                 val factoryDefinitionValueType =
-                    factoryDefinitionValue.getClassFactoryDefinitionType() ?: factoryDefinitionValue.type
+                    factoryDefinitionValue.getClassFactoryDefinitionType() ?: factoryDefinitionValue.type.unwrapClosureValue(expression.project)
 
                 val classFactoryUsedInState = stateValueType.isClassFactory(expression.project)
                 val classFactoryUsedInDefinition = factoryDefinitionValueType.isClassFactory(expression.project)

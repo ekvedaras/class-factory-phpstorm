@@ -7,6 +7,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryDefinition
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -71,10 +72,10 @@ class ClassFactoryPropertyDefinitionTypeProvider : ClassFactoryPhpTypeProvider {
             classFactory.definitionMethod.getPropertyDefinition(key) ?: return null
 
         if (propertyDefinition.isClosure()) {
-            return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(this)
+            return propertyDefinition.asClosureState()?.resolveReturnedTypeFromClassFactory(this)?.unwrapClosureValue(project)
         }
 
-        return propertyDefinition.value.type
+        return propertyDefinition.value.type.unwrapClosureValue(project)
     }
 
     override fun getBySignature(

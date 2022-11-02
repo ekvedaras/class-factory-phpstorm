@@ -4,7 +4,11 @@
 
 ## [Unreleased]
 ### Added
-- Detect when property type inside factory does not match class property type
+- Detect when property type inside factory does not match class (or factory definition) property type
+- Support for `ClosureValue`
+
+### Changed
+- Refactored internals (not fully done yet)
 
 ## [1.3.0]
 ### Added

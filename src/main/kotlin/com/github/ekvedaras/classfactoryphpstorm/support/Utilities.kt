@@ -33,6 +33,12 @@ class Utilities private constructor() {
 
         fun PhpType.classFactoryTargetOrSelf(project: Project) = this.asClassFactory(project)?.targetClass?.type ?: this
 
+        fun PhpType.unwrapClosureValue(project: Project) = if (this.getFirstClass(project)?.fqn == "\\EKvedaras\\ClassFactory\\ClosureValue") {
+            PhpType.CLOSURE
+        } else {
+            this
+        }
+
         fun Method.isClassFactoryDefinition() =
             this.name == "definition" && this.containingClass?.isClassFactory() ?: false
 

@@ -171,6 +171,13 @@ internal abstract class EssentialTestCase : TestCase() {
         )
     }
 
+    fun testItCanHandleClosureValues() {
+        assertInspection(
+            "essential/propertyWithClosureValue.php",
+            incorrectPropertyTypeInspection(),
+        )
+    }
+
     fun testItReportsIncorrectPropertyTypesWhenThereIsNoConstructor() {
         assertInspection(
             "essential/propertyWithWrongTypeWhenThereIsNoConstructor.php",

@@ -14,6 +14,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isC
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
@@ -69,7 +70,7 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
 
                 if ((classFactoryUsed && ClassFactory(
                         ((factoryValue as MethodReference).classReference as ClassReference).getClass() ?: return
-                    ).targetClass.type != property.type) || (!classFactoryUsed && property.type != factoryValue.type)
+                    ).targetClass.type != property.type) || (!classFactoryUsed && property.type != factoryValue.type.unwrapClosureValue(expression.project))
                 ) {
                     holder.registerProblem(
                         factoryValue,

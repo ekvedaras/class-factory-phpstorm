@@ -4,6 +4,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory.Companion.a
 import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
@@ -42,7 +43,7 @@ class ReturnInClosureDefinition(val element: PhpReturn) {
             resolvedType.asClassFactory(element.project)?.targetClass?.type
         } else {
             resolvedType
-        }
+        }?.unwrapClosureValue(element.project)
     }
 }
 

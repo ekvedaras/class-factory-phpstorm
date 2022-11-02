@@ -10,6 +10,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isA
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isMostLikelyClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isMostLikelyClassFactoryStateMethod
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -94,9 +95,10 @@ class AttributesArrayValueTypeProvider : ClassFactoryPhpTypeProvider {
         if (propertyDefinition.isClosure()) {
             return propertyDefinition.asClosureState()
                 ?.resolveReturnedTypeFromClassFactory(ClassFactoryPropertyDefinitionTypeProvider())
+                ?.unwrapClosureValue(project)
         }
 
-        return propertyDefinition.value.type
+        return propertyDefinition.value.type.unwrapClosureValue(project)
     }
 
     override fun getBySignature(

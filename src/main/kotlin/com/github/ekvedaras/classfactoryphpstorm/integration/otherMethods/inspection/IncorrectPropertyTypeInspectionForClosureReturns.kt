@@ -15,6 +15,7 @@ import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isC
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
@@ -76,7 +77,7 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
 
                 if (stateValue !is PhpTypedElement) return
 
-                val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type
+                val stateValueType = stateValue.getClassFactoryStateType() ?: stateValue.type.unwrapClosureValue(expression.project)
 
                 val factoryDefinitionValueType = classFactoryMethodReference
                     .classFactory
