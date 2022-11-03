@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [2.0.1]
 ### Fixed
 - Handle nullable types (#13)
 - Always complete the type before comparing with property type
