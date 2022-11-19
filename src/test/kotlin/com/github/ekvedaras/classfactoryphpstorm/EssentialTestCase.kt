@@ -140,8 +140,6 @@ internal abstract class EssentialTestCase : TestCase() {
         assertCompletionDoesNotContain("value")
     }
 
-    // These tests below require a workaround in build.gradle.kts due to a bug in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
-
     fun testItReportsNotFoundProperties() {
         assertInspection("essential/nonExistingProperty.php", propertyNotFoundInspection())
     }

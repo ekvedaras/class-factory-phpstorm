@@ -8,7 +8,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.7.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.9.0"
+    id("org.jetbrains.intellij") version "1.10.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
 }
@@ -47,11 +47,6 @@ changelog {
 tasks {
     wrapper {
         gradleVersion = properties("gradleVersion")
-    }
-
-    // Temporary workaround for bug in intellij plugin. See https://github.com/JetBrains/gradle-intellij-plugin/issues/1094
-    test {
-        systemProperty("java.system.class.loader", "com.intellij.util.lang.PathClassLoader")
     }
 
     patchPluginXml {
