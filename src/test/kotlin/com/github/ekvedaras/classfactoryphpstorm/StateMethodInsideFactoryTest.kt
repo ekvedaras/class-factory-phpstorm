@@ -30,4 +30,13 @@ internal class StateMethodInsideFactoryTest : EssentialTestCase() {
 
         assertCompletionContains("id", "exists", "accountReference", "name", "tradingName", "currency", "ratingInputs")
     }
+
+    fun testNestedStateCalls() {
+        assertInspection("nestedStateCalls.php", this.incorrectPropertyTypeInspection())
+        assertInspection("nestedStateCalls.php", this.incorrectPropertyTypeInClosureReturnsInspection())
+        assertInspection("nestedStateCalls.php", this.incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues())
+        assertInspection("nestedStateCalls.php", this.propertyNotFoundInspection())
+        assertInspection("nestedStateCalls.php", this.propertyNotFoundInAttributesArrayInspection())
+        assertInspection("nestedStateCalls.php", this.propertyNotFoundInArrayKeysInDirectlyPassedClosure())
+    }
 }

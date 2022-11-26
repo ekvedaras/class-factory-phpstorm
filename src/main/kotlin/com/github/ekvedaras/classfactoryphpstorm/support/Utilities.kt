@@ -45,7 +45,7 @@ class Utilities private constructor() {
             this.name == "definition" && this.containingClass?.isClassFactory() ?: false
 
         fun MethodReference.isClassFactoryState() =
-            this.name == "state" && this.parentOfType<Method>()?.containingClass?.isClassFactory() ?: false
+            this.name == "state" && this.parentOfType<Method>()?.containingClass?.isClassFactory() ?: false && this.firstPsiChild is Variable && (this.firstPsiChild as Variable).name == "this"
 
         fun MethodReference.getActualClassReference(): ClassReference? = if (this.classReference is ClassReference) {
             this.classReference as ClassReference

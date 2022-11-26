@@ -26,9 +26,7 @@ import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 class PropertyNotFoundInspection : PhpInspection() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhpElementVisitor() {
-            override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression?) {
-                if (expression == null) return
-
+            override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression) {
                 if (DumbService.isDumb(expression.project)) return
 
                 val arrayHashElement = expression.parent.parent
@@ -45,7 +43,6 @@ class PropertyNotFoundInspection : PhpInspection() {
                         methodReference.isClassFactoryStateMethod() -> StateMethodReferenceOutsideFactory(
                             methodReference
                         )
-
                         else -> return
                     }
                 } catch (e: DomainException) {

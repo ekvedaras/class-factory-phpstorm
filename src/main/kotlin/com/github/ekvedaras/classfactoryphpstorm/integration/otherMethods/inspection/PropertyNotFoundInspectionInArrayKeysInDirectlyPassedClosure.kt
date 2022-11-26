@@ -6,6 +6,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.method.make.MakeMethodRe
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceOutsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
@@ -21,21 +22,23 @@ import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.Function
 import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.ParameterList
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
+import kotlin.reflect.jvm.internal.impl.resolve.constants.ArrayValue
 
 class PropertyNotFoundInspectionInArrayKeysInDirectlyPassedClosure : PhpInspection() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhpElementVisitor() {
-            override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression?) {
-                if (expression == null) return
-
+            override fun visitPhpStringLiteralExpression(expression: StringLiteralExpression) {
                 if (DumbService.isDumb(expression.project)) return
 
                 val arrayReturnedByClosure = expression.parent.parent.parent
 
                 if (expression.parent.parent !is ArrayHashElement) return
                 if (arrayReturnedByClosure !is ArrayCreationExpression) return
+                if (expression.parent.isArrayHashValueOf(expression.parent.parent as ArrayHashElement)) return
+                if (expression.parent.parent.parent.parent is ParameterList) return
 
                 val function = arrayReturnedByClosure.parentOfType<Function>() ?: return
 
