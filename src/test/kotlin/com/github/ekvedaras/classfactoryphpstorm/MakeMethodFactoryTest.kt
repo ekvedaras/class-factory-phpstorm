@@ -26,10 +26,6 @@ internal class MakeMethodFactoryTest : EssentialTestCase() {
     override fun incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues(): PhpInspection =
         IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray()
 
-    override fun testItResolvesReferencesInArrayReturnedByDirectlyPassedClosure() {
-        // TODO: failing due to PhpCache having cached empty results. Find a workaround
-    }
-
     fun testItCanHandleMethodCallsOnOtherFactoriesFromAttributesArray() {
         assertInspection(
             "makeOtherFactoryFromAttributes.php",
