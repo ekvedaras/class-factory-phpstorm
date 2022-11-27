@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [2.0.2]
 ### Fixed
 - Incorrect reports of unknown columns when using nested states
 - Class property inspection when using nested states
@@ -57,7 +59,6 @@
   as an array hash value.
 
 ## [1.1.1]
-
 ### Fixed
 - Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
 
