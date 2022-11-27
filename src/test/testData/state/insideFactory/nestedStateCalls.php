@@ -5,7 +5,7 @@ class Id {
 }
 
 class Age {
-    public readonly int $value;
+    public readonly int <caret>$value;
 }
 
 

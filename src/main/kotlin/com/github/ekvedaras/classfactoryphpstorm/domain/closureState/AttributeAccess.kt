@@ -1,6 +1,7 @@
 package com.github.ekvedaras.classfactoryphpstorm.domain.closureState
 
 import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.type.ClassFactoryPropertyDefinitionTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.ClassFactoryPhpTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unquoteAndCleanup
 import com.intellij.psi.PsiElement
@@ -37,8 +38,8 @@ class AttributeAccess(val element: ArrayAccessExpression) {
             element.index?.text?.unquoteAndCleanup() ?: throw AttributeAccessException.attributesArrayIndexNotFound()
     }
 
-    fun getCompleteType(): PhpType {
-        val typeProvider = ClassFactoryPropertyDefinitionTypeProvider()
+    fun getCompleteType(using: ClassFactoryPhpTypeProvider? = null): PhpType {
+        val typeProvider = using ?: ClassFactoryPropertyDefinitionTypeProvider()
         val type = typeProvider.getType(this.element) ?: element.type
 
         if (type.isComplete) return type

@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Fixed
 - Incorrect reports of unknown columns when using nested states
+- Class property inspection when using nested states
 
 ## [2.0.1]
 ### Fixed
