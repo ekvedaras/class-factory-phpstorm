@@ -1,6 +1,8 @@
 package com.github.ekvedaras.classfactoryphpstorm.support
 
 import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory.Companion.asClassFactory
+import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.childrenOfType
@@ -79,7 +81,12 @@ class Utilities private constructor() {
             this.name == "make" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
 
         fun MethodReference.isClassFactoryStateMethod() =
-            this.name == "state" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
+            this.name == "state" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: (
+                this.firstPsiChild is ArrayAccessExpression
+                        && AttributeAccess(this.firstPsiChild as ArrayAccessExpression)
+                        .getCompleteType(AttributesArrayValueTypeProvider())
+                        .isClassFactory(this.project)
+            )
 
         fun PsiElement.isArrayHashValueOf(arrayHashElement: ArrayHashElement) = this == arrayHashElement.value
 

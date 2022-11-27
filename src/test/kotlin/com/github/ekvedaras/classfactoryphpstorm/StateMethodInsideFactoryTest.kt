@@ -33,14 +33,16 @@ internal class StateMethodInsideFactoryTest : EssentialTestCase() {
         assertCompletionContains("id", "exists", "accountReference", "name", "tradingName", "currency", "ratingInputs")
     }
 
-    fun testNestedStateCalls() {
+    fun testNestedStateCallsProduceCorrectInspections() {
         assertInspection("nestedStateCalls.php", this.incorrectPropertyTypeInspection())
         assertInspection("nestedStateCalls.php", this.incorrectPropertyTypeInClosureReturnsInspection())
         assertInspection("nestedStateCalls.php", this.incorrectPropertyTypeInDirectlyPassedClosureReturnedArrayValues())
         assertInspection("nestedStateCalls.php", this.propertyNotFoundInspection())
         assertInspection("nestedStateCalls.php", this.propertyNotFoundInAttributesArrayInspection())
         assertInspection("nestedStateCalls.php", this.propertyNotFoundInArrayKeysInDirectlyPassedClosure())
+    }
 
+    fun testNestedStateCallsCorrectlyFindsReferences() {
         val usages = myFixture.testFindUsagesUsingAction("nestedStateCalls.php")
 
         assertEquals(2, usages.size)
@@ -51,5 +53,12 @@ internal class StateMethodInsideFactoryTest : EssentialTestCase() {
             assertTrue(usage.element?.textRange?.startOffset == usage.navigationRange.startOffset - 1)
             assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
         }
+    }
+
+    fun testNestedStateCallsCorrectlyComplete() {
+        myFixture.configureByFile("nestedStateCallsCaretAtNestedState.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("value")
     }
 }

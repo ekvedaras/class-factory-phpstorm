@@ -1,11 +1,15 @@
 package com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.completion
 
+import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory.Companion.asClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactoryMethodReference
+import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.make.MakeMethodReference
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceInsideFactory
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethodReferenceOutsideFactory
+import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
@@ -14,8 +18,10 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.openapi.project.DumbService
+import com.intellij.psi.PsiReference
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
+import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
 import com.jetbrains.php.lang.psi.elements.ArrayHashElement
 import com.jetbrains.php.lang.psi.elements.MethodReference
