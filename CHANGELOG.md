@@ -4,7 +4,8 @@
 
 ## [Unreleased]
 ### Fixed
-- Handle array types more loosely so `string[]` vs `array` would be acceptable.
+- Handle array types more loosely so `string[]` vs `array` would be acceptable
+- Handle boolean types
 
 ## [2.0.2]
 ### Fixed

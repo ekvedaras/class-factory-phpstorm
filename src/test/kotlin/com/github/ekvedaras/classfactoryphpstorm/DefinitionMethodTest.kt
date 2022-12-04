@@ -40,6 +40,10 @@ internal class DefinitionMethodTest : EssentialTestCase() {
         assertInspection("stringArray.php", this.incorrectPropertyTypeInspection())
     }
 
+    fun testItUnderstandsBooleanVsFalse() {
+        assertInspection("boolean.php", this.incorrectPropertyTypeInspection())
+    }
+
     override fun testItResolvesReferencesInAssociativeArrayKeys() {
         val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdInConstructorWithUsage.php")
 

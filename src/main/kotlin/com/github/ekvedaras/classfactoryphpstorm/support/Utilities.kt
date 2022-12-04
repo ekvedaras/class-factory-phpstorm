@@ -46,11 +46,14 @@ class Utilities private constructor() {
         }
 
         fun PhpType.includes(that: PhpType, project: Project): Boolean {
-            return this.widenedTypes().intersect(that.global(project).widenedTypes().toSet()).isEmpty()
+            return this.widenedTypes(withBoolean = false).intersect(
+                that.global(project).widenedTypes(withBoolean = this.types.contains("\\bool")).toSet()
+            ).isEmpty()
         }
 
-        private fun PhpType.widenedTypes() = this.types.map {when(true) {
+        private fun PhpType.widenedTypes(withBoolean: Boolean) = this.types.map {when(true) {
             it.endsWith("[]") -> "\\array"
+            (withBoolean && (it == "\\true" || it.equals("\\false"))) -> "\\bool"
             else -> it
         }}
 
