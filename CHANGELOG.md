@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [2.0.3]
 ### Fixed
 - Handle array types more loosely so `string[]` vs `array` would be acceptable
 - Handle boolean types
@@ -62,7 +64,6 @@
   as an array hash value.
 
 ## [1.1.1]
-
 ### Fixed
 - Potential fix for `Indexing process should not rely on non-indexed file data` (#2)
 
