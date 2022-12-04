@@ -9,6 +9,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.includes
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
@@ -73,7 +74,7 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
 
                 if ((classFactoryUsed && ClassFactory(
                         ((factoryValue as MethodReference).getActualClassReference() ?: return).getClass() ?: return
-                    ).targetClass.type != property.type) || (!classFactoryUsed && property.type.types.intersect(factoryValue.type.unwrapClosureValue(expression.project).global(expression.project).types).isEmpty())
+                    ).targetClass.type != property.type) || (!classFactoryUsed && property.type.includes(factoryValue.type.unwrapClosureValue(expression.project), expression.project))
                 ) {
                     holder.registerProblem(
                         factoryValue,

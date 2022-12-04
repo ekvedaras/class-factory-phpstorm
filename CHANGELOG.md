@@ -3,6 +3,9 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+### Fixed
+- Handle array types more loosely so `string[]` vs `array` would be acceptable.
+
 ## [2.0.2]
 ### Fixed
 - Incorrect reports of unknown columns when using nested states

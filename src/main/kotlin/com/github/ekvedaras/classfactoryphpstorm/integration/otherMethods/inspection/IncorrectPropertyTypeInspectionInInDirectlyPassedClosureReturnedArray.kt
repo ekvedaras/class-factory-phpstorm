@@ -10,6 +10,7 @@ import com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.ty
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider.Companion.getClassFactoryStateType
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.includes
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryState
@@ -104,7 +105,7 @@ class IncorrectPropertyTypeInspectionInInDirectlyPassedClosureReturnedArray : Ph
                             TextRange(0, arrayHashElement.value?.textLength ?: return)
                         )
                     }
-                } else if (stateValueType.global(expression.project).types.intersect(factoryDefinitionValueType.global(expression.project).types).isEmpty()) {
+                } else if (stateValueType.global(expression.project).includes(factoryDefinitionValueType, expression.project)) {
                     holder.registerProblem(
                         arrayHashElement.value ?: return,
                         MyBundle.message("incorrectPropertyType")

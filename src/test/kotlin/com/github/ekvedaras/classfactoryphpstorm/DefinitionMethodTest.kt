@@ -36,6 +36,10 @@ internal class DefinitionMethodTest : EssentialTestCase() {
         assertInspection("missingPropertyDefinition.php", MissingClassPropertiesDefinitions())
     }
 
+    fun testItUnderstandsStringArrayVsArray() {
+        assertInspection("stringArray.php", this.incorrectPropertyTypeInspection())
+    }
+
     override fun testItResolvesReferencesInAssociativeArrayKeys() {
         val usages = myFixture.testFindUsagesUsingAction("essential/caretAtIdInConstructorWithUsage.php")
 

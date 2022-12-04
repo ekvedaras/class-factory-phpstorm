@@ -3,6 +3,8 @@ package com.github.ekvedaras.classfactoryphpstorm.support
 import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory.Companion.asClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.classFactoryTargetOrSelf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.childrenOfType
@@ -37,11 +39,20 @@ class Utilities private constructor() {
 
         fun PhpType.classFactoryTargetOrSelf(project: Project) = this.asClassFactory(project)?.targetClass?.type ?: this
 
-        fun PhpType.unwrapClosureValue(project: Project) = if (this.getFirstClass(project)?.fqn == "\\EKvedaras\\ClassFactory\\ClosureValue") {
+        fun PhpType.unwrapClosureValue(project: Project): PhpType = if (this.getFirstClass(project)?.fqn == "\\EKvedaras\\ClassFactory\\ClosureValue") {
             PhpType.CLOSURE
         } else {
             this
         }
+
+        fun PhpType.includes(that: PhpType, project: Project): Boolean {
+            return this.widenedTypes().intersect(that.global(project).widenedTypes().toSet()).isEmpty()
+        }
+
+        private fun PhpType.widenedTypes() = this.types.map {when(true) {
+            it.endsWith("[]") -> "\\array"
+            else -> it
+        }}
 
         fun Method.isClassFactoryDefinition() =
             this.name == "definition" && this.containingClass?.isClassFactory() ?: false

@@ -3,6 +3,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ClosureDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.includes
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isShort
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
@@ -33,9 +34,9 @@ class IncorrectPropertyTypeInspectionForShortClosureReturnsInDefinitionMethod : 
                     .targetClass
                     .getPropertyByName(closure.definition.propertyName) ?: return
 
-                val closureType = closure.type()?.global(expression.project)
+                val closureType = closure.type()
 
-                if (closureType != null && property.type.types.intersect(closureType.types).isEmpty()) {
+                if (closureType != null && property.type.includes(closureType, expression.project)) {
                     holder.registerProblem(
                         closure.returnedValue ?: return,
                         MyBundle.message("incorrectPropertyType")

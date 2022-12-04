@@ -9,6 +9,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethod
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider.Companion.getClassFactoryStateType
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.includes
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
@@ -90,7 +91,7 @@ class IncorrectPropertyTypeInspectionForClosureReturns : PhpInspection() {
                 if ((classFactoryUsed && ClassFactory(
                         stateValueType.types.first().substringAfter("#C").substringBefore('.')
                             .getClass(expression.project) ?: return
-                    ).targetClass.type != property.type) || (!classFactoryUsed && factoryDefinitionValueType != null && stateValueType.types.intersect(factoryDefinitionValueType.global(expression.project).types).isEmpty())
+                    ).targetClass.type != property.type) || (!classFactoryUsed && factoryDefinitionValueType != null && stateValueType.includes(factoryDefinitionValueType, expression.project))
                 ) {
                     holder.registerProblem(
                         stateValue,

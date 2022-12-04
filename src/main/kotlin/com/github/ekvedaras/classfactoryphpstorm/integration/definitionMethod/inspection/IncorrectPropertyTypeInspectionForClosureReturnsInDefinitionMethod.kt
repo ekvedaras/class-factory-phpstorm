@@ -3,6 +3,7 @@ package com.github.ekvedaras.classfactoryphpstorm.integration.definitionMethod.i
 import com.github.ekvedaras.classfactoryphpstorm.MyBundle
 import com.github.ekvedaras.classfactoryphpstorm.domain.method.definition.ReturnInClosureDefinition
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.includes
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.DumbService
@@ -31,7 +32,7 @@ class IncorrectPropertyTypeInspectionForClosureReturnsInDefinitionMethod : PhpIn
                     .targetClass
                     .getPropertyByName(returnInClosure.definition.propertyName) ?: return
 
-                if (returnInClosure.type != null && property.type.types.intersect(returnInClosure.type.global(expression.project).types).isEmpty()) {
+                if (returnInClosure.type != null && property.type.includes(returnInClosure.type, expression.project)) {
                     holder.registerProblem(
                         returnInClosure.value,
                         MyBundle.message("incorrectPropertyType")
