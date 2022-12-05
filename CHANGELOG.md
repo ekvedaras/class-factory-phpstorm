@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+
+## [2.0.3]
 ### Fixed
 - Handle array types more loosely so `string[]` vs `array` would be acceptable
 - Handle boolean types
