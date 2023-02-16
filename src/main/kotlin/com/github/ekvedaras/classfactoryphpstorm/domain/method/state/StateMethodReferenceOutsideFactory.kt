@@ -8,6 +8,7 @@ import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.A
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClassFactoryClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryStateMethod
 import com.intellij.psi.util.childrenOfType
@@ -27,8 +28,7 @@ class StateMethodReferenceOutsideFactory(private val methodReference: MethodRefe
         if (!methodReference.isClassFactoryStateMethod()) throw StateMethodReferenceOutsideFactoryException.notStateMethodReference()
 
         ClassFactory(
-            methodReference.getActualClassReference()?.getClass()
-                ?: throw StateMethodReferenceOutsideFactoryException.unableToFindMethodClass()
+            methodReference.getClassFactoryClass() ?: throw StateMethodReferenceOutsideFactoryException.unableToFindMethodClass()
         )
     }
 

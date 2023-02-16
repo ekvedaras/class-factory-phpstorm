@@ -57,4 +57,11 @@ internal class MakeMethodFactoryTest : EssentialTestCase() {
 //            assertTrue(usage.element?.textRange?.endOffset == usage.navigationRange.endOffset + 1)
 //        }
     }
+
+    fun testItCompletesWhenCreatedFromStaticFactoryMethodOnClass() {
+        myFixture.configureByFile("makeWhenBuiltFromStaticFactoryMethod.php")
+        myFixture.completeBasic()
+
+        assertCompletionContains("value")
+    }
 }

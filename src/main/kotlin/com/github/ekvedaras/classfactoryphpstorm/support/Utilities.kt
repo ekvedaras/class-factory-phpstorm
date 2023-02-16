@@ -4,31 +4,27 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactory.Companion.a
 import com.github.ekvedaras.classfactoryphpstorm.domain.closureState.AttributeAccess
 import com.github.ekvedaras.classfactoryphpstorm.integration.otherMethods.type.AttributesArrayValueTypeProvider
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.classFactoryTargetOrSelf
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.unwrapClosureValue
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 import com.jetbrains.php.PhpIndex
-import com.jetbrains.php.lang.psi.elements.ArrayAccessExpression
-import com.jetbrains.php.lang.psi.elements.ArrayHashElement
-import com.jetbrains.php.lang.psi.elements.ClassReference
+import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.Function
-import com.jetbrains.php.lang.psi.elements.GroupStatement
-import com.jetbrains.php.lang.psi.elements.Method
-import com.jetbrains.php.lang.psi.elements.MethodReference
-import com.jetbrains.php.lang.psi.elements.PhpClass
-import com.jetbrains.php.lang.psi.elements.PhpExpression
-import com.jetbrains.php.lang.psi.elements.PhpReturn
-import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
+
+private const val CLASS_FACTORY_FQN = "\\EKvedaras\\ClassFactory\\ClassFactory"
+private const val CLOSURE_VALUE_FQN = "\\EKvedaras\\ClassFactory\\ClosureValue"
 
 class Utilities private constructor() {
     companion object {
         fun String.unquoteAndCleanup() = this.replace("IntellijIdeaRulezzz", "").trim('\'', '"').trim()
 
         fun PhpClass.isClassFactory() =
-            (this.extendsList.lastChild is ClassReference) && (this.extendsList.lastChild as ClassReference).fqn == "\\EKvedaras\\ClassFactory\\ClassFactory"
+            (this.extendsList.lastChild is ClassReference) && (this.extendsList.lastChild as ClassReference).fqn == CLASS_FACTORY_FQN
 
         // TODO There must be a better way
         fun PhpType.getFirstClass(project: Project) =
@@ -39,7 +35,7 @@ class Utilities private constructor() {
 
         fun PhpType.classFactoryTargetOrSelf(project: Project) = this.asClassFactory(project)?.targetClass?.type ?: this
 
-        fun PhpType.unwrapClosureValue(project: Project): PhpType = if (this.getFirstClass(project)?.fqn == "\\EKvedaras\\ClassFactory\\ClosureValue") {
+        fun PhpType.unwrapClosureValue(project: Project): PhpType = if (this.getFirstClass(project)?.fqn == CLOSURE_VALUE_FQN) {
             PhpType.CLOSURE
         } else {
             this
@@ -92,14 +88,34 @@ class Utilities private constructor() {
             this.name == "state" && this.getActualClassReference()?.fqn?.endsWith("Factory") == true
 
         fun MethodReference.isClassFactoryMakeMethod() =
-            this.name == "make" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: false
+            this.name == "make" && this.isMemberOfAny(CLASS_FACTORY_FQN)
+
+        fun MethodReference.getClassFactoryClass(): PhpClass? =
+            if (DumbService.isDumb(project)) null
+            else if (classReference !is PhpTypedElement) null
+            else PhpIndex.getInstance(project)
+                .completeType(project, (classReference as PhpTypedElement).type, mutableSetOf())
+                .types
+                .flatMap { PhpIndex.getInstance(project).getClassesByFQN(it) }
+                .firstOrNull { it.isChildOfAny(CLASS_FACTORY_FQN, orIsAny = false) }
+
+        fun MethodReference.isMemberOfAny(vararg classes: String): Boolean =
+            if (DumbService.isDumb(project)) false
+            else if (classReference !is PhpTypedElement) false
+            else PhpIndex.getInstance(project)
+                .completeType(project, (classReference as PhpTypedElement).type, mutableSetOf())
+                .types
+                .flatMap { PhpIndex.getInstance(project).getClassesByFQN(it) }
+                .firstOrNull { it.isChildOfAny(*classes, orIsAny = false) } != null
+
+        fun PhpClass.isChildOfAny(vararg superFqn: String, orIsAny: Boolean = false): Boolean = superFqn.contains(superFQN) || (orIsAny && superFqn.contains(fqn)) || superClass?.isChildOfAny(*superFqn, orIsAny = orIsAny) == true
 
         fun MethodReference.isClassFactoryStateMethod() =
-            this.name == "state" && this.getActualClassReference()?.getClass()?.isClassFactory() ?: (
+            this.name == "state" && (this.isMemberOfAny(CLASS_FACTORY_FQN) || (
                 this.firstPsiChild is ArrayAccessExpression
                         && AttributeAccess(this.firstPsiChild as ArrayAccessExpression)
                         .getCompleteType(AttributesArrayValueTypeProvider())
-                        .isClassFactory(this.project)
+                        .isClassFactory(this.project))
             )
 
         fun PsiElement.isArrayHashValueOf(arrayHashElement: ArrayHashElement) = this == arrayHashElement.value

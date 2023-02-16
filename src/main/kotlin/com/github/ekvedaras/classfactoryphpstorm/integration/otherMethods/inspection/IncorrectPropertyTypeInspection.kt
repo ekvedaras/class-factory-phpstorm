@@ -9,6 +9,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.method.state.StateMethod
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClassFactoryClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.includes
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isArrayHashValueOf
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactory
@@ -69,11 +70,10 @@ class IncorrectPropertyTypeInspection : PhpInspection() {
 
                 // TODO There must be a better way
                 val classFactoryUsed =
-                    factoryValue is MethodReference && factoryValue.getActualClassReference()?.getClass()
-                        ?.isClassFactory() == true
+                    factoryValue is MethodReference && factoryValue.getClassFactoryClass() != null
 
                 if ((classFactoryUsed && ClassFactory(
-                        ((factoryValue as MethodReference).getActualClassReference() ?: return).getClass() ?: return
+                        (factoryValue as MethodReference).getClassFactoryClass() ?: return
                     ).targetClass.type != property.type) || (!classFactoryUsed && property.type.includes(factoryValue.type.unwrapClosureValue(expression.project), expression.project))
                 ) {
                     holder.registerProblem(

@@ -5,6 +5,7 @@ import com.github.ekvedaras.classfactoryphpstorm.domain.ClassFactoryMethodRefere
 import com.github.ekvedaras.classfactoryphpstorm.support.DomainException
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getActualClassReference
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClass
+import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.getClassFactoryClass
 import com.github.ekvedaras.classfactoryphpstorm.support.Utilities.Companion.isClassFactoryMakeMethod
 import com.intellij.psi.util.childrenOfType
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
@@ -17,8 +18,7 @@ class MakeMethodReference(private val methodReference: MethodReference) : ClassF
     init {
         if (!methodReference.isClassFactoryMakeMethod()) throw MakeMethodReferenceException.notMakeMethodReference()
         classFactory = ClassFactory(
-            methodReference.getActualClassReference()?.getClass()
-                ?: throw MakeMethodReferenceException.unableToFindMethodClass()
+            methodReference.getClassFactoryClass() ?: throw MakeMethodReferenceException.unableToFindMethodClass()
         )
     }
 

@@ -3,6 +3,8 @@
 # class-factory-phpstorm Changelog
 
 ## [Unreleased]
+### Fixed
+- Better resolve if method belongs to a class factory, so things like `Class::factory()->make(['prop'])` would work.
 
 ## [2.0.3]
 ### Fixed
